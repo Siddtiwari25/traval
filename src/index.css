@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Montserrat", "Inter", sans-serif;
+}
+
+@keyframes flightPath {
+  0% { transform: translateX(-10%) translateY(0) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateX(110%) translateY(-20px) rotate(5deg); opacity: 0; }
+}
+
+.animate-flight {
+  animation: flightPath 2.5s infinite linear;
+}
+
+/* Scrollbar behaviors */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Uttarakhand Atmospheric Animations */
+@keyframes riverFlow {
+  from {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes mistFloat {
+  0% {
+    transform: translateX(-4%) translateY(0px) scale(1);
+    opacity: 0.15;
+  }
+  50% {
+    transform: translateX(4%) translateY(-5px) scale(1.05);
+    opacity: 0.35;
+  }
+  100% {
+    transform: translateX(-4%) translateY(0px) scale(1);
+    opacity: 0.15;
+  }
+}
+
+@keyframes slowSunrise {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.08) translateY(-4px);
+  }
+}
+
+@keyframes soarAround {
+  0% {
+    transform: translateX(0px) translateY(0px) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateX(350px) translateY(-30px) scale(0.9);
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateX(700px) translateY(-10px) scale(0.75);
+    opacity: 0;
+  }
+}
+
+.animate-river {
+  animation: riverFlow 12s infinite linear;
+  stroke-dasharray: 24, 12;
+}
+
+.animate-mist-slow {
+  animation: mistFloat 20s infinite ease-in-out;
+}
+
+.animate-mist-fast {
+  animation: mistFloat 14s infinite ease-in-out;
+}
+
+.animate-sunrise-glow {
+  animation: slowSunrise 10s infinite ease-in-out;
+}
+
+.animate-soaring {
+  animation: soarAround 25s infinite linear;
+}
+
