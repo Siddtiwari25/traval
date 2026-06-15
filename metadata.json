@@ -1,0 +1,6 @@
+{
+  "name": "RUDRA TRAVEL",
+  "description": "A premium travel dashboard, destination explorer, and AI itinerary planner for Uttarakhand.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
