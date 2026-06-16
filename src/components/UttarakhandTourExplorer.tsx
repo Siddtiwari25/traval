@@ -78,8 +78,8 @@ const PIN_LOCATIONS: Record<string, MapPinLocation> = {
     highlight: 'Lakshman Jhula, Beatles Hermitage Nest'
   },
   Kedarnath: {
-    id: 'Kedarnath',
-    name: 'Kedarnath',
+    id: 'golu devi',
+    name: 'Golu devi',
     x: 52,
     y: 28,
     description: 'Majestic ancient Shiva temple set against massive snow fields.',
