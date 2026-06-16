@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Plane, Star, MapPin, ShieldAlert, Train as TrainIcon, Car, Wifi, Waves, Coffee, Heart, CheckCircle } from 'lucide-react';
+import { Bike, Plane, Star, MapPin, ShieldAlert, Train as TrainIcon, Car, Wifi, Waves, Coffee, Heart, CheckCircle } from 'lucide-react';
 import { City, TravelTab, Flight, Hotel, Train, Cab } from '../types';
 import { FLIGHTS, HOTELS, TRAINS, CABS } from '../data';
 
@@ -9,6 +9,7 @@ interface SearchResultsProps {
   fromCity: City;
   toCity: City;
   onBook: (provider: string, routeDetails: string, price: string) => void;
+  appliedPromoCode: string | null;
 }
 
 export default function SearchResults({
@@ -16,7 +17,23 @@ export default function SearchResults({
   fromCity,
   toCity,
   onBook,
+  appliedPromoCode,
 }: SearchResultsProps) {
+
+  // Helper to compute discount details from coupons
+  const getDiscountedVal = (original: number) => {
+    if (!appliedPromoCode) return { discounted: original, percent: 0, saved: 0 };
+    const code = appliedPromoCode.toUpperCase().trim();
+    let percent = 10; // Default flat 10% on other unrecognized codes
+    if (code === 'DEVBHOOMI30') percent = 30;
+    else if (code === 'RUDRA25') percent = 25;
+    else if (code === 'MMTSUPER') percent = 15;
+    else if (code === 'MMTINTELECT') percent = 20;
+
+    const saved = Math.round((original * percent) / 100);
+    const discounted = original - saved;
+    return { discounted, percent, saved };
+  };
 
   // Stagger animation container
   const containerVariants = {
@@ -38,11 +55,11 @@ export default function SearchResults({
     <div id="search-results-section" className="font-sans">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight">
-          Available {activeTab.substring(0, 1).toUpperCase() + activeTab.substring(1)}:{' '}
+          {activeTab === 'flights' ? 'Available Scooty & Bikes' : `Available ${activeTab.substring(0, 1).toUpperCase() + activeTab.substring(1)}`}:{' '}
           <span className="text-sky-500 font-extrabold">{activeTab === 'hotels' ? toCity.name : `${fromCity.code} to ${toCity.code}`}</span>
         </h2>
         <span className="text-xs bg-slate-200/60 text-slate-600 font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-          {activeTab === 'hotels' ? 'Destinations Lodging' : 'Realtime Schedules'}
+          {activeTab === 'hotels' ? 'Destinations Lodging' : activeTab === 'flights' ? 'Eco-Rent Fleet' : 'Realtime Schedules'}
         </span>
       </div>
 
@@ -62,52 +79,68 @@ export default function SearchResults({
               whileHover={{ y: -3 }}
               className="bg-white p-5 rounded-2xl border border-slate-200/50 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 hover:shadow-md transition-shadow relative"
             >
-              {/* Left Logo / airline info */}
+              {/* Left Logo / vehicle brand info */}
               <div className="flex items-center gap-4 w-full md:w-1/4">
                 <div className="w-12 h-12 bg-sky-50 rounded-xl flex items-center justify-center text-sky-600 font-extrabold text-sm border border-sky-100 uppercase">
-                  {flight.logoCode}
+                  <Bike className="w-6 h-6 text-sky-500" />
                 </div>
                 <div>
                   <h4 className="font-extrabold text-slate-800 text-base">{flight.airline}</h4>
-                  <p className="text-xs text-slate-400 font-medium">{flight.flightNo} | Economy Cabin</p>
+                  <p className="text-xs text-slate-400 font-medium">Model Code: {flight.flightNo} | Insured & Serviced</p>
                 </div>
               </div>
 
-              {/* Center flight duration path */}
+              {/* Center vehicle attributes */}
               <div className="flex items-center justify-between gap-6 md:gap-12 w-full md:w-2/4 px-2">
                 <div className="text-left">
-                  <span className="block font-black text-slate-800 text-lg">{flight.fromTime}</span>
+                  <span className="block font-black text-slate-800 text-base">Pickup</span>
                   <span className="text-xs text-slate-400 font-bold tracking-wide uppercase">{fromCity.name}</span>
                 </div>
                 
                 <div className="text-center flex-1 relative px-4 max-w-44">
-                  <span className="text-[11px] text-slate-400 font-bold block mb-1">{flight.duration}</span>
+                  <span className="text-[11px] text-sky-600 font-extrabold block mb-1">{flight.duration}</span>
                   <div className="h-[2px] w-full bg-slate-200 relative rounded-full">
-                    <Plane className="w-3.5 h-3.5 text-sky-400 absolute -top-1.5 left-1/2 -translate-x-1/2 rotate-90" />
+                    <Bike className="w-3.5 h-3.5 text-sky-450 absolute -top-1.5 left-1/2 -translate-x-1/2 animate-pulse" />
                   </div>
-                  <span className="text-[10px] font-extrabold text-teal-600 block mt-1 uppercase tracking-wider">{flight.stops}</span>
+                  <span className="text-[10px] font-extrabold text-emerald-600 block mt-1 uppercase tracking-wider">{flight.stops}</span>
                 </div>
 
                 <div className="text-right">
-                  <span className="block font-black text-slate-800 text-lg">{flight.toTime}</span>
+                  <span className="block font-black text-slate-800 text-base">Dropoff</span>
                   <span className="text-xs text-slate-400 font-bold tracking-wide uppercase">{toCity.name}</span>
                 </div>
               </div>
 
               {/* Right Booking pricing */}
-              <div className="text-right flex items-center justify-between md:flex-col gap-4 md:gap-1 w-full md:w-1/4 border-t md:border-t-0 pt-4 md:pt-0 border-slate-100">
-                <div>
-                  <span className="text-slate-400 text-xs block font-semibold">One-way total</span>
-                  <span className="block font-black text-2xl text-slate-800">${flight.price}</span>
-                </div>
-                <button
-                  id={`btn-book-flight-${flight.id}`}
-                  onClick={() => onBook(flight.airline, `${fromCity.code} ➔ ${toCity.code} (${flight.flightNo})`, `$${flight.price}`)}
-                  className="bg-sky-500 hover:bg-sky-600 active:scale-95 text-white font-extrabold text-xs px-6 py-3 rounded-full transition-all cursor-pointer shadow-lg shadow-sky-500/10 uppercase tracking-widest"
-                >
-                  Book Seat
-                </button>
-              </div>
+              {(() => {
+                const { discounted, percent, saved } = getDiscountedVal(flight.price);
+                return (
+                  <div className="text-right flex items-center justify-between md:flex-col gap-4 md:gap-2.5 w-full md:w-1/4 border-t md:border-t-0 pt-4 md:pt-0 border-slate-100">
+                    <div>
+                      <span className="text-slate-400 text-xs block font-bold uppercase tracking-tight">Rent Rate / Day</span>
+                      {percent > 0 ? (
+                        <div className="flex flex-col items-end">
+                          <div className="flex items-center gap-1.5 justify-end">
+                            <span className="text-xs text-slate-400 line-through font-extrabold">₹{flight.price}</span>
+                            <span className="text-[9.5px] font-black text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-sm border border-emerald-100 uppercase">-{percent}%</span>
+                          </div>
+                          <span className="block font-black text-2xl text-slate-900 leading-none mt-1">₹{discounted}</span>
+                          <span className="text-[9px] font-extrabold text-emerald-600 mt-1">Save ₹{saved}!</span>
+                        </div>
+                      ) : (
+                        <span className="block font-black text-2xl text-slate-800">₹{flight.price}</span>
+                      )}
+                    </div>
+                    <button
+                      id={`btn-book-flight-${flight.id}`}
+                      onClick={() => onBook(flight.airline, `2-Wheeler Rent at ${fromCity.name} (${flight.flightNo})`, percent > 0 ? `₹${discounted}/Day` : `₹${flight.price}/Day`)}
+                      className="bg-sky-500 hover:bg-sky-600 active:scale-95 text-white font-extrabold text-[10.5px] px-4.5 py-3 rounded-xl transition-all cursor-pointer shadow-lg shadow-sky-500/10 uppercase tracking-wider block text-center w-full"
+                    >
+                      Reserve & Sync to My Trips
+                    </button>
+                  </div>
+                );
+              })()}
             </motion.div>
           ))}
         </motion.div>
@@ -127,7 +160,7 @@ export default function SearchResults({
               key={hotel.id}
               variants={itemVariants}
               whileHover={{ y: -5 }}
-              className="bg-white rounded-2xl border border-slate-200/50 shadow-sm overflow-hidden flex flex-col hover:shadow-lg transition-shadow relative"
+              className="bg-white rounded-2xl border border-slate-200/50 shadow-sm overflow-hidden flex flex-col hover:shadow-lg transition-transform duration-300 relative animate-fade-in"
             >
               {/* Imagery Banner */}
               <div className="h-48 overflow-hidden relative group">
@@ -156,94 +189,35 @@ export default function SearchResults({
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between pt-4 border-t border-slate-100">
-                  <div>
-                    <span className="text-xs text-slate-400 font-semibold block">Price Per Night</span>
-                    <span className="font-black text-xl text-slate-800">${hotel.pricePerNight}</span>
-                  </div>
-                  
-                  <button
-                    id={`btn-book-hotel-${hotel.id}`}
-                    onClick={() => onBook(hotel.name, `Resort Stay at ${hotel.location}`, `$${hotel.pricePerNight} / Night`)}
-                    className="bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-xs px-5 py-2.5 rounded-xl transition-all cursor-pointer uppercase tracking-wider"
-                  >
-                    Select Room
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-      )}
-
-      {/* TRAIN RESULTS VIEW */}
-      {activeTab === 'trains' && (
-        <motion.div 
-          id="train-results-list"
-          variants={containerVariants} 
-          initial="hidden" 
-          animate="show" 
-          className="space-y-4"
-        >
-          {TRAINS.map((train) => (
-            <motion.div
-              key={train.id}
-              variants={itemVariants}
-              whileHover={{ y: -3 }}
-              className="bg-white p-5 rounded-2xl border border-slate-200/50 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 hover:shadow-md transition-shadow"
-            >
-              <div className="flex items-center gap-4 w-full md:w-1/3">
-                <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600 font-extrabold text-sm border border-amber-100">
-                  <TrainIcon className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="font-extrabold text-slate-800 text-base">{train.name}</h4>
-                  <p className="text-xs text-slate-400 font-bold">Number: {train.trainNo} | Superfast</p>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between gap-6 w-full md:w-1/3 text-center">
-                <div className="text-left">
-                  <span className="font-black text-slate-800 text-base block">{train.fromTime}</span>
-                  <span className="text-xs text-slate-400 font-semibold uppercase">{fromCity.name}</span>
-                </div>
-
-                <div className="flex-1 px-4">
-                  <span className="text-[10px] text-slate-400 font-bold block">{train.duration}</span>
-                  <div className="h-0.5 bg-slate-200 my-1 relative">
-                    <div className="w-2 h-2 rounded-full bg-slate-300 absolute -top-0.5 left-1/2 -translate-x-1/2" />
-                  </div>
-                </div>
-
-                <div className="text-right">
-                  <span className="font-black text-slate-800 text-base block">{train.toTime}</span>
-                  <span className="text-xs text-slate-400 font-semibold uppercase">{toCity.name}</span>
-                </div>
-              </div>
-
-              <div className="w-full md:w-1/3 flex items-center justify-between border-t md:border-t-0 pt-4 md:pt-0 border-slate-100">
-                <div className="flex gap-1.5">
-                  {train.classes.map((cls) => (
-                    <span key={cls} className="font-mono text-[10px] font-bold bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md border border-slate-200/40">
-                      {cls}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="text-right flex items-center gap-4">
-                  <div className="mr-2">
-                    <span className="text-[10px] text-slate-400 font-semibold block">Starting from</span>
-                    <span className="font-black text-xl text-slate-800">${train.price}</span>
-                  </div>
-                  
-                  <button
-                    id={`btn-book-train-${train.id}`}
-                    onClick={() => onBook(train.name, `${fromCity.code} ➔ ${toCity.code} Express (${train.trainNo})`, `$${train.price}`)}
-                    className="bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-xs px-5 py-2.5 rounded-xl transition-all cursor-pointer uppercase tracking-wider"
-                  >
-                    Book Class
-                  </button>
-                </div>
+                {(() => {
+                  const { discounted, percent, saved } = getDiscountedVal(hotel.pricePerNight);
+                  return (
+                    <div className="flex items-center justify-between pt-4 border-t border-slate-100 gap-2 w-full">
+                      <div>
+                        <span className="text-[10px] text-slate-450 font-bold block uppercase tracking-tight">Price Per Night</span>
+                        {percent > 0 ? (
+                          <div className="flex flex-col items-start leading-none mt-1">
+                            <div className="flex items-center gap-1">
+                              <span className="text-xs text-slate-450 line-through font-bold">₹{hotel.pricePerNight}</span>
+                              <span className="text-[9px] font-black text-emerald-600 bg-emerald-50 px-1 py-0.5 rounded-sm border border-emerald-150 uppercase">-{percent}%</span>
+                            </div>
+                            <span className="font-black text-xl text-slate-900 leading-none mt-0.5">₹{discounted}</span>
+                          </div>
+                        ) : (
+                          <span className="font-black text-xl text-slate-800">₹{hotel.pricePerNight}</span>
+                        )}
+                      </div>
+                      
+                      <button
+                         id={`btn-book-hotel-${hotel.id}`}
+                         onClick={() => onBook(hotel.name, `Resort Stay at ${hotel.location}`, percent > 0 ? `₹${discounted} / Night` : `₹${hotel.pricePerNight} / Night`)}
+                         className="bg-sky-500 hover:bg-sky-600 active:scale-95 text-white font-bold text-[10.5px] px-3.5 py-2.5 rounded-xl transition-all cursor-pointer uppercase tracking-wider text-center"
+                      >
+                        Reserve & Sync to My Trips
+                      </button>
+                    </div>
+                  );
+                })()}
               </div>
             </motion.div>
           ))}
@@ -286,24 +260,39 @@ export default function SearchResults({
                 </div>
                 <div className="text-center">
                   <span className="text-xs text-slate-400 font-bold block mb-0.5">Rate / KM</span>
-                  <span className="font-extrabold text-slate-800">${cab.pricePerKm} / km</span>
+                  <span className="font-extrabold text-slate-800">₹{cab.pricePerKm} / km</span>
                 </div>
               </div>
 
-              <div className="w-full md:w-1/3 flex items-center justify-between border-t md:border-t-0 pt-4 md:pt-0 border-slate-100">
-                <div className="text-left">
-                  <span className="text-[10px] text-slate-400 font-bold block">Estimated Fare</span>
-                  <span className="font-black text-2xl text-slate-800">${cab.estimatedPrice}</span>
-                </div>
+              {(() => {
+                const { discounted, percent, saved } = getDiscountedVal(cab.estimatedPrice);
+                return (
+                  <div className="w-full md:w-1/3 flex items-center justify-between border-t md:border-t-0 pt-4 md:pt-0 border-slate-100 gap-3">
+                    <div className="text-left">
+                      <span className="text-[10px] text-slate-400 font-bold block uppercase tracking-tight">Estimated Fare</span>
+                      {percent > 0 ? (
+                        <div className="flex flex-col items-start leading-none mt-1">
+                          <div className="flex items-center gap-1">
+                            <span className="text-xs text-slate-450 line-through font-extrabold">₹{cab.estimatedPrice}</span>
+                            <span className="text-[9px] font-black text-emerald-600 bg-emerald-50 px-1 py-0.5 rounded-sm border border-emerald-150 uppercase">-{percent}%</span>
+                          </div>
+                          <span className="font-black text-2xl text-slate-900 leading-none mt-0.5">₹{discounted}</span>
+                        </div>
+                      ) : (
+                        <span className="font-black text-2xl text-slate-800">₹{cab.estimatedPrice}</span>
+                      )}
+                    </div>
 
-                <button
-                  id={`btn-book-cab-${cab.id}`}
-                  onClick={() => onBook(`Eco Cab: ${cab.model}`, `Airport One-Way pickup`, `$${cab.estimatedPrice}`)}
-                  className="bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-xs px-6 py-3 rounded-full transition-all cursor-pointer uppercase tracking-widest"
-                >
-                  Reserve Cab
-                </button>
-              </div>
+                    <button
+                      id={`btn-book-cab-${cab.id}`}
+                      onClick={() => onBook(`Eco Cab: ${cab.model}`, `Airport One-Way pickup`, percent > 0 ? `₹${discounted}` : `₹${cab.estimatedPrice}`)}
+                      className="bg-sky-500 hover:bg-sky-600 active:scale-95 text-white font-extrabold text-[10.5px] px-4.5 py-3 rounded-xl transition-all cursor-pointer uppercase tracking-wider text-center"
+                    >
+                      Reserve & Sync to My Trips
+                    </button>
+                  </div>
+                );
+              })()}
             </motion.div>
           ))}
         </motion.div>

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { 
   PhoneCall, 
   Instagram, 
+  Facebook,
   MessageSquare, 
   MapPin, 
   Clock, 
@@ -24,10 +25,10 @@ export default function ContactMethods() {
   const contactOptions = [
     {
       id: 'helpline',
-      title: '24/7 Premium Helpline',
-      displayValue: '+91 1800-419-8777',
-      link: 'tel:+9118004198777',
-      description: 'Assistance for flight cancellations, hotels, and sudden modifications.',
+      title: 'Rakesh Cab Service (Primary)',
+      displayValue: '+91-8859490284',
+      link: 'tel:+918859490284',
+      description: 'Available 24/7. Pre-book or hire premium cabs located in Mukteshwar & Nainital.',
       icon: PhoneCall,
       color: 'bg-orange-500',
       iconAnimation: {
@@ -42,58 +43,57 @@ export default function ContactMethods() {
           repeatDelay: 2
         }
       },
-      tag: 'Immediate response',
+      tag: 'Immediate Response',
       tagColor: 'bg-rose-50 text-rose-700 border-rose-100'
     },
     {
-      id: 'whatsapp',
-      title: 'WhatsApp Concierge Desk',
-      displayValue: '+91 91136-12000',
-      link: 'https://wa.me/919113612000',
-      description: 'Get automated flight pnr, ticket receipts, and booking links direct.',
-      icon: MessageSquare,
-      color: 'bg-emerald-500',
+      id: 'instagram',
+      title: 'Rudra Travels Instagram',
+      displayValue: '@rudra_travels_service',
+      link: 'https://instagram.com',
+      description: 'Follow our active feed for beautiful tour group highlights, local weather updates, and road clips.',
+      icon: Instagram,
+      color: 'bg-gradient-to-tr from-pink-500 via-rose-500 to-orange-500',
       iconAnimation: {
         animate: {
-          y: [0, -5, 0],
+          scale: [1, 1.05, 1],
         },
         transition: {
-          duration: 2,
+          duration: 2.5,
           repeat: Infinity,
           ease: 'easeInOut' as const
         }
       },
-      tag: 'Average reply: 2 mins',
-      tagColor: 'bg-emerald-50 text-emerald-700 border-emerald-100'
+      tag: 'Join 12k+ Followers',
+      tagColor: 'bg-pink-55 text-pink-700 border-pink-100'
     },
     {
-      id: 'instagram',
-      title: 'Devbhoomi Instagram Desk',
-      displayValue: '@travel.uttarakhand',
-      link: 'https://instagram.com',
-      description: 'Explore scenic reels, live story updates, and tag us to get featured in our global feed!',
-      icon: Instagram,
-      color: 'bg-gradient-to-tr from-amber-500 via-red-500 to-purple-600',
+      id: 'facebook',
+      title: 'Rakesh Cab Service Facebook',
+      displayValue: 'fb.com/RudraTravelsMukteshwar',
+      link: 'https://facebook.com',
+      description: 'Join our friendly Himalayan travelers community page to find carpools, reviews, and active promo flyers.',
+      icon: Facebook,
+      color: 'bg-blue-600',
       iconAnimation: {
         animate: {
-          rotate: [0, 8, -8, 8, 0],
-          scale: [1, 1.08, 1.08, 1],
+          y: [0, -4, 0],
         },
         transition: {
-          duration: 3.5,
+          duration: 2.0,
           repeat: Infinity,
           ease: 'easeInOut' as const
         }
       },
-      tag: 'Feed & Reels Online',
-      tagColor: 'bg-pink-50 text-pink-700 border-pink-100'
+      tag: 'Active Community Group',
+      tagColor: 'bg-blue-50 text-blue-705 border-blue-100'
     },
     {
       id: 'office',
-      title: 'Uttarakhand Regional Hub',
-      displayValue: 'Dehradun Airport Rd, Sector 4',
-      link: 'https://maps.google.com',
-      description: 'Step in for authentic offline hospitality or local guide allotments.',
+      title: 'Physical Regional Desk',
+      displayValue: 'Main market, mohan bazaar, Mukteshwar, Darima, Uttarakhand 263138',
+      link: 'https://maps.app.goo.gl/yqNKxK8uLUj6cSsJ6',
+      description: 'Come down to our head office beside Mohan Bazaar to grab customized offline coupon flyers.',
       icon: MapPin,
       color: 'bg-indigo-500',
       iconAnimation: {
@@ -107,7 +107,7 @@ export default function ContactMethods() {
           ease: 'easeInOut' as const
         }
       },
-      tag: '9:00 AM - 8:00 PM',
+      tag: 'Main Market Office',
       tagColor: 'bg-indigo-50 text-indigo-700 border-indigo-100'
     }
   ];
@@ -214,13 +214,11 @@ export default function ContactMethods() {
               </div>
             </motion.a>
           ))}
-        </div>
-
-        {/* Dynamic callback form slot (right column 1 span) */}
+        </div>        {/* Physical Office & Service Pickup Point Map card */}
         <div className="lg:col-span-1">
-          <div className="bg-slate-900 text-white p-6 rounded-3xl relative overflow-hidden shadow-xl border border-slate-800">
+          <div className="bg-slate-900 text-white p-6 rounded-3xl relative overflow-hidden shadow-xl border border-slate-800 flex flex-col justify-between h-full">
             {/* Background design pattern */}
-            <div className="absolute inset-0 opacity-10 pointer-events-none">
+            <div className="absolute inset-0 opacity-5 pointer-events-none">
               <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                   <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
@@ -231,147 +229,74 @@ export default function ContactMethods() {
               </svg>
             </div>
 
-            <AnimatePresence mode="wait">
-              {!formSubmitted ? (
-                <motion.form
-                  key="callback-form"
-                  onSubmit={handleCallbackSubmit}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="space-y-4 relative z-10"
-                >
-                  <div>
-                    <h4 className="font-extrabold text-sm uppercase tracking-wider flex items-center gap-1.5 text-white">
-                      <HelpCircle className="w-4 h-4 text-sky-400" />
-                      Virtual Support Desk
-                    </h4>
-                    <p className="text-[10px] text-slate-400 font-semibold leading-relaxed mt-0.5">
-                      Type your details below and our regional concierge agents will reach out on your specified channel.
+            <div className="space-y-5 relative z-10">
+              <div>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 font-extrabold text-[9.5px] uppercase tracking-wider mb-2">
+                  <MapPin className="w-3.5 h-3.5" /> Registered Hub
+                </span>
+                <h4 className="font-extrabold text-lg text-white tracking-tight">
+                  Head Office & Pickup Point
+                </h4>
+                <p className="text-[11.5px] text-slate-400 font-semibold leading-relaxed mt-1">
+                  Locate Rudra Travels & Rakesh Cab Service right at the central mountain route. Stop by for bookings, physical receipts, or tour handoffs!
+                </p>
+              </div>
+
+              {/* Explicit Address specs */}
+              <div className="bg-slate-950/60 rounded-2xl p-4 border border-slate-800 text-xs space-y-3 font-semibold text-slate-300">
+                <div>
+                  <span className="text-[9px] font-bold uppercase text-orange-500 tracking-widest block mb-0.5">Physical Head Office:</span>
+                  <p className="text-white text-[11px] leading-relaxed">
+                    Main Market, Mohan Bazaar, Mukteshwar, Darima, Uttarakhand 263138
+                  </p>
+                </div>
+
+                <div className="border-t border-slate-800/80 pt-2.5">
+                  <span className="text-[9px] font-bold uppercase text-sky-400 tracking-widest block mb-0.5">All-Service Pickup Point:</span>
+                  <div className="flex items-start gap-1 pb-1">
+                    <span className="text-white text-[11.5px] font-mono leading-tight bg-slate-800 px-1.5 py-0.5 rounded mr-1">
+                      FJ9X+39W, 16
+                    </span>
+                    <p className="text-white text-[11px] leading-relaxed flex-1">
+                      Bhatelia-Mukteshwar Rd, Mukteshwar, Darima, Uttarakhand 263138
                     </p>
                   </div>
+                  <span className="text-[10px] text-slate-400 block mt-1">
+                    💡 <span className="text-slate-300">24/7 Cab Dispatch</span> & scooty pre-booked collections.
+                  </span>
+                </div>
+              </div>
 
-                  {/* Channel selectors pills */}
-                  <div className="flex gap-1 overflow-x-auto pb-1 scrollbar-none">
-                    {(['General', 'Booking', 'Spiritual', 'Emergency'] as const).map((channel) => {
-                      const isSelected = activeFormChannel === channel;
-                      return (
-                        <button
-                          key={channel}
-                          type="button"
-                          onClick={() => setActiveFormChannel(channel)}
-                          className={`px-2 py-1 rounded-lg text-[9px] font-bold uppercase transition-all whitespace-nowrap cursor-pointer ${
-                            isSelected
-                              ? 'bg-sky-500 text-slate-950 shadow-xs'
-                              : 'bg-white/5 text-slate-300 hover:bg-white/10'
-                          }`}
-                        >
-                          {channel}
-                        </button>
-                      );
-                    })}
-                  </div>
+              {/* Aesthetic static Map preview frame */}
+              <div className="rounded-2xl border border-slate-800 overflow-hidden relative group">
+                <img 
+                  referrerPolicy="no-referrer" 
+                  src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=400&q=80" 
+                  alt="Mukteshwar Map Hub Preview" 
+                  className="w-full h-24 object-cover opacity-60 group-hover:scale-103 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-slate-950/20" />
+                <div className="absolute inset-0 flex items-center justify-center p-2">
+                  <span className="bg-slate-900/90 text-white border border-slate-700/60 text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-wider shadow">
+                    Interactive Google Coordinates
+                  </span>
+                </div>
+              </div>
+            </div>
 
-                  {/* Sender Name field */}
-                  <div>
-                    <label htmlFor="callback-sender-name" className="block text-[8px] font-extrabold uppercase text-slate-400 tracking-wider mb-1">
-                      Full Name
-                    </label>
-                    <input
-                      id="callback-sender-name"
-                      type="text"
-                      required
-                      placeholder="e.g., Vikram Aditya"
-                      value={senderName}
-                      onChange={(e) => setSenderName(e.target.value)}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-sky-500 font-semibold"
-                    />
-                  </div>
-
-                  {/* Contact field (Phone or Email) */}
-                  <div>
-                    <label htmlFor="callback-sender-contact" className="block text-[8px] font-extrabold uppercase text-slate-400 tracking-wider mb-1">
-                      Phone Number or Mail id
-                    </label>
-                    <input
-                      id="callback-sender-contact"
-                      type="text"
-                      required
-                      placeholder="e.g., +91 98765-43210"
-                      value={senderContact}
-                      onChange={(e) => setSenderContact(e.target.value)}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-sky-500 font-semibold"
-                    />
-                  </div>
-
-                  {/* Message field */}
-                  <div>
-                    <label htmlFor="callback-message" className="block text-[8px] font-extrabold uppercase text-slate-400 tracking-wider mb-1">
-                      Message / Request Overview
-                    </label>
-                    <textarea
-                      id="callback-message"
-                      rows={2}
-                      maxLength={180}
-                      required
-                      placeholder="Mention your booking reference or custom route demand..."
-                      value={messageText}
-                      onChange={(e) => setMessageText(e.target.value)}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-sky-500 font-semibold resize-none"
-                    />
-                  </div>
-
-                  {/* Action submit */}
-                  <button
-                    type="submit"
-                    disabled={isSubmitting || !senderName || !senderContact || !messageText}
-                    className={`w-full font-black py-2.5 rounded-xl text-[10px] uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${
-                      isSubmitting
-                        ? 'bg-slate-800 text-slate-550 cursor-wait'
-                        : 'bg-sky-500 hover:bg-sky-450 text-slate-950 font-black cursor-pointer'
-                    }`}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <span className="w-3.5 h-3.5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
-                        <span>Filing request...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-3.5 h-3.5" />
-                        <span>Send Callback Request</span>
-                      </>
-                    )}
-                  </button>
-                </motion.form>
-              ) : (
-                <motion.div
-                  key="callback-success"
-                  initial={{ scale: 0.95, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0.95, opacity: 0 }}
-                  className="space-y-4 py-8 text-center relative z-10"
-                >
-                  <div className="w-12 h-12 rounded-full bg-emerald-500/15 border border-emerald-500 text-emerald-400 flex items-center justify-center mx-auto mb-2">
-                    <CheckCircle className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h4 className="font-extrabold text-sm">Callback Requested!</h4>
-                    <p className="text-[10px] text-slate-400 mt-1.5 leading-relaxed max-w-xs mx-auto">
-                      Thank you <span className="text-white font-black">{senderName}</span>. A registered agent specialized in <span className="text-sky-400 font-black">{activeFormChannel} topics</span> will contact you within minutes at <span className="text-white font-black">{senderContact}</span>.
-                    </p>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={handleResetForm}
-                    className="px-4 py-2 bg-white/10 hover:bg-white/15 text-slate-200 text-[10px] font-black uppercase rounded-lg cursor-pointer transition-colors"
-                  >
-                    File another ticket
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {/* Direct Google Maps Action CTA */}
+            <div className="pt-4 mt-4 border-t border-slate-800 relative z-10 w-full">
+              <a
+                href="https://maps.app.goo.gl/yqNKxK8uLUj6cSsJ6"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full bg-orange-500 hover:bg-orange-400 active:scale-97 text-slate-950 font-black py-3 rounded-xl text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-orange-500/10"
+              >
+                <MapPin className="w-4 h-4" />
+                <span>Open in Google Maps</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
           </div>
         </div>
 

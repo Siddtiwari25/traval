@@ -26,7 +26,10 @@ import {
   Upload,
   X,
   Share2,
-  Trash2
+  Trash2,
+  Phone,
+  Mail,
+  RefreshCw
 } from 'lucide-react';
 
 // Coordinates defined as percentages (x, y) relative to a 100x100 coord grid for seamless scaling
@@ -78,8 +81,8 @@ const PIN_LOCATIONS: Record<string, MapPinLocation> = {
     highlight: 'Lakshman Jhula, Beatles Hermitage Nest'
   },
   Kedarnath: {
-    id: 'golu devi',
-    name: 'Golu devi',
+    id: 'Kedarnath',
+    name: 'Kedarnath',
     x: 52,
     y: 28,
     description: 'Majestic ancient Shiva temple set against massive snow fields.',
@@ -167,290 +170,457 @@ interface PredefinedTour {
   description: string;
   highlights: string[];
   itinerary: ItineraryItem[];
+  image?: string;
+  popularity?: number;
 }
+
+const TOUR_POPULARITY: Record<string, number> = {
+  'tour-chardham': 99,
+  'tour-kainchi-dham': 98,
+  'tour-rishikesh': 96,
+  'tour-nainital': 95,
+  'tour-mussoorie': 94,
+  'tour-jim-corbett': 92,
+  'tour-haridwar': 90,
+  'tour-auli': 88,
+  'tour-valley-of-flowers': 87,
+  'tour-chopta': 85,
+  'tour-mukteshwar': 82,
+  'tour-kausani': 80,
+  'tour-ranikhet': 78,
+  'tour-almora': 75,
+  'tour-lansdowne': 72,
+  'tour-munsiyari': 70,
+  'tour-hemkund': 68,
+  'tour-adi-kailash': 65
+};
 
 const UTTARAKHAND_TOURS: PredefinedTour[] = [
   {
+    id: 'tour-kainchi-dham',
+    name: 'Kainchi Dham Neem Karoli Baba Tour',
+    subtitle: 'Journey of Devotion & Sacred Tranquility',
+    badge: 'Spiritual Darshan',
+    duration: '2 Days',
+    pricePerPerson: 4500,
+    stops: ['Haridwar', 'Nainital'],
+    difficulty: 'Easy',
+    description: 'Seek blessings at the famous Kainchi Dham Ashram of Neem Karoli Baba, a spiritual sanctuary loved by global leaders and seekers alike.',
+    highlights: [
+      'Attend peaceful morning prayer services at Kainchi Dham Ashram',
+      'Meditate by the quiet waters of Kshipra River stream',
+      'Receive warm blessed prasad of the ashram',
+      'Scenic forest drive through lush pine woods'
+    ],
+    itinerary: [
+      { day: 'Day 1', title: 'Arrival & Forest Drive', text: 'Arrive at the base, drive through beautiful pine-wood slopes to Nainital foothill station.', stop: 'Nainital' },
+      { day: 'Day 2', title: 'Kainchi Dham Divine Darshan', text: 'Visit Neem Karoli Baba Ashram, sit by the river stream, feel deep spiritual solace, and accept holy prasad before the return journey.', stop: 'Nainital' }
+    ]
+  },
+  {
+    id: 'tour-nainital',
+    name: 'Scenic Nainital & Lake District Escape',
+    subtitle: 'Emerald Boating, Sunsets & Pine-wood walks',
+    badge: 'Leisure Lakefront',
+    duration: '3 Days',
+    pricePerPerson: 7500,
+    stops: ['Nainital'],
+    difficulty: 'Easy',
+    description: 'Relax next to the shimmering pear-shaped Naini Lake, explore beautiful wood paths, and ride panoramic cable cars.',
+    highlights: [
+      'Boating along the emerald Naini Lake',
+      'Enjoy spectacular views of Nanda Devi from Snow View point',
+      'Strolls through Mall Road and Tibetan Market',
+      'Sunset hike to scenic Tiffin Top cliffs'
+    ],
+    itinerary: [
+      { day: 'Day 1', title: 'Lakefront Stroll', text: 'Check in, walk across Nainital Mall Road, and enjoy a traditional sailboat ride under the evening breeze.', stop: 'Nainital' },
+      { day: 'Day 2', title: 'Mountain View Cable Ride', text: 'Board the aerial gondola to Snow View peak to capture the mighty Himalayan wall.', stop: 'Nainital' },
+      { day: 'Day 3', title: 'Tiffin Top Sunrise', text: 'Witness spectacular mountain sunrise from Dorothy Seat before departure.', stop: 'Nainital' }
+    ]
+  },
+  {
     id: 'tour-chardham',
-    name: 'Spiritual Char Dham Sacred Trail',
-    subtitle: 'Sacred Glaciers & Vedic Portals',
-    badge: 'Spiritual Healing',
-    duration: '8 Days',
-    pricePerPerson: 360,
+    name: 'Sacred Char Dham Yatra Pilgrimage',
+    subtitle: 'The Ultimate Spiritual Journey of a Lifetime',
+    badge: 'Divine Pilgrimage',
+    duration: '10 Days',
+    pricePerPerson: 28000,
     stops: ['Haridwar', 'Rishikesh', 'Kedarnath', 'Badrinath'],
     difficulty: 'Hard',
-    description: 'The ancient pilgrimage route of Uttarakhand. Absorb river aartis, traverse towering snow peaks, and experience divine tranquility inside stone temples.',
+    description: 'An auspicious journey spanning the four holiest shrines: Yamunotri, Gangotri, Kedarnath, and Badrinath. Deeply wash away life worries.',
     highlights: [
-      'Ganga Aarti prayers in Haridwar',
-      'Yoga & healing sessions in Rishikesh',
-      '16km high Himalayan Kedarnath trek',
-      'Scenic bath in mineral Tapt Kund springs'
+      'Bespoke VIP puja arrangement at Kedarnath and Badrinath temples',
+      'Dip in the sacred mineral-rich sulfuric Tapt Kund springs',
+      'Beautiful sunrise and sunset prayers in pristine settings',
+      'All inclusive stays, nutritious sattvik meals, and expert guides'
     ],
     itinerary: [
-      { day: 'Day 1', title: 'Aarti Invocation', text: 'Arrive at Har Ki Pauri, Haridwar. Kindle holy oil lamps as bells echo during the spectacular sunset prayers.', stop: 'Haridwar' },
-      { day: 'Day 2-3', title: 'Beatles & Bridges', text: 'Drive to Rishikesh. Participate in beach meditations, traditional hawan rituals, and organic ashram lunches.', stop: 'Rishikesh' },
-      { day: 'Day 4-5', title: 'Kedarnath Ascending', text: 'Trek or fly by helicopter up to Kedarnath temple. Feel the powerful mountain winds reflecting the eternal cosmos.', stop: 'Kedarnath' },
-      { day: 'Day 6-7', title: 'Altar of Badrinath', text: 'Scenic luxury caravan drive to pristine Badrinath temple at the base of Alaknanda River waterfalls.', stop: 'Badrinath' },
-      { day: 'Day 8', title: 'Mountain Confluence', text: 'Homeward return, stopping to witness the sacred Alaknanda & Bhagirathi roaring confluence at Devprayag.', stop: 'Haridwar' }
+      { day: 'Day 1', title: 'Aarti Haridwar Welcome', text: 'Assemble in Haridwar, witness beautiful floating oil lamps at Har Ki Pauri ghat.', stop: 'Haridwar' },
+      { day: 'Day 2-3', title: 'Yamunotri & Gangotri Valleys', text: 'Drive to sacred rivers and hot springs, offering deep prayers.', stop: 'Rishikesh' },
+      { day: 'Day 4-6', title: 'Kedarnath Valley Trek', text: 'Embark on the 16km majestic trek or fly by helicopter up to Lord Shiva sacred temple.', stop: 'Kedarnath' },
+      { day: 'Day 7-8', title: 'Holy Badrinath Altar', text: 'Cross rivers to reach the high Badrinath deity nestled at Nilkantha mountain foot.', stop: 'Badrinath' },
+      { day: 'Day 9-10', title: 'Rishikesh Confluence return', text: 'Descend through Devprayag water junction back to Haridwar with prasad.', stop: 'Rishikesh' }
     ]
   },
   {
-    id: 'tour-hillstations',
-    name: 'Queen of Hills & Shimmering Lakes',
-    subtitle: 'Mist Woodwalks & Pear-Shaped Lakes',
-    badge: 'Leisure & Romantic',
-    duration: '5 Days',
-    pricePerPerson: 195,
-    stops: ['Dehradun', 'Mussoorie', 'Nainital'],
+    id: 'tour-haridwar',
+    name: 'Spiritual Haridwar Gateway Tour',
+    subtitle: 'Holy River Cleansing Dip & Ancient Rituals',
+    badge: 'Spiritual Plains',
+    duration: '2 Days',
+    pricePerPerson: 3500,
+    stops: ['Haridwar'],
     difficulty: 'Easy',
-    description: 'Enjoy a leisurely drive spanning Kumaon hills and Garhwal ridges. Discover quaint mountain cafes, misty suspension ropeways, and wooden boat rides.',
+    description: 'Visit the gateway of Gods. Experience pure spirituality on the shores of the Ganges and pray during the iconic river aarti.',
     highlights: [
-      'Strolls through Mussoorie Mall Road',
-      'Boating along emerald Nainital Naini Lake',
-      'Waterfalls and caves exploration in Dehradun',
-      'Epic sunsets from Landour ridge'
+      'Prime seats for Ganga Aarti at Har Ki Pauri ghat',
+      'Ride the high Mansa Devi ropeway to hilltop shrines',
+      'Local market heritage sweet-tasting tour',
+      'Cleansing holy dip in clean designated canal bays'
     ],
     itinerary: [
-      { day: 'Day 1', title: 'Canyon Escapes', text: 'Arrive at Dehradun vales, explore Robber Cave crevices where fresh mountain springs carve deep walls.', stop: 'Dehradun' },
-      { day: 'Day 2-3', title: 'Lal Tibba Pines', text: 'Check-in to Mussoorie resort. Stroll dense oak pathways, explore Landour bakery, view snow peaks.', stop: 'Mussoorie' },
-      { day: 'Day 4', title: 'Lake District Crossing', text: 'Drive across terraced citrus farms to Nainital. Sip hot traditional masala chai on the lakeside.', stop: 'Nainital' },
-      { day: 'Day 5', title: 'Panoramic Gondola Ride', text: 'Glide inside Nainital cable cars up to Snow View ridge, viewing the giant Himalayan wall Nanda Devi.', stop: 'Nainital' }
+      { day: 'Day 1', title: 'Ganga Ceremony', text: 'Arrive in Haridwar, browse local Vedic stores, enjoy delicious Kadhai milk and pedas, then sit for Ganga prayers.', stop: 'Haridwar' },
+      { day: 'Day 2', title: 'Ropeway Temple Sights', text: 'Glide up Mansa Devi temple hills, capturing the full aerial scene of the plains before return.', stop: 'Haridwar' }
     ]
   },
   {
-    id: 'tour-adventure',
-    name: 'Ultimate Alpine Ski & Rapids Adventure',
-    subtitle: 'White-Water Trails & Snowy Gondolas',
-    badge: 'Action & Trekking',
-    duration: '6 Days',
-    pricePerPerson: 275,
-    stops: ['Rishikesh', 'Auli', 'Valley of Flowers'],
+    id: 'tour-rishikesh',
+    name: 'Rishikesh Yoga & White-Water Rapids',
+    subtitle: 'Capital of Yoga, River Camping & Thrills',
+    badge: 'Yoga & Adventure',
+    duration: '3 Days',
+    pricePerPerson: 4800,
+    stops: ['Rishikesh'],
     difficulty: 'Medium',
-    description: 'An adrenaline-fueled trek engineered for thrill-seekers. Combines high-grade white water river rapids with alpine snowfields and valley flower fields.',
+    description: 'Balance your body and soul. Indulge in exhilarating river rafting over wild rapids and heal yourself with riverside meditations.',
     highlights: [
-      'Grade IV Rafting rapids along high Ganga canyon',
-      'Riding Asia\'s longest cable Gondola line',
-      'Skiing orientation at snowcapped Auli',
-      'Flora hikes across the Valley of Flowers'
+      'Exciting 16km rafting down grade III/IV rapids of Ganges',
+      'Riverside beach camping with overnight stargazing & bonfire',
+      'Hone yoga stances under certified local master guides',
+      'Soothe your soul at the historic Beatles Ashram'
     ],
     itinerary: [
-      { day: 'Day 1', title: 'White-Water Launch', text: 'Brace the roaring 16km rapids in Rishikesh. Wrap the evening with bonfire camp songs on private sandy riverbanks.', stop: 'Rishikesh' },
-      { day: 'Day 2-3', title: 'Himalayan ski heights', text: 'Scenic drive to Joshimath, boarding the high-flying tram car into Auli ski slopes.', stop: 'Auli' },
-      { day: 'Day 4-5', title: 'Valley of Flowers Trek', text: 'Ascend to the high biosphere reserve. Capture blue poppies, rare mountain lilies, and crystalline streams.', stop: 'Valley of Flowers' },
-      { day: 'Day 6', title: 'Joshimath Farewell', text: 'Savor traditional organic spinach and dal mountain lunch prior to return.', stop: 'Rishikesh' }
+      { day: 'Day 1', title: 'Ashram Solace & Aarti', text: 'Check into riverside camp, explore Beatles hermitage site, and join peaceful sand-side chants.', stop: 'Rishikesh' },
+      { day: 'Day 2', title: 'Roaring River Thrills', text: 'Raft down cold glacier rapids, jump from cliffs, and savor beach hot meals by a bonfire.', stop: 'Rishikesh' },
+      { day: 'Day 3', title: 'Sunrise Hatha Yoga', text: 'Breathe deep in a morning pranayama session prior to departure.', stop: 'Rishikesh' }
     ]
   },
   {
-    id: 'tour-wildlife',
-    name: 'Devbhoomi Wildlife & Mystique Safari',
-    subtitle: 'Bengal Tiger Footprints & Foothill Forests',
-    badge: 'Eco & Wilderness',
-    duration: '4 Days',
-    pricePerPerson: 230,
-    stops: ['Jim Corbett', 'Nainital'],
+    id: 'tour-jim-corbett',
+    name: 'Jim Corbett National Park Wild Safari',
+    subtitle: 'Track Majestic Bengal Tigers in Foothill Forests',
+    badge: 'Wildlife Forest',
+    duration: '3 Days',
+    pricePerPerson: 8200,
+    stops: ['Jim Corbett'],
     difficulty: 'Easy',
-    description: 'Venture deep inside the protected sal woodlands of lower Shivalik hills. Glide behind open jeeps to experience raw ecosystems and majestic wild tigers.',
+    description: 'Venture inside India oldest national park. Glide across sal forests, watch elephants, and trace secret spots of tigers.',
     highlights: [
-      'Morning jeep safari into Corbett Core Zones',
-      'Stays at wood-crafted riverside forest cabin resorts',
-      'Stargazing workshops in Kumaon mountain observatory',
-      'Wild elephant and leopard photographing'
+      'Morning and afternoon jeep safaris into Corbett core zones',
+      'Overnight stay in wood-framed forest riverside resorts',
+      'Acoustic evening live folk gather with local naturalists',
+      'Guided birdwatching tours by Ramganga reservoir'
     ],
     itinerary: [
-      { day: 'Day 1', title: 'Jungle Cabins', text: 'Arrive in Jim Corbett, check-in to luxurious log cottages by the roaring Ramganga River. Enjoy night wilderness calls.', stop: 'Jim Corbett' },
-      { day: 'Day 2', title: 'Dawn Tiger Quest', text: 'Board 4x4 open safari gypsies at 5:00 AM. Cross tall golden grass corridors in search of Bengal Tigers.', stop: 'Jim Corbett' },
-      { day: 'Day 3', title: 'High Corbett Trails', text: 'Trek inside Corbett buffer fields to ancient Garjia temple perched precariously on a rock.', stop: 'Jim Corbett' },
-      { day: 'Day 4', title: 'Hill Lake Transition', text: 'Scenic transition to Nainital orchards for organic jam tastings and high scenic walks.', stop: 'Nainital' }
+      { day: 'Day 1', title: 'Jungle Foothill Stays', text: 'Arrive at the forest buffer zone, check-in to quiet luxury lodges, and listen to night forest bird calls.', stop: 'Jim Corbett' },
+      { day: 'Day 2', title: 'Dawn Tiger Safari', text: 'Set out at 5:30 AM on a 4x4 open safari gypsy searching for the hidden Bengal Tiger.', stop: 'Jim Corbett' },
+      { day: 'Day 3', title: 'Garjia Temple Walk', text: 'Walk ancient rocky forest tracks up to Garjia shrine nested on a boulder by Koshi river.', stop: 'Jim Corbett' }
     ]
   },
   {
-    id: 'tour-auli-ski',
-    name: 'Auli Snowboarding & Peaks',
-    subtitle: 'Himalayan Winter Playground',
-    badge: 'Active Sports',
-    duration: '5 Days',
-    pricePerPerson: 320,
-    stops: ['Dehradun', 'Auli', 'Badrinath'],
-    difficulty: 'Medium',
-    description: 'Unleash your winter explorer spirits. Glide across deep slopes of Auli with snowcapped peaks of Nanda Devi backing your high chairlifts.',
-    highlights: [
-      'Gondola cable car ride over pine ridges',
-      '1-on-1 certified ski trainer private sessions',
-      'Evening hot cocoa in Himalayan resort',
-      'Visit holy Badrinath baseline'
-    ],
-    itinerary: [
-      { day: 'Day 1', title: 'Canyon Foothills', text: 'Arrive in Dehradun and transfer up to refreshing high altitude mountains.', stop: 'Dehradun' },
-      { day: 'Day 2', title: 'Boarding the Sky', text: 'Take the scenic long cabin cable tram into white snow slopes.', stop: 'Auli' },
-      { day: 'Day 3', title: 'Deep Powder Trails', text: 'Personal ski training sessions on pine wood boundaries.', stop: 'Auli' },
-      { day: 'Day 4', title: 'Vedic Snow Temple', text: 'Scenic mountain drive to the quiet holy Alaknanda Badrinath shrine.', stop: 'Badrinath' },
-      { day: 'Day 5', title: 'Alpine Farewell', text: 'Scenic descend back to Dehradun foothills for departure.', stop: 'Dehradun' }
-    ]
-  },
-  {
-    id: 'tour-dev-complete',
-    name: 'Devbhoomi Complete Pilgrimage',
-    subtitle: 'Divine Sacred Sanctums & Healing',
-    badge: 'Spiritual Journey',
-    duration: '7 Days',
-    pricePerPerson: 399,
-    stops: ['Haridwar', 'Rishikesh', 'Badrinath'],
-    difficulty: 'Medium',
-    description: 'An immersive journey across the absolute spiritual nodes. Savor rivers prayers, Vedic ashram lessons, and sacred mountain sights.',
-    highlights: [
-      'Holy Ganga river deep cleansing dip',
-      'Pristine Vedic ashram staying & organic meals',
-      'Personal customized Pooja reservation assistance',
-      'Breathtaking sunrise walks over mountain peaks'
-    ],
-    itinerary: [
-      { day: 'Day 1', title: 'Aarti oil oiling', text: 'Watch beautiful brass lamps floating in ancient Haridwar waters.', stop: 'Haridwar' },
-      { day: 'Day 2-3', title: 'Yoga Ashram lessons', text: 'Learn sunrise yoga and healing in Rishikesh beach ashrams.', stop: 'Rishikesh' },
-      { day: 'Day 4-5', title: 'Foothills of God', text: 'Walk spiritual suspension bridges and explore Beatles hermitage site.', stop: 'Rishikesh' },
-      { day: 'Day 6', title: 'Altar of Badrinath', text: 'Climb up to the divine shrine nested between high mountain ranges.', stop: 'Badrinath' },
-      { day: 'Day 7', title: 'Final Blessings', text: 'Receive sacred offerings and return back along Ganga rapids.', stop: 'Haridwar' }
-    ]
-  },
-  {
-    id: 'tour-kumaon-lakes',
-    name: 'Kumaon Shimmering Lakes & Wildlife',
-    subtitle: 'Breezy Woods & Deep Safaris',
-    badge: 'Adventure & Leisure',
-    duration: '6 Days',
-    pricePerPerson: 250,
-    stops: ['Jim Corbett', 'Nainital', 'Dehradun'],
+    id: 'tour-mukteshwar',
+    name: 'Mukteshwar Dham Tranquil Ridge Tour',
+    subtitle: 'Vast Snowy peaks, Apple Orchards & Rock Cliffs',
+    badge: 'Misty Solitude',
+    duration: '3 Days',
+    pricePerPerson: 6500,
+    stops: ['Nainital'],
     difficulty: 'Easy',
-    description: 'Relax in the scenic oak forests of Nainital combined with Tiger safaris in Corbett and pristine river waters in Dehradun.',
+    description: 'Explore the 350-year-old temple of Lord Shiva and see spectacular views of the wide Himalayan high peaks.',
     highlights: [
-      'Dhikala buffer zone jeep exploration',
-      'Scenic wooden boat ride on shimmering Naini Lake',
-      'Cozy heritage timber cottage staying',
-      'Walk inside deep Robbers Cave streams'
+      'Walk to Mukteshwar Dham and see the beautiful mountain cliffs',
+      'Scenic photography at Chauli-ki-Jali rock projections',
+      'Explore local fruit orchards brimming with juicy plums, apples and peaches',
+      'Cozy fireplace dining inside high mountain stone retreats'
     ],
     itinerary: [
-      { day: 'Day 1-2', title: 'Tiger Footprints', text: 'Search Bengali tigers inside Corbett forest in open 4x4 vehicles.', stop: 'Jim Corbett' },
-      { day: 'Day 3-4', title: 'Shimmering Lake', text: 'Classic boat rides and strolls along Nainital Mall Road fruit orchards.', stop: 'Nainital' },
-      { day: 'Day 5', title: 'Astronomical observatory', text: 'Star-spotting high Himalayan peaks using high power telescopes.', stop: 'Nainital' },
-      { day: 'Day 6', title: 'Cave Springs transition', text: 'Discover secret mountain water channels in Dehradun before departure.', stop: 'Dehradun' }
+      { day: 'Day 1', title: 'Quiet Pine Woods Drive', text: 'Scenic drive to Mukteshwar ridge, sipping local fruit juices on arrival.', stop: 'Nainital' },
+      { day: 'Day 2', title: 'Cliffs & Mukteshwar Shrine', text: 'Offer prayers at Mukteshwar Dham temple, then watch adventure climbing on Chauli ki Jali cliffs.', stop: 'Nainital' },
+      { day: 'Day 3', title: 'Local Orchard Walk & return', text: 'Stroll through organic farms, hand-pluck mountain apples, and depart.', stop: 'Nainital' }
     ]
   },
   {
-    id: 'tour-yoga-rapids',
-    name: 'Yoga & White-Water Rapids Blitz',
-    subtitle: 'Adrenaline & Inner Stillness',
-    badge: 'Action & Spas',
-    duration: '4 Days',
-    pricePerPerson: 165,
-    stops: ['Haridwar', 'Rishikesh', 'Mussoorie'],
-    difficulty: 'Medium',
-    description: 'A perfect short getaway combining thrilling river rafting, sunrise beach yoga along Ganga sands, and misty walks in Mussoorie hills.',
+    id: 'tour-almora',
+    name: 'Almora Heritage & Cultural Loop',
+    subtitle: 'Brighten Your Mind with Ancient Kumaoni Craft',
+    badge: 'Cultural Heritage',
+    duration: '3 Days',
+    pricePerPerson: 5800,
+    stops: ['Nainital'],
+    difficulty: 'Easy',
+    description: 'Unwind in the cultural heart of Kumaon. Walk unique cobblestone markets, witness traditional weaver villages, and taste local sweets.',
     highlights: [
-      '16km river rafting experience over major rapids',
-      'Guided sunrise beach meditation & breathing loops',
-      'Rappelling session at Kempty Falls rock walls',
-      'Strolling around historic Landour bakeries'
+      'Wander through the historic 200-year-old Almora Lal Bazaar',
+      'Indulge in authentic Bal Mithai and Singori chocolates',
+      'Visit the unique cosmic magnetic fields of Kasar Devi Temple',
+      'Guided walks around traditional coppersmith lanes'
     ],
     itinerary: [
-      { day: 'Day 1', title: 'Plains of Gateway', text: 'Enjoy evening river prayers in Haridwar and sound healing session.', stop: 'Haridwar' },
-      { day: 'Day 2', title: 'Wild Rapids Raft', text: 'Conquer active Grade III rapids of Ganges canyon in Rishikesh.', stop: 'Rishikesh' },
-      { day: 'Day 3', title: 'Beach Yoga sands', text: ' Sunrise breathing and organic pranayama over silver sands.', stop: 'Rishikesh' },
-      { day: 'Day 4', title: 'Mist Mountain walk', text: 'Enjoy cool pine air and bakery walk on Mussoorie ridges.', stop: 'Mussoorie' }
+      { day: 'Day 1', title: 'Cobblestone Markets', text: 'Arrive and check in to heritage stay. Walk Almora streets and savor traditional Bal Mithai sweets coated in sugar.', stop: 'Nainital' },
+      { day: 'Day 2', title: 'Kasar Devi Cosmic Peak', text: 'Meditate at Kasar Devi, a pine peak with high magnetic energy loved by Swami Vivekananda.', stop: 'Nainital' },
+      { day: 'Day 3', title: 'Bright End Corner sunset', text: 'Watch a striking panoramic sunset casting orange light across snowy peaks.', stop: 'Nainital' }
     ]
   },
   {
-    id: 'tour-flowers-botanical',
-    name: 'Valley of Flowers Botanica',
-    subtitle: 'UNESCO Floral Heritage Trek',
-    badge: 'Nature Botanical',
-    duration: '6 Days',
-    pricePerPerson: 295,
-    stops: ['Rishikesh', 'Valley of Flowers', 'Badrinath'],
-    difficulty: 'Hard',
-    description: 'Embark on a magnificent flora hike traversing high Himalayan rivers to a pristine alpine biosphere blooming with thousands of rare wild orchids.',
+    id: 'tour-ranikhet',
+    name: 'Ranikhet Meadows & Pine Woods',
+    subtitle: 'Quiet Orchid Gardens & Golf Course Ridges',
+    badge: 'Quiet Meadows',
+    duration: '3 Days',
+    pricePerPerson: 6200,
+    stops: ['Nainital'],
+    difficulty: 'Easy',
+    description: 'A soothing escape to a quiet cantonment town. Walk lush greens, visit apple orchards, and capture high snow-clad mountain vistas.',
     highlights: [
-      'Witness UNESCO biosphere floral reserve in peak bloom',
-      'Track rare blue poppies and high alpine orchids',
-      'Scenic guided botanical trail walking sessions',
-      'Stunning high Badrinath mountain vistas'
+      'Stroll across the beautiful Ranikhet Golf Course',
+      'Tour of the legendary Kumaon Regiment museum and war memorials',
+      'See beautiful orchards at Chaubatia Gardens',
+      'Quiet mountain hikes among towering cedar forests'
     ],
     itinerary: [
-      { day: 'Day 1', title: 'Base Assembly', text: 'Arrive in Rishikesh and secure warm-up gear and oxygen level review.', stop: 'Rishikesh' },
-      { day: 'Day 2-3', title: 'Ascending the Valley', text: 'Trek inside alpine mountain passes surrounded by cascading rivers.', stop: 'Valley of Flowers' },
-      { day: 'Day 4', title: 'The Floral Meadow', text: 'Capture pristine high bio ecosystems containing rare mountain lilies.', stop: 'Valley of Flowers' },
-      { day: 'Day 5', title: 'Sacred peak sanctuary', text: 'Relax at Badrinath and take a warm mineral sulfur spring bath.', stop: 'Badrinath' },
-      { day: 'Day 6', title: 'Return down the gorge', text: 'Descend along spectacular roaring Confluence views to Haridwar valley.', stop: 'Rishikesh' }
+      { day: 'Day 1', title: 'Pine Wood strolls', text: 'Cottage check-in, peaceful walks in the pine and cedar woods.', stop: 'Nainital' },
+      { day: 'Day 2', title: 'Golf Links & Museum', text: 'Play golf on the high rolling greens, explore army hero histories, and visit holy Jhula Devi temple.', stop: 'Nainital' },
+      { day: 'Day 3', title: 'Chaubatia Apple orchards', text: 'Inspect local honey farms and pick ripe fruits prior to departure.', stop: 'Nainital' }
     ]
   },
   {
-    id: 'tour-legends-glaciers',
-    name: 'Legends & Glaciers Trekking',
-    subtitle: 'Eternal Shiva High Slopes',
-    badge: 'Active Pilgrimage',
-    duration: '6 Days',
-    pricePerPerson: 340,
-    stops: ['Rishikesh', 'Kedarnath', 'Auli'],
-    difficulty: 'Hard',
-    description: 'Ascend the pristine ancient Shiva mountain. Witness jaw-dropping mountain glaciers of Kedarnath and return via deep ski fields of Auli.',
+    id: 'tour-kausani',
+    name: 'Kausani - Switzerland of India',
+    subtitle: 'Breathtaking 300km view of Himalayan Range',
+    badge: 'Scenics Peak',
+    duration: '3 Days',
+    pricePerPerson: 6900,
+    stops: ['Nainital'],
+    difficulty: 'Easy',
+    description: 'Experience what Mahatma Gandhi called the Switzerland of India. Rest on high pine terraces looking directly at Trishul and Nanda Devi.',
     highlights: [
-      'Breathtaking Kedarnath ancient stone shrine',
-      'Trek beside colossal high altitude mountain glaciers',
-      'Panoramic cable gondola ticket in Auli included',
-      'Spectacular sunset peaks view from high meadows'
+      'Witness stunning wide sunset colors over snow peaks',
+      'Tour of local aromatic Kausani Tea Gardens',
+      'Peaceful walk inside Anasakti Ashram, where Gandhi wrote books',
+      'Explore local handloom shawl weaving centers'
     ],
     itinerary: [
-      { day: 'Day 1', title: 'Foothill brief', text: 'Briefing, high elevation fitness assessment, and light rafting warmup.', stop: 'Rishikesh' },
-      { day: 'Day 2-3', title: 'Glacial Ascent', text: 'Trek across high elevation bridges and winding valleys up to Kedarnath.', stop: 'Kedarnath' },
-      { day: 'Day 4', title: 'Temple Prayers', text: 'Savor spiritual morning prayers in front of the colossal temple rock.', stop: 'Kedarnath' },
-      { day: 'Day 5', title: 'Sky Gondola', text: 'Scenic cable carriage landing over snow fields of Auli ski resort.', stop: 'Auli' },
-      { day: 'Day 6', title: 'Meadows retreat', text: 'Wander inside quiet pine clearings prior to mountain return.', stop: 'Auli' }
+      { day: 'Day 1', title: 'Anasakti Stillness', text: 'Walk up to Anasakti Ashram, watch mountain sunset, and listen to calming prayers.', stop: 'Nainital' },
+      { day: 'Day 2', title: 'Tea Gardens & Valley Trek', text: 'Tour tea estates, taste organic green tea, and learn traditional shawl weaving.', stop: 'Nainital' },
+      { day: 'Day 3', title: 'Sunrise Mountain Glow', text: 'Capture the peak gold beam on Panchachuli mountains before heading home.', stop: 'Nainital' }
     ]
   },
   {
-    id: 'tour-mussoorie-leisure',
-    name: 'Misty Mussoorie Leisure Loop',
-    subtitle: 'Queen of Hills Heritage',
-    badge: 'Chill & Relax',
-    duration: '4 Days',
-    pricePerPerson: 180,
+    id: 'tour-mussoorie',
+    name: 'Misty Mussoorie Queen of Hills',
+    subtitle: 'Suspension Cascades, Ropeways & Mall Road Walks',
+    badge: 'Leisure Hills',
+    duration: '3 Days',
+    pricePerPerson: 6800,
     stops: ['Dehradun', 'Mussoorie'],
     difficulty: 'Easy',
-    description: 'Escape the plains to the tranquil British-era mountain walks. Experience pristine cool air, heritage bakeries, and high cascading waterfalls.',
+    description: 'Unwind in the majestic hills of Garhwal. Taste fine bakeries of Landour, walk mist covered paths, and feel cool mountain spray.',
     highlights: [
-      'Discover water currents inside Robbers Cave',
-      'Colonial heritage Landour bakery woodwalks',
-      'Unmatched panoramic peak sunset from Lal Tibba',
-      'Enjoy cold mountain spring splash at Kempty Falls'
+      'Plunge in cold mountain cascades of Kempty Falls',
+      'Taste amazing apple pies at historical Landour bakeries',
+      'Walk dense oak forests of Lal Tibba peaks',
+      'Shop at the energetic Mall Road bazaar'
     ],
     itinerary: [
-      { day: 'Day 1', title: 'Cave Springs', text: 'Check out secret water corridors and canyon springs in Dehradun.', stop: 'Dehradun' },
-      { day: 'Day 2', title: 'The Ridge Trail', text: 'Drive to Mussoorie and check into cozy colonial mist hotel.', stop: 'Mussoorie' },
-      { day: 'Day 3', title: 'Landour Bakeries', text: 'Hike up to Landour bakery and sample wild berry crepes and tea.', stop: 'Mussoorie' },
-      { day: 'Day 4', title: 'High Cascades', text: 'Unwind beside cascading mountain falls before afternoon transition.', stop: 'Mussoorie' }
+      { day: 'Day 1', title: 'Robber Cave Foothills', text: 'Stop by Dehradun water channels and climb up to Mussoorie mist.', stop: 'Dehradun' },
+      { day: 'Day 2', title: 'Landour Bakery & Sunsets', text: 'Dine in Landour, hike forest trails, and view Himalayan peaks from Lal Tibba.', stop: 'Mussoorie' },
+      { day: 'Day 3', title: 'Kempty Cascades Splash', text: 'Splash in refreshing falls before driving back to the plains.', stop: 'Mussoorie' }
     ]
   },
   {
-    id: 'tour-wild-peaks',
-    name: 'Nanda Devi Foothill Wilderness',
-    subtitle: 'Rare Leopards & High Valleys',
-    badge: 'Eco Forest',
+    id: 'tour-munsiyari',
+    name: 'Munsyari Himalayan Wilderness Adventure',
+    subtitle: 'Gateway to Pristine Panchachuli Glaciers',
+    badge: 'Extreme Alpine',
     duration: '5 Days',
-    pricePerPerson: 245,
-    stops: ['Jim Corbett', 'Auli', 'Badrinath'],
-    difficulty: 'Medium',
-    description: 'Combine the dense Tiger habitats of Jim Corbett with the alpine meadows of Auli and high mountain ridges near Nanda Devi National park.',
+    pricePerPerson: 12500,
+    stops: ['Nainital'],
+    difficulty: 'Hard',
+    description: 'Venture deep into Kumaon high edges. Experience unmatched alpine serenity near huge glaciers and roaring waterfalls.',
     highlights: [
-      'Spot wild elephants and leopards in Corbett reserves',
-      'Ride the high speed mountain ropeway up into Auli',
-      'Fabulous high altitude photography spots of snow peaks',
-      'Visit pristine mountain shrines in quiet holy valleys'
+      'Stunning close views of the five peaks of Panchachuli',
+      'Moderate trek to mysterious high altitude Mesar Kund lake',
+      'Guided photography around Birthi Falls cascade',
+      'Stay in heritage Johar tribe shepherd villages'
     ],
     itinerary: [
-      { day: 'Day 1-2', title: 'Jungle Safaris', text: 'Ride open top trucks across Corbett forest paths looking for predators.', stop: 'Jim Corbett' },
-      { day: 'Day 3-4', title: 'Alpine Pine Ridges', text: 'Ascend Joshimath up to spectacular high altitude alpine skier heights.', stop: 'Auli' },
-      { day: 'Day 5', title: 'Sanctuary Confluence', text: 'Quiet reflection session in Badrinath Alaknanda gorge before return.', stop: 'Badrinath' }
+      { day: 'Day 1', title: 'Birthi Water Falls', text: 'Drive to Munsyari, pause at the giant 400ft Birthi Falls casting cold water spray.', stop: 'Nainital' },
+      { day: 'Day 2-3', title: 'Panchachuli Majestic Sights', text: 'Explore pristine Johar valley and trek up to scenic views facing icy peaks.', stop: 'Nainital' },
+      { day: 'Day 4', title: 'Mesar Kund Trek', text: 'Hike pristine oak forests containing rich mountain birds to a hidden sacred pond.', stop: 'Nainital' },
+      { day: 'Day 5', title: 'Valley Descent', text: 'Return from high borders with lovely woolen carpets made by native weavers.', stop: 'Nainital' }
+    ]
+  },
+  {
+    id: 'tour-adi-kailash',
+    name: 'Adi Kailash & Om Parvat Sacred Yatra',
+    subtitle: 'Holy Inner Himalayan Ridge Pilgrimage',
+    badge: 'Epic Pilgrimage',
+    duration: '8 Days',
+    pricePerPerson: 35000,
+    stops: ['Haridwar', 'Badrinath'],
+    difficulty: 'Hard',
+    description: 'A powerful spiritual journey to the sacred Om Parvat, where snow naturally creates the holy "OM" symbol on mountain rock.',
+    highlights: [
+      'Behold the mystical snow-formed OM symbol on Om Parvat',
+      'Holy dip in the pristine high altitude Gauri Kund lake',
+      'Inner-Line permit support and custom 4x4 mountain vehicles',
+      'Spiritual prayers led by local Vedic priests'
+    ],
+    itinerary: [
+      { day: 'Day 1', title: 'Mountain Road Launch', text: 'Briefing and permit validation prior to setting off into the high valleys.', stop: 'Haridwar' },
+      { day: 'Day 2-3', title: 'Pithoragarh Gorges', text: 'Traverse roaring river gorges in high stability private 4x4 vehicles.', stop: 'Haridwar' },
+      { day: 'Day 4-5', title: 'Beholding Adi Kailash', text: 'Stand before the holy peak, looking at its reflection in reflective lakes.', stop: 'Badrinath' },
+      { day: 'Day 6-7', title: 'The Om Parvat Miracle', text: 'Offer morning prayers facing the wonderful sacred snow script.', stop: 'Badrinath' },
+      { day: 'Day 8', title: 'Valleys return', text: 'Descend along spectacular pine fields back to base camp.', stop: 'Haridwar' }
+    ]
+  },
+  {
+    id: 'tour-auli',
+    name: 'Auli Skiing & Alpine Meadows',
+    subtitle: 'Ride High Aerial Gondolas & Ski Powder Snow',
+    badge: 'Ski Snowboard',
+    duration: '4 Days',
+    pricePerPerson: 11000,
+    stops: ['Rishikesh', 'Auli'],
+    difficulty: 'Medium',
+    description: 'Unleash your winter spirit. Board the longest ropeway in India and ski down beautiful snow fields backdropped by Nanda Devi.',
+    highlights: [
+      'Scenic ride on Asia\'s longest cable car ropeway',
+      'One on one lessons with certified winter skiing guides',
+      'Breathtaking close up views of high peak snow walls',
+      'Chai next to high altitude synthetic lake shores'
+    ],
+    itinerary: [
+      { day: 'Day 1', title: 'Joshimath Foothill', text: 'Arrive at the base, ride up through dense oak forests to cold Auli ridge.', stop: 'Rishikesh' },
+      { day: 'Day 2-3', title: 'Ski Slope Training', text: 'Rent professional skis, slide down deep powder pistes, and learn techniques.', stop: 'Auli' },
+      { day: 'Day 4', title: 'High Lake Sunrise', text: 'Capture pristine blue waters reflecting snow peaks before departing.', stop: 'Auli' }
+    ]
+  },
+  {
+    id: 'tour-valley-of-flowers',
+    name: 'Valley of Flowers UNESCO Biosphere',
+    subtitle: 'Trek inside thousands of Wild Alpine Blooms',
+    badge: 'UNESCO Heritage',
+    duration: '4 Days',
+    pricePerPerson: 9500,
+    stops: ['Rishikesh', 'Valley of Flowers'],
+    difficulty: 'Hard',
+    description: 'Walk across a fairytale valley blooming with rare Himalayan blue poppies, red lilies, and high altitude rivers.',
+    highlights: [
+      'Scenic walks inside the protected biosphere reserve',
+      'Spot beautiful high altitude mountain flowers',
+      'Cross pristine mountain streams on rustic logs',
+      'Stay in comforting local eco cottages'
+    ],
+    itinerary: [
+      { day: 'Day 1', title: 'Mountain River Drive', text: 'Scenic drive along rushing confluences to high base camps.', stop: 'Rishikesh' },
+      { day: 'Day 2-3', title: 'Glorious Blooms Hike', text: 'Wander deep inside the UNESCO floral sanctuary, capturing majestic fields.', stop: 'Valley of Flowers' },
+      { day: 'Day 4', title: 'Gorge return', text: 'Hike back downstream with fresh memory logs of spectacular petals.', stop: 'Rishikesh' }
+    ]
+  },
+  {
+    id: 'tour-chopta',
+    name: 'Chopta Tungnath Mini Switzerland Trek',
+    subtitle: 'Hike up to the highest Shiva Temple in the World',
+    badge: 'Active Trek',
+    duration: '4 Days',
+    pricePerPerson: 7800,
+    stops: ['Rishikesh', 'Kedarnath'],
+    difficulty: 'Medium',
+    description: 'Discover lush meadows named Chopta Bugyal and hike up to Tungnath temple, perched at more than 12,000 feet height.',
+    highlights: [
+      'Walk to Tungnath, the highest Shiva temple on earth',
+      'Reach Chandrashila Peak for standard 360° Himalayan panoramas',
+      'Camp inside lush meadows under starry sky views',
+      'Observe gorgeous high altitude birds like Monal'
+    ],
+    itinerary: [
+      { day: 'Day 1', title: 'Chopta Green Meadows', text: 'Arrive at Chopta, check in to geodesic domes nested on emerald grass.', stop: 'Rishikesh' },
+      { day: 'Day 2-3', title: 'Tungnath & Chandrashila Peak', text: 'Climb stone mountain trails to the ancient temple, continuing to the breezy highest peak ridge.', stop: 'Kedarnath' },
+      { day: 'Day 4', title: 'Monal Trails return', text: 'Walk lush rhododendron paths capturing red monal birds before departure.', stop: 'Rishikesh' }
+    ]
+  },
+  {
+    id: 'tour-hemkund',
+    name: 'Sacred Hemkund Sahib Yatra',
+    subtitle: 'Pristine Starry Lake & High Sikh Gurudwara',
+    badge: 'Devout Trail',
+    duration: '4 Days',
+    pricePerPerson: 8800,
+    stops: ['Rishikesh', 'Badrinath'],
+    difficulty: 'Hard',
+    description: 'Embark on a devout hike up to Hemkund Sahib Gurudwara, next to a pristine high altitude lake surrounded by seven snow peaks.',
+    highlights: [
+      'Take holy prayers at the highest Sikh Gurudwara on earth',
+      'Sit beside the crystalline Hemkund lake reflecting snow peaks',
+      'Taste blessed hot Prasad and nourishing lentil soup',
+      'Ascend through forests of blossoming birch and pine'
+    ],
+    itinerary: [
+      { day: 'Day 1', title: 'Base assembly', text: 'Drive riverside canyons to Ghangaria base, checking safety stats.', stop: 'Rishikesh' },
+      { day: 'Day 2-3', title: 'Ascending Hemkund', text: 'Trek up stone path lanes. Reach the spectacular holy lake surrounded by glaciers.', stop: 'Badrinath' },
+      { day: 'Day 4', title: 'Downstream trek', text: 'Hike back down with spiritual clarity and sweet prasad memory logs.', stop: 'Rishikesh' }
+    ]
+  },
+  {
+    id: 'tour-lansdowne',
+    name: 'Quiet Lansdowne Colonial Escape',
+    subtitle: 'Peaceful Pine Hills, Old Churches & Lakes',
+    badge: 'Relax Loop',
+    duration: '3 Days',
+    pricePerPerson: 5500,
+    stops: ['Haridwar'],
+    difficulty: 'Easy',
+    description: 'A serene cantonment town established by the British. Enjoy pine breezes, pleasant water boating, and nostalgic heritage walks.',
+    highlights: [
+      'Relax in the quiet pine-wood lanes of Lansdowne',
+      'Boating along high altitude Bhulla Lake pond',
+      'Tours of historical St. John church and museum sites',
+      'Panoramic sunset walks around Tip-in-Top ridges'
+    ],
+    itinerary: [
+      { day: 'Day 1', title: 'Heritage Pines', text: 'Check in to cozy pine resort. Take walks through oak woods looking at wild iris.', stop: 'Haridwar' },
+      { day: 'Day 2', title: 'Tip-In-Top Sunset View', text: 'See marvelous snow peaks, explore British era stone churches, and boat at Bhulla Lake.', stop: 'Haridwar' },
+      { day: 'Day 3', title: 'War History and Return', text: 'Tour military history museums prior to journey back to plains.', stop: 'Haridwar' }
     ]
   }
 ];
+
+const TOUR_IMAGES: Record<string, string> = {
+  'tour-kainchi-dham': 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=600&q=80',
+  'tour-nainital': 'https://images.unsplash.com/photo-1572883454114-1cf0031ed2a1?auto=format&fit=crop&w=600&q=80',
+  'tour-chardham': 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=600&q=80',
+  'tour-haridwar': 'https://images.unsplash.com/photo-1605649487212-47bdab064df7?auto=format&fit=crop&w=600&q=80',
+  'tour-rishikesh': 'https://images.unsplash.com/photo-1598977123418-45f04b01fe14?auto=format&fit=crop&w=600&q=80',
+  'tour-jim-corbett': 'https://images.unsplash.com/photo-1615959189197-48f8de675111?auto=format&fit=crop&w=600&q=80',
+  'tour-mukteshwar': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80',
+  'tour-almora': 'https://images.unsplash.com/photo-1582531633534-118df2835a8f?auto=format&fit=crop&w=600&q=80',
+  'tour-ranikhet': 'https://images.unsplash.com/photo-1501555088652-021faa106b9b?auto=format&fit=crop&w=600&q=80',
+  'tour-kausani': 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80',
+  'tour-mussoorie': 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=600&q=80',
+  'tour-munsiyari': 'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=600&q=80',
+  'tour-adi-kailash': 'https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=600&q=80',
+  'tour-auli': 'https://images.unsplash.com/photo-1551829142-d9ec6b41215b?auto=format&fit=crop&w=600&q=80',
+  'tour-valley-of-flowers': 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&w=600&q=80',
+  'tour-chopta': 'https://images.unsplash.com/photo-1486873249359-2731bd6dafc7?auto=format&fit=crop&w=600&q=80',
+  'tour-hemkund': 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=600&q=80',
+  'tour-lansdowne': 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=600&q=80',
+};
+
+UTTARAKHAND_TOURS.forEach((tour) => {
+  tour.image = TOUR_IMAGES[tour.id] || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80';
+});
 
 // Beautiful abstract coordinate polyline that forms a boundary map of Uttarakhand
 const STATE_BOUNDS = "M 8 50 L 15 28 L 32 18 L 50 14 L 75 19 L 94 34 L 88 62 L 76 85 L 60 93 L 42 90 L 32 82 L 18 84 Z";
@@ -463,65 +633,67 @@ interface TourAddon {
 }
 
 const TOUR_ADDONS: Record<string, TourAddon[]> = {
+  'tour-kainchi-dham': [
+    { id: 'vip-darshan', name: 'VIP Kainchi Ashram Entry', description: 'Priority lane Ashram entrance with sacred photo book & sweet prasad kit.', pricePerPerson: 500 },
+    { id: 'guide', name: 'Local spiritual guide companion', description: 'Learn histories of Neem Karoli Baba and famous global visitors.', pricePerPerson: 1000 }
+  ],
+  'tour-nainital': [
+    { id: 'sailing', name: 'Private Sailboat Yacht Evening', description: 'Premium sailboat lake navigation under a cozy canvas top.', pricePerPerson: 1500 },
+    { id: 'tiffin-high-tea', name: 'Tiffin Top Ridge High-Tea', description: 'Freshly brewed rhododendron tea with artisan mountain cookies.', pricePerPerson: 800 }
+  ],
   'tour-chardham': [
-    { id: 'vip-darshan', name: 'VIP Temple Darshan Pass', description: 'Skip the line VIP queues at temples + Holy Prasad kit.', pricePerPerson: 35 },
-    { id: 'porter', name: 'Sherpa Guide & Porter Support', description: 'Assists with heavy bags and provides certified oxygen route tips.', pricePerPerson: 65 },
-    { id: 'yoga', name: 'Vedic Healing & Yoga Session', description: 'Sunrise guided pranayama along the Ganges sands.', pricePerPerson: 25 }
+    { id: 'priority-darshan', name: 'VIP Priority Temple Pass (All Dhams)', description: 'Fast lanes at the busy sanctums with customized group Puja slots.', pricePerPerson: 3500 },
+    { id: 'porter-help', name: 'Sherpa Porter Support (Kedarnath Trek)', description: 'Assists carrying heavy backpacks up the steep mountain heights.', pricePerPerson: 2500 },
+    { id: 'hot-spring', name: 'Premium Mineral Bath Access', description: 'VIP reserved slot in refreshing private copper-fed thermal water basins.', pricePerPerson: 1000 }
   ],
-  'tour-hillstations': [
-    { id: 'candlelit', name: 'Lakeside Candlelit Dinner', description: 'Romantic multi-course mountain slow-food meal in Nainital.', pricePerPerson: 45 },
-    { id: 'heritage', name: 'Private Landour Heritage Walk', description: 'Explore historic woodwalks and ancient bakeries with an expert guide.', pricePerPerson: 20 },
-    { id: 'tea', name: 'Himalayan Organic Tea Tasting', description: 'Artisanal sampling of rare wild mountain herbs, lavender, and rhododendron.', pricePerPerson: 15 }
+  'tour-haridwar': [
+    { id: 'priority-aarti', name: 'Ganga Aarti Front-Row Seat Pass', description: 'Sought-after riverfront seats with a certified master prayer priest.', pricePerPerson: 1000 },
+    { id: 'cable-express', name: 'Mansa Devi Cable Car Express Ticket', description: 'Zero-waiting priority express lane entry for the aerial ropeway.', pricePerPerson: 500 }
   ],
-  'tour-adventure': [
-    { id: 'gopro', name: '4K Action Cam Rental Pack', description: 'Anti-shake camera with helmet and chest harness mounts for rafting/skiing.', pricePerPerson: 30 },
-    { id: 'coach', name: 'Personalized 1-on-1 Ski Coach', description: 'Professional instruction sessions by top Auli championship veterans.', pricePerPerson: 75 },
-    { id: 'winterwear', name: 'Thermal Active Winterwear Suit', description: 'Insulated snow pants, hooded windbreaker, and thermal gloves.', pricePerPerson: 20 }
+  'tour-rishikesh': [
+    { id: 'gopro-rafting', name: '4K GoPro Helmet Action Video Pack', description: 'Includes raw video logs of your Grade IV white-water rapids ride.', pricePerPerson: 1200 },
+    { id: 'ganges-meditation', name: 'Private Tibetan Healing Ceremony', description: 'Heal stress with ancient bronze dynamic chime bowls on silver beaches.', pricePerPerson: 1500 }
   ],
-  'tour-wildlife': [
-    { id: 'naturalist', name: 'Expert Wildlife Naturalist', description: 'Private buffer zone companion with advanced tracking binoculars.', pricePerPerson: 40 },
-    { id: 'lens', name: 'Pro Telephoto Camera Lens (300mm)', description: 'Rent an optical zoom lens for safe capture of tigers from a jeep range.', pricePerPerson: 25 },
-    { id: 'camp', name: 'Under-the-Stars Riverside Fireplace', description: 'Rustic evening gathering on the Ramganga River with native acoustic songs.', pricePerPerson: 15 }
+  'tour-jim-corbett': [
+    { id: 'dhikala-upgrade', name: 'Dhikala Buffer Zone Jeep Safari', description: 'Deeper core safari inside dense forests with senior trackers.', pricePerPerson: 3000 },
+    { id: 'lenses-cam', name: 'Pro Wildlife Zoom Lens Cam Voucher', description: 'High definition zoom camera rental to capture tigers safely.', pricePerPerson: 1800 }
   ],
-  'tour-auli-ski': [
-    { id: 'gopro-auli', name: '4K Action Cam Rental', description: 'Strap a high resolution camera to record skiing.', pricePerPerson: 25 },
-    { id: 'private-instructor', name: 'Private Certified Ski Guide', description: 'Professional ski guide lessons on alpine slopes.', pricePerPerson: 60 },
-    { id: 'hot-cocoa', name: 'Alpine Fireplace Diners', description: 'Special evening heater fireside dinner serving native sweets.', pricePerPerson: 20 }
+  'tour-mukteshwar': [
+    { id: 'mountain-climb', name: 'Chauli ki Jali Rappelling Adventure', description: 'Thrill rope descent down dramatic vertical cliff walls with pros.', pricePerPerson: 1500 }
   ],
-  'tour-dev-complete': [
-    { id: 'complete-puja', name: 'Special VIP Puja Registration', description: 'Register early with standard sanctuary pundits for prayers.', pricePerPerson: 30 },
-    { id: 'dev-porter', name: 'Ganga Holy Water flask + Porter', description: 'Receive an pure brass copper vessel of sacred river fluids.', pricePerPerson: 25 },
-    { id: 'dev-ayurveda', name: 'Ayurveda Herb massage', description: 'Relax high pressure altitude muscles with local oils.', pricePerPerson: 35 }
+  'tour-almora': [
+    { id: 'shawl-weaver', name: 'Kasar weavers custom shawl customizer', description: 'Witness real coppersmiths and have weavers prepare a custom wool scarf.', pricePerPerson: 1000 }
   ],
-  'tour-kumaon-lakes': [
-    { id: 'naini-private', name: 'Private Sailboat Evening', description: 'Two hour private luxury yacht boating on Naini Lake.', pricePerPerson: 40 },
-    { id: 'birding', name: 'Pangot Himalayan bird tracking', description: 'Walk pine valleys identifying colored local bird nests.', pricePerPerson: 15 },
-    { id: 'local-thali', name: 'Traditional Kumaon Thali lunch', description: 'Try native recipes like Gahat soup, Bhatt Chudkani, and sweet Bal Mithai.', pricePerPerson: 20 }
+  'tour-ranikhet': [
+    { id: 'golf-instructor', name: 'Ranikhet Golf Lessons with Veteran', description: 'Learn high-altitude swinging with military pro instructors.', pricePerPerson: 1500 }
   ],
-  'tour-yoga-rapids': [
-    { id: 'ganges-rafting', name: 'Supreme High Grade safety kit', description: 'Extra durable helmets and heavy floats for wild rapids.', pricePerPerson: 15 },
-    { id: 'sound-healing', name: 'Tibetan Sound healing lesson', description: 'Relieve stress with ancient bronze dynamic chime bowls waves.', pricePerPerson: 25 },
-    { id: 'glen-stroll', name: 'Mussoorie Pine forest cycle trail', description: 'Bicycle rent with safety guide around high ridges.', pricePerPerson: 30 }
+  'tour-kausani': [
+    { id: 'tea-tasting', name: 'Curated Organic Tea blend basket', description: 'Gourmet box of rare lavender, chamomile & orthodox black leaves.', pricePerPerson: 1200 }
   ],
-  'tour-flowers-botanical': [
-    { id: 'botanist-companion', name: 'Private Botanical Scholar', description: 'A licensed flora scientist walking to help detail orchid classes.', pricePerPerson: 45 },
-    { id: 'botanical-journal', name: 'Alpine flower guide + dry book', description: 'A custom book containing beautiful sketches of Himalayan plants.', pricePerPerson: 12 },
-    { id: 'hamlet-stay', name: 'Scenic organic cottage upgrade', description: 'Timber cabins facing pristine mountain water channels.', pricePerPerson: 35 }
+  'tour-mussoorie': [
+    { id: 'bakery-voucher', name: 'Historic Landour Bakeries Lunch Feast', description: 'Includes wildberry crepes, fresh hand-rolled pies, and gourmet coffee.', pricePerPerson: 800 }
   ],
-  'tour-legends-glaciers': [
-    { id: 'oxygen-kit', name: 'Premium High altitude Oxygen set', description: 'Refillable lightweight canister with clean safety nozzles.', pricePerPerson: 20 },
-    { id: 'temple-priority', name: 'Priority VIP Darshan entrance pass', description: 'Fast lanes bypassing general temple line structures.', pricePerPerson: 35 },
-    { id: 'glacier-walk', name: 'Glacial hiking equipment rental', description: 'Thermal boot grips, safety climbing hooks, and walking sticks.', pricePerPerson: 25 }
+  'tour-munsiyari': [
+    { id: 'glacier-guide', name: 'Panchachuli base glacier scout', description: 'Private hiking guide down high streams with thermal gear kits.', pricePerPerson: 2500 }
   ],
-  'tour-mussoorie-leisure': [
-    { id: 'landour-bakery', name: 'Artisanal landour bakery voucher', description: 'Covers unlimited plum cakes, fresh croissants, and wild coffee.', pricePerPerson: 15 },
-    { id: 'cable-car-ticket', name: 'Priority cable car pass', description: 'Skip terminal queue waiting for tourist gondolas.', pricePerPerson: 12 },
-    { id: 'sunset-supper', name: 'Scenic sunset ridge dinner', description: 'Candlelit dining on open high altitude outlook balcony.', pricePerPerson: 30 }
+  'tour-adi-kailash': [
+    { id: 'yatra-insurance', name: 'High-Altitude Medical & Permit Cover', description: 'Full coverage of permissions, inner-line cards, and oxygen setups.', pricePerPerson: 3000 }
   ],
-  'tour-wild-peaks': [
-    { id: 'forest-jeep', name: 'Private core ring safari gypsy', description: 'Complete vehicle reservation bypassing general tourist trucks.', pricePerPerson: 50 },
-    { id: 'night-vision', name: 'High grade night vision tracking', description: 'Track wild predators from high tree deck stations.', pricePerPerson: 22 },
-    { id: 'camp-bonfire', name: 'Riverside fire barbeque', description: 'Organic mountain vegetables and grill items over charcoal.', pricePerPerson: 18 }
+  'tour-auli': [
+    { id: 'ski-instructor', name: 'Certified 1-on-1 Ski Trainer Session', description: 'Championship veteran skiing lesson on steep powdery runs.', pricePerPerson: 2500 },
+    { id: 'snow-gear', name: 'Thermal Active insulated skiwear bundle', description: 'Heated waterproof coat, premium snow Pants, and safety goggles.', pricePerPerson: 1200 }
+  ],
+  'tour-valley-of-flowers': [
+    { id: 'botanist', name: 'UNESCO Scholar Botanical Companion', description: 'Private expert explaining names of hundreds of endemic high orchids.', pricePerPerson: 2000 }
+  ],
+  'tour-chopta': [
+    { id: 'tungnath-pony', name: 'Traditional mountain pony ride help', description: 'Assists elderly or weary travelers up the steep stone temple stairs.', pricePerPerson: 1800 }
+  ],
+  'tour-hemkund': [
+    { id: 'oxygen-flask', name: 'Oxygen Canister + Holy baseline flask', description: 'Refillable lightweight canister with clean safety nozzles.', pricePerPerson: 800 }
+  ],
+  'tour-lansdowne': [
+    { id: 'lake-boating', name: 'Private Rowboat on Bhulla Lake', description: 'Escape the crowds on a quiet personal woodboat row.', pricePerPerson: 400 }
   ]
 };
 
@@ -534,8 +706,8 @@ interface AccommodationStyle {
 
 const ACCOMMODATION_STYLES: AccommodationStyle[] = [
   { id: 'Homestay', name: 'Cozy Mountain Homestays', description: 'Immersive family-run timber cottages with traditional wood chimneys.', extraCostPerDay: 0 },
-  { id: 'Chalet', name: 'Eco-Resort & Wooden Chalets', description: 'High-comfort pine-wood cabins featuring panoramic valley balconies.', extraCostPerDay: 25 },
-  { id: 'Dome', name: 'Luxe Star Domes & Wellness Spa', description: 'Modern geodesic heated transparent domes offering a 360° starlit sky.', extraCostPerDay: 50 }
+  { id: 'Chalet', name: 'Eco-Resort & Wooden Chalets', description: 'High-comfort pine-wood cabins featuring panoramic valley balconies.', extraCostPerDay: 1500 },
+  { id: 'Dome', name: 'Luxe Star Domes & Wellness Spa', description: 'Modern geodesic heated transparent domes offering a 360° starlit sky.', extraCostPerDay: 3000 }
 ];
 
 interface ServiceTier {
@@ -707,7 +879,49 @@ export default function UttarakhandTourExplorer({ onBookTour, appliedPromoCode }
   const [tourPackages, setTourPackages] = useState<PredefinedTour[]>(UTTARAKHAND_TOURS);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [difficultyFilter, setDifficultyFilter] = useState<string>('All');
-  const [sortBy, setSortBy] = useState<string>('price-low');
+  const [sortBy, setSortBy] = useState<string>('popularity');
+  const [selectedStopFilter, setSelectedStopFilter] = useState<string | null>(null);
+
+  // Local package section states
+  const [localPackagePromoCode, setLocalPackagePromoCode] = useState<string>('');
+  const [bookingPackage, setBookingPackage] = useState<PredefinedTour | null>(null);
+  
+  // Custom states inside the active booking modal
+  const [modalTravelers, setModalTravelers] = useState<number>(2);
+  const [modalDate, setModalDate] = useState<string>('2026-08-10');
+  const [modalTier, setModalTier] = useState<'Standard' | 'Deluxe' | 'Luxury'>('Standard');
+  const [modalTrekkingGear, setModalTrekkingGear] = useState<boolean>(true);
+  const [modalAddonIds, setModalAddonIds] = useState<string[]>([]);
+
+  // Schedule Call Expert Form states
+  const [expertName, setExpertName] = useState<string>('');
+  const [expertEmail, setExpertEmail] = useState<string>('');
+  const [expertPhone, setExpertPhone] = useState<string>('');
+  const [expertCity, setExpertCity] = useState<string>('');
+  const [expertComment, setExpertComment] = useState<string>('');
+
+  const getPackageDiscountInfo = (pkgPrice: number, promo: string | null) => {
+    let discountPercent = 0;
+    if (!promo) return { percent: 0, amount: 0, finalPrice: pkgPrice };
+
+    const code = promo.toUpperCase().trim();
+    if (code === 'DEVBHOOMI30') {
+      discountPercent = 30;
+    } else if (code === 'RUDRA25') {
+      discountPercent = 25;
+    } else if (code === 'MMTSUPER') {
+      discountPercent = 15;
+    } else if (code === 'MMTINTELECT' && pkgPrice > 500) {
+      discountPercent = 20;
+    }
+
+    const amount = Math.round((pkgPrice * discountPercent) / 100);
+    return {
+      percent: discountPercent,
+      amount,
+      finalPrice: pkgPrice - amount
+    };
+  };
 
   // Destination Photo Gallery state parameters
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>(() => {
@@ -738,6 +952,19 @@ export default function UttarakhandTourExplorer({ onBookTour, appliedPromoCode }
   useEffect(() => {
     localStorage.setItem('mmt_gallery_favorites', JSON.stringify(favoriteIds));
   }, [favoriteIds]);
+
+  // Listen for the global clear-tour-filters event to show all packages
+  useEffect(() => {
+    const handleClearFilters = () => {
+      setSelectedStopFilter(null);
+      setSearchTerm('');
+      setDifficultyFilter('All');
+    };
+    window.addEventListener('clear-tour-filters', handleClearFilters);
+    return () => {
+      window.removeEventListener('clear-tour-filters', handleClearFilters);
+    };
+  }, []);
 
   // Handle auto pin update based on selected tour
   useEffect(() => {
@@ -1009,13 +1236,18 @@ export default function UttarakhandTourExplorer({ onBookTour, appliedPromoCode }
                             pkg.description.toLowerCase().includes(searchTerm.toLowerCase()) || 
                             pkg.subtitle.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesDifficulty = difficultyFilter === 'All' || pkg.difficulty === difficultyFilter;
-      return matchesSearch && matchesDifficulty;
+      const matchesStopFilter = !selectedStopFilter || pkg.stops.includes(selectedStopFilter);
+      return matchesSearch && matchesDifficulty && matchesStopFilter;
     })
     .sort((a, b) => {
       if (sortBy === 'price-low') {
         return a.pricePerPerson - b.pricePerPerson;
       } else if (sortBy === 'price-high') {
         return b.pricePerPerson - a.pricePerPerson;
+      } else if (sortBy === 'popularity') {
+        const popA = a.popularity ?? TOUR_POPULARITY[a.id] ?? 50;
+        const popB = b.popularity ?? TOUR_POPULARITY[b.id] ?? 50;
+        return popB - popA;
       } else if (sortBy === 'duration') {
         const durA = parseInt(a.duration) || 0;
         const durB = parseInt(b.duration) || 0;
@@ -1041,7 +1273,7 @@ export default function UttarakhandTourExplorer({ onBookTour, appliedPromoCode }
     onBookTour(
       `MMT Exclusive: ${uniqueTourRef}`,
       bookingDetails,
-      `$${finalPrice}`
+      `₹${finalPrice.toLocaleString('en-IN')}`
     );
     setActiveTab('overview');
   };
@@ -1082,6 +1314,39 @@ export default function UttarakhandTourExplorer({ onBookTour, appliedPromoCode }
               {tour.badge}
             </button>
           ))}
+        </div>
+      </div>
+
+       {/* BIDIRECTIONAL CONTROL & INTERACTIVE INFO BAR */}
+      <div className="flex flex-wrap items-center justify-between gap-4 mt-2 bg-slate-50 p-4 rounded-2xl border border-slate-100 mb-8">
+        <div className="flex items-center gap-2">
+          <div className="p-1 px-2.5 rounded-lg bg-orange-100 text-orange-700 text-[10px] font-black uppercase tracking-wider flex items-center gap-1.5 shadow-xs">
+            <Compass className="w-3.5 h-3.5 text-orange-500 animate-pulse" />
+            <span>Interactive Guide Map Info</span>
+          </div>
+          <p className="text-slate-400 text-[11px] font-semibold hidden md:inline-block">
+            Choose a map pin to filter vacation packages or a curated package to center it on the map!
+          </p>
+        </div>
+        
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Active bidirectional pin filter indicator */}
+          {selectedStopFilter && (
+            <div className="bg-sky-50 text-sky-800 border border-sky-200 rounded-xl py-1 px-3 text-[11px] font-extrabold flex items-center gap-1.5 shadow-xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-ping" />
+              <span>Visits: {selectedStopFilter}</span>
+              <button 
+                onClick={() => {
+                  setSelectedStopFilter(null);
+                  triggerToast("Cleared stop filter! Showing all packages. 🌸");
+                }} 
+                className="text-sky-500 hover:text-sky-700 font-black scale-125 ml-1 select-none pointer-events-auto cursor-pointer"
+                title="Clear filter"
+              >
+                ×
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -1319,7 +1584,17 @@ export default function UttarakhandTourExplorer({ onBookTour, appliedPromoCode }
                     if (matchingDayIdx !== -1) {
                       setActiveItineraryDayIdx(matchingDayIdx);
                     }
-                    triggerToast(`Viewing site profile: ${pin.name} ⛰️`);
+                    // Filter the packages below dynamically
+                    setSelectedStopFilter(pin.name);
+                    triggerToast(`Filtering vacation packages visiting ${pin.name}! 🗺️`);
+                    
+                    // Smoothly scroll down to focused packages section
+                    setTimeout(() => {
+                      const element = document.getElementById('curated-holiday-packages');
+                      if (element) {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }, 400);
                   }}
                   style={{ left: `${pin.x}%`, top: `${pin.y}%` }}
                   className="absolute -translate-x-1/2 -translate-y-1/2 z-10 flex flex-col items-center group cursor-pointer"
@@ -1489,7 +1764,7 @@ export default function UttarakhandTourExplorer({ onBookTour, appliedPromoCode }
                   <h4 className="text-xs font-black uppercase text-slate-400 tracking-wider mb-2">Circuit Route Sequence</h4>
                   <div className="flex flex-wrap items-center gap-1.5">
                     {selectedTour.stops.map((stop, i) => (
-                      <React.Fragment key={stop}>
+                      <React.Fragment key={`${stop}-${i}`}>
                         {i > 0 && <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />}
                         <button
                           type="button"
@@ -1537,7 +1812,7 @@ export default function UttarakhandTourExplorer({ onBookTour, appliedPromoCode }
                   <div>
                     <span className="text-[9px] text-slate-400 block uppercase font-bold">Price starting from</span>
                     <span className="text-xl font-black text-slate-900 block leading-none mt-0.5">
-                      ${selectedTour.pricePerPerson} <span className="text-xs text-slate-400 font-semibold">/ Guest</span>
+                      ₹{selectedTour.pricePerPerson.toLocaleString('en-IN')} <span className="text-xs text-slate-400 font-semibold">/ Guest</span>
                     </span>
                   </div>
 
@@ -1745,7 +2020,7 @@ export default function UttarakhandTourExplorer({ onBookTour, appliedPromoCode }
                             </div>
                             <div className="text-right shrink-0 ml-1">
                               <span className="block font-black text-[10px] text-orange-600">
-                                {style.extraCostPerDay === 0 ? 'Included' : `+$${style.extraCostPerDay}/night`}
+                                {style.extraCostPerDay === 0 ? 'Included' : `+₹${style.extraCostPerDay.toLocaleString('en-IN')}/night`}
                               </span>
                             </div>
                           </button>
@@ -1788,7 +2063,7 @@ export default function UttarakhandTourExplorer({ onBookTour, appliedPromoCode }
                               </div>
                               <div className="text-right shrink-0 ml-1">
                                 <span className={`block font-black text-[10px] ${isSelected ? 'text-emerald-600' : 'text-slate-500'}`}>
-                                  +${addon.pricePerPerson} / Guest
+                                  +₹{addon.pricePerPerson.toLocaleString('en-IN')} / Guest
                                 </span>
                               </div>
                             </button>
@@ -1821,27 +2096,27 @@ export default function UttarakhandTourExplorer({ onBookTour, appliedPromoCode }
                 <div className="bg-orange-50/50 p-4 rounded-2xl border border-orange-200/50 space-y-2">
                   <div className="flex justify-between text-xs text-slate-500 font-bold">
                     <span>Base Fare ({travelersCount} voyager{travelersCount > 1 ? 's' : ''})</span>
-                    <span>${selectedTour.pricePerPerson * travelersCount}</span>
+                    <span>₹{(selectedTour.pricePerPerson * travelersCount).toLocaleString('en-IN')}</span>
                   </div>
 
                   {packageTier !== 'Standard' && (
                     <div className="flex justify-between text-xs text-slate-500 font-bold">
                       <span>Service Tier Upgrade ({packageTier})</span>
-                      <span className="text-slate-700">+${(personBasePrice - selectedTour.pricePerPerson) * travelersCount}</span>
+                      <span className="text-slate-700">+₹{((personBasePrice - selectedTour.pricePerPerson) * travelersCount).toLocaleString('en-IN')}</span>
                     </div>
                   )}
 
                   {personAccomCost > 0 && (
                     <div className="flex justify-between text-xs text-slate-500 font-bold">
                       <span>Lodging Premium ({durationDays} Nights)</span>
-                      <span className="text-slate-700">+${personAccomCost * travelersCount}</span>
+                      <span className="text-slate-700">+₹{(personAccomCost * travelersCount).toLocaleString('en-IN')}</span>
                     </div>
                   )}
 
                   {addonsCost > 0 && (
                     <div className="flex justify-between text-xs text-slate-500 font-bold">
                       <span>Native Excursions Plan</span>
-                      <span className="text-slate-700">+${addonsCost * travelersCount}</span>
+                      <span className="text-slate-700">+₹{(addonsCost * travelersCount).toLocaleString('en-IN')}</span>
                     </div>
                   )}
 
@@ -1855,7 +2130,7 @@ export default function UttarakhandTourExplorer({ onBookTour, appliedPromoCode }
                   {discountAmount > 0 && (
                     <div className="flex justify-between text-xs text-emerald-600 font-bold">
                       <span>Promo Discount ({discountPercent}%)</span>
-                      <span>-${discountAmount}</span>
+                      <span>-₹{discountAmount.toLocaleString('en-IN')}</span>
                     </div>
                   )}
 
@@ -1872,7 +2147,7 @@ export default function UttarakhandTourExplorer({ onBookTour, appliedPromoCode }
 
                   <div className="border-t border-dashed border-orange-200 my-2 pt-2 flex justify-between text-sm">
                     <span className="font-extrabold text-slate-800">Total Booking Cost</span>
-                    <span className="font-black text-orange-600">${finalPrice}</span>
+                    <span className="font-black text-orange-600">₹{finalPrice.toLocaleString('en-IN')}</span>
                   </div>
                 </div>
 
@@ -1937,11 +2212,112 @@ export default function UttarakhandTourExplorer({ onBookTour, appliedPromoCode }
               onChange={(e) => setSortBy(e.target.value)}
               className="px-3 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold bg-slate-50 focus:outline-none focus:border-orange-500 transition-colors cursor-pointer text-slate-800"
             >
+              <option value="popularity">Popularity</option>
               <option value="price-low">Price: Low to High</option>
               <option value="price-high">Price: High to Low</option>
               <option value="duration">Duration: Days</option>
               <option value="alphabetical">Alphabetical: A-Z</option>
             </select>
+
+            {/* Clear All active conditions to Show All Packages */}
+            {(searchTerm || difficultyFilter !== 'All' || selectedStopFilter) && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedStopFilter(null);
+                  setSearchTerm('');
+                  setDifficultyFilter('All');
+                  triggerToast("Showing all vacation packages with no active filters! 🌸");
+                }}
+                className="px-4 py-2.5 bg-orange-650 hover:bg-orange-700 text-white leading-none rounded-xl text-xs font-black transition-all cursor-pointer shadow-md hover:scale-105 active:scale-95 shrink-0 flex items-center gap-1.5"
+                title="Reset search and filters to view all packages"
+              >
+                <span>Clear & Show All Packages</span>
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* INTERACTIVE COUPON DASHBOARD FOR HOLIDAY PACKAGES */}
+        <div className="bg-slate-50 border border-slate-200/60 rounded-3xl p-5 mb-8 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-6">
+          <div className="space-y-1">
+            <span className="text-[10.5px] font-black uppercase text-orange-750 bg-orange-100/60 px-2.5 py-0.5 rounded-md inline-block">
+              Exclusive Package Deals
+            </span>
+            <h4 className="font-extrabold text-[#0f172a] text-sm tracking-tight flex items-center gap-1.5">
+              <Sparkles className="w-4 h-4 text-amber-500 animate-pulse" />
+              Claim 15% to 30% Package Discounts
+            </h4>
+            <p className="text-[11px] text-slate-400 font-semibold">
+              Type or select code. Offers apply automatically to your final bookings instantly on confirm checkout.
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            {/* Quick coupon tags */}
+            <div className="flex flex-wrap items-center gap-1.5">
+              {[
+                { code: 'DEVBHOOMI30', label: '30% Off' },
+                { code: 'RUDRA25', label: '25% Off' },
+                { code: 'MMTSUPER', label: '15% Off' }
+              ].map((voucher) => {
+                const isActive = (localPackagePromoCode || appliedPromoCode || '').toUpperCase().trim() === voucher.code;
+                return (
+                  <button
+                    key={voucher.code}
+                    type="button"
+                    onClick={() => {
+                      setLocalPackagePromoCode(voucher.code);
+                      triggerToast(`Coupon ${voucher.code} applied successfully! 🎁`);
+                    }}
+                    className={`px-2.5 py-1.5 rounded-lg text-[10px] font-black uppercase transition-all tracking-wide border cursor-pointer ${
+                      isActive
+                        ? 'bg-emerald-600 border-emerald-500 text-white shadow-xs'
+                        : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                    }`}
+                  >
+                    {voucher.code} ({voucher.label})
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Code inputs */}
+            <div className="flex items-center gap-1.5">
+              <input
+                type="text"
+                placeholder="Enter Promo Code"
+                value={localPackagePromoCode}
+                onChange={(e) => setLocalPackagePromoCode(e.target.value.toUpperCase())}
+                className="px-3 py-2 border border-slate-200 bg-white rounded-xl text-xs font-mono font-bold uppercase tracking-wider focus:outline-none focus:border-orange-500 text-slate-800 w-28 sm:w-32"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  if (localPackagePromoCode.trim()) {
+                    triggerToast(`Promo Coupon [${localPackagePromoCode.trim()}] active! 🌟`);
+                  } else {
+                    triggerToast('Enter a promo code first!');
+                  }
+                }}
+                className="bg-slate-900 hover:bg-slate-800 text-white text-xs font-black uppercase px-3 py-2 rounded-xl transition-colors cursor-pointer"
+              >
+                Apply
+              </button>
+              {(localPackagePromoCode || appliedPromoCode) && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLocalPackagePromoCode('');
+                    triggerToast('Coupon cleared.');
+                  }}
+                  className="p-2 bg-slate-100 hover:bg-slate-200 text-slate-400 rounded-xl cursor-pointer"
+                  title="Clear active promo"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -1951,6 +2327,12 @@ export default function UttarakhandTourExplorer({ onBookTour, appliedPromoCode }
             const isSelected = selectedTour.id === pkg.id;
             const basePackagePrice = pkg.pricePerPerson;
             const calculatedTotalPrice = basePackagePrice * travelersCount;
+
+            const activePromo = localPackagePromoCode || appliedPromoCode;
+            const promoInfo = getPackageDiscountInfo(calculatedTotalPrice, activePromo);
+            const discountPercent = promoInfo.percent;
+            const discountAmount = promoInfo.amount;
+            const finalPackagePrice = promoInfo.finalPrice;
 
             return (
               <motion.div
@@ -1976,6 +2358,24 @@ export default function UttarakhandTourExplorer({ onBookTour, appliedPromoCode }
                     ? 'from-emerald-500 to-teal-500'
                     : 'from-sky-500 to-indigo-500'
                 }`} />
+
+                {/* Package Cover Image Banner */}
+                {pkg.image && (
+                  <div className="h-40 w-full relative overflow-hidden shrink-0">
+                    <img 
+                      src={pkg.image} 
+                      alt={pkg.name} 
+                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                      referrerPolicy="no-referrer"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
+                    
+                    {/* Floating badge inside photo */}
+                    <span className="absolute bottom-2.5 left-3 bg-slate-900/85 backdrop-blur-xs text-white text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md border border-white/10 shadow">
+                      {pkg.badge}
+                    </span>
+                  </div>
+                )}
 
                 <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
                   {/* Card Main text */}
@@ -2026,15 +2426,29 @@ export default function UttarakhandTourExplorer({ onBookTour, appliedPromoCode }
                     <div>
                       <span className="text-[8.5px] text-slate-400 block font-black uppercase tracking-tight">Per Voyager</span>
                       <span className="text-sm font-black text-slate-950 block leading-tight">
-                        ${pkg.pricePerPerson} <span className="text-[8.5px] text-slate-400 font-bold">/ guest</span>
+                        ₹{pkg.pricePerPerson.toLocaleString('en-IN')} <span className="text-[8.5px] text-slate-400 font-bold">/ guest</span>
                       </span>
                     </div>
 
                     <div className="text-right">
                       <span className="text-[8.5px] text-slate-400 block font-black uppercase tracking-tight">{travelersCount} Voyager{travelersCount > 1 ? 's' : ''}</span>
-                      <span className="text-xs font-black text-orange-600 block leading-tight">
-                        ${calculatedTotalPrice} base
-                      </span>
+                      {discountAmount > 0 ? (
+                        <div className="flex flex-col items-end">
+                          <span className="text-[10px] text-slate-400 line-through leading-none font-bold">
+                            ₹{calculatedTotalPrice.toLocaleString('en-IN')}
+                          </span>
+                          <span className="text-xs font-black text-emerald-600 block leading-tight mt-0.5">
+                            ₹{finalPackagePrice.toLocaleString('en-IN')}
+                          </span>
+                          <span className="text-[7.5px] font-black text-emerald-700 bg-emerald-50 px-1 py-0.5 rounded-sm uppercase tracking-tight mt-1 border border-emerald-100">
+                            Save {discountPercent}% applied
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-xs font-black text-orange-600 block leading-tight">
+                          ₹{calculatedTotalPrice.toLocaleString('en-IN')} base
+                        </span>
+                      )}
                     </div>
                   </div>
 
@@ -2067,18 +2481,19 @@ export default function UttarakhandTourExplorer({ onBookTour, appliedPromoCode }
                       type="button"
                       id={`btn-add-ledger-${pkg.id}`}
                       onClick={() => {
-                        const bookingDetails = `${pkg.name} (${pkg.duration} Tour), ${travelersCount} Voyagers, Starts: ${selectedDate}${trekkingGearRequired ? ' (Gear Pack Included)' : ''}`;
-                        onBookTour(
-                          `MMT Exclusive: ${pkg.name}`,
-                          bookingDetails,
-                          `$${calculatedTotalPrice}`
-                        );
-                        triggerToast(`Booking registration successfully added to trips! 🎒`);
+                        // Open the custom proper booking form modal with defaults as fallback/further adjustment option
+                        setBookingPackage(pkg);
+                        setModalTravelers(travelersCount);
+                        setModalDate(selectedDate);
+                        setModalTier('Standard'); // Default to Standard tier
+                        setModalTrekkingGear(trekkingGearRequired);
+                        setModalAddonIds([]); // Default no extra addons selected yet
+                        triggerToast(`Opened options for: ${pkg.name}. Complete details below! 📝`);
                       }}
-                      className="bg-[#0f172a] hover:bg-slate-800 text-white font-black py-2 rounded-xl transition-transform active:scale-97 cursor-pointer text-[10.5px] flex items-center justify-center gap-1 shadow-md"
+                      className="bg-emerald-600 hover:bg-emerald-500 text-white font-black py-2 rounded-xl transition-transform active:scale-97 cursor-pointer text-[10.5px] flex items-center justify-center gap-1 shadow-md w-full"
                     >
-                      <Plus className="w-3.5 h-3.5" />
-                      <span>Add to Trips</span>
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>Book Package</span>
                     </button>
                   </div>
                 </div>
@@ -2190,12 +2605,12 @@ export default function UttarakhandTourExplorer({ onBookTour, appliedPromoCode }
           </div>
         </div>
 
-        {/* Gallery Grid + Upload Side Form */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        {/* Gallery Grid */}
+        <div className="w-full">
           
           {/* Snapshots Grid Area */}
-          <div className="lg:col-span-3">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+          <div className="w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
               
               <AnimatePresence mode="popLayout">
                 {galleryItems.filter(item => {
@@ -2319,140 +2734,11 @@ export default function UttarakhandTourExplorer({ onBookTour, appliedPromoCode }
                   <p className="text-[10px] text-slate-400 max-w-xs mt-0.5">
                     {galleryCategory === 'Favorites' 
                       ? "You haven't bookmarked any snapshots yet. Tap the heart icons on standard cards to populate this drawer!"
-                      : "We can't find anything matching your term. Try typing another location, topic, or add your own photograph side-by-side!"}
+                      : "We can't find anything matching your term. Try typing another location or topic."}
                   </p>
                 </div>
               )}
 
-            </div>
-          </div>
-
-          {/* Snapshot Contribution Side Form Column */}
-          <div className="lg:col-span-1">
-            <div className="bg-white p-5 rounded-3xl border border-slate-200/60 shadow-xs space-y-4 sticky top-6">
-              <div>
-                <h4 className="font-extrabold text-[13px] text-slate-900 uppercase tracking-tight flex items-center gap-1.5">
-                  <Upload className="w-4 h-4 text-orange-600" />
-                  Contribute Destination Snapshot
-                </h4>
-                <p className="text-[10px] text-slate-400 font-semibold leading-relaxed mt-0.5">
-                  Simulate pitching your own photograph to the global travel feed. We will lock it into your client-side inspirations board database.
-                </p>
-              </div>
-
-              <div className="space-y-3 pt-1">
-                {/* Title Input field */}
-                <div>
-                  <label htmlFor="upload-title-input" className="block text-[9px] font-black uppercase text-slate-405 tracking-wider mb-1">Snapshot Title</label>
-                  <input
-                    id="upload-title-input"
-                    type="text"
-                    required
-                    maxLength={32}
-                    placeholder="e.g., Majestic Landour Sunset"
-                    value={uploadTitle}
-                    onChange={(e) => setUploadTitle(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200/70 rounded-lg p-2.5 text-xs font-semibold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-orange-500"
-                  />
-                </div>
-
-                {/* Location Select match mapping field */}
-                <div>
-                  <label htmlFor="upload-location-select" className="block text-[9px] font-black uppercase text-slate-405 tracking-wider mb-1">Uttarakhand Location</label>
-                  <select
-                    id="upload-location-select"
-                    value={uploadLocation}
-                    onChange={(e) => setUploadLocation(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200/70 rounded-lg p-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-orange-500"
-                  >
-                    {Object.keys(PIN_LOCATIONS).map(locName => (
-                      <option key={locName} value={locName}>{locName}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Tag Selection Row */}
-                <div>
-                  <label htmlFor="upload-tag-select" className="block text-[9px] font-black uppercase text-slate-405 tracking-wider mb-1">Vibe Category</label>
-                  <select
-                    id="upload-tag-select"
-                    value={uploadTag}
-                    onChange={(e) => setUploadTag(e.target.value as any)}
-                    className="w-full bg-slate-50 border border-slate-200/70 rounded-lg p-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-orange-500"
-                  >
-                    <option value="Spiritual">Spiritual</option>
-                    <option value="Lakes & Rivers">Lakes & Rivers</option>
-                    <option value="Peaks & Snow">Peaks & Snow</option>
-                    <option value="Nature & Parks">Nature & Parks</option>
-                    <option value="Wildlife Reserves">Wildlife Reserves</option>
-                    <option value="Adventure Paths">Adventure Paths</option>
-                  </select>
-                </div>
-
-                {/* Drag-&-Drop File Uploader Container */}
-                <div>
-                  <span className="block text-[9px] font-black uppercase text-slate-405 tracking-wider mb-1">Upload Photo File</span>
-                  
-                  <div
-                    onDragOver={handleDragOver}
-                    onDragLeave={handleDragLeave}
-                    onDrop={handleDrop}
-                    className={`border-2 border-dashed rounded-xl p-3.5 text-center transition-all cursor-pointer relative flex flex-col items-center justify-center ${
-                      isDragOver
-                        ? 'border-orange-500 bg-orange-50/50 hover:bg-orange-55/60'
-                        : uploadFileBase64
-                        ? 'border-emerald-400 bg-emerald-50/10'
-                        : 'border-slate-250 bg-slate-50/60 hover:bg-slate-50 hover:border-slate-300'
-                    }`}
-                    onClick={() => document.getElementById('gallery-file-uploader')?.click()}
-                  >
-                    <input
-                      type="file"
-                      id="gallery-file-uploader"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={handleFileSelect}
-                    />
-
-                    {uploadFileBase64 ? (
-                      <div className="space-y-1.5 w-full">
-                        <img
-                          src={uploadFileBase64}
-                          alt="Contribution preview"
-                          referrerPolicy="no-referrer"
-                          className="w-16 h-12 object-cover rounded-md mx-auto shadow-xs border border-emerald-300"
-                        />
-                        <span className="block text-[9.5px] font-bold text-emerald-700 leading-none mr-0.5">Photo Loaded!</span>
-                        <span className="block text-[7.5px] text-slate-400 font-semibold underline hover:text-orange-600 mt-1">Swap Image</span>
-                      </div>
-                    ) : (
-                      <>
-                        <Upload className="w-5 h-5 text-slate-400 mb-1" />
-                        <span className="block text-[10px] font-black text-slate-700">Drag & Drop Image</span>
-                        <span className="block text-[8px] text-slate-400 font-medium mt-0.5">or click to browse folders</span>
-                        <span className="block text-[7px] text-slate-400 mt-1">Accepts images up to 4MB</span>
-                      </>
-                    )}
-                  </div>
-                </div>
-
-                {/* Form Action Submit Button */}
-                <button
-                  type="button"
-                  onClick={handleAddCustomPhoto}
-                  disabled={isPhotoUploading || !uploadFileBase64 || !uploadTitle}
-                  className={`w-full font-black py-2.5 rounded-xl text-[10.5px] uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 mt-2 ${
-                    isPhotoUploading 
-                      ? 'bg-slate-100 text-slate-400 cursor-wait'
-                      : !uploadFileBase64 || !uploadTitle
-                      ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
-                      : 'bg-orange-600 hover:bg-orange-500 text-white shadow-md shadow-orange-500/10 cursor-pointer active:scale-97'
-                  }`}
-                >
-                  <Camera className="w-4 h-4 shrink-0" />
-                  <span>{isPhotoUploading ? 'Publishing...' : 'Pin snapshot'}</span>
-                </button>
-              </div>
             </div>
           </div>
 
@@ -2595,6 +2881,158 @@ export default function UttarakhandTourExplorer({ onBookTour, appliedPromoCode }
               </div>
             </motion.div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* COMPREHENSIVE PROPER PACKAGE BOOKING CONFIGURATION MODAL */}
+      <AnimatePresence>
+        {bookingPackage && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-xs pointer-events-auto overflow-y-auto">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+              className="bg-white rounded-3xl border border-slate-200 shadow-2xl w-full max-w-lg overflow-hidden flex flex-col relative my-8"
+              id="packages-custom-booking-modal"
+            >
+              {/* Box Header Banner */}
+              <div className="bg-[#0f172a] p-5 text-white relative">
+                <button
+                  type="button"
+                  id="close-booking-modal-x"
+                  onClick={() => setBookingPackage(null)}
+                  className="absolute top-4 right-4 p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition-colors cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+                
+                <span className="text-[8.5px] font-black tracking-widest uppercase bg-orange-600 px-2.5 py-0.5 rounded-md inline-block mb-1.5 font-sans">
+                  Active Package Booking
+                </span>
+                <h3 className="text-lg font-black tracking-tight leading-snug">
+                  Ready to Get Started?
+                </h3>
+                <p className="text-[11px] text-slate-400 font-semibold mt-1">
+                  Reach out to Travel Cab Servicess for all your needs.
+                </p>
+                <div className="mt-3 p-2 bg-white/5 border border-white/10 rounded-xl flex items-center justify-between gap-2">
+                  <div>
+                    <span className="text-[8px] uppercase tracking-wider text-slate-400 font-bold block">Selected Option:</span>
+                    <span className="text-[11px] text-orange-400 font-black block">{bookingPackage.name}</span>
+                  </div>
+                  <span className="text-[11px] font-bold text-slate-300 bg-white/15 px-2 py-1 rounded-md font-mono">
+                    ₹{bookingPackage.pricePerPerson.toLocaleString('en-IN')}/person
+                  </span>
+                </div>
+              </div>
+
+              {/* Box Form Body Scrollable */}
+              <div className="p-5 overflow-y-auto space-y-5 flex-1 max-h-[62vh]" id="booking-modal-body-content">
+                
+                {/* Visual Direct Touch-to-Call / Mail Box Grid */}
+                <div className="grid grid-cols-2 gap-3.5">
+                  <div className="col-span-2 sm:col-span-1 bg-amber-50/40 hover:bg-amber-50 rounded-2xl p-3 border border-amber-200/50 transition-colors">
+                    <span className="text-[9px] uppercase tracking-wider text-amber-600 font-extrabold flex items-center gap-1.5 mb-1.5">
+                      <Phone className="w-3.5 h-3.5 text-amber-500 animate-bounce" /> Call Us 24/7
+                    </span>
+                    <div className="space-y-1">
+                      <a 
+                        href="tel:+918859490284" 
+                        className="block text-slate-800 hover:text-orange-650 font-black text-[13px] tracking-tight transition-colors cursor-pointer"
+                        title="Click to dial directly"
+                      >
+                        +91-8859490284
+                      </a>
+                      <a 
+                        href="tel:+919627349173" 
+                        className="block text-slate-800 hover:text-orange-650 font-black text-[13px] tracking-tight transition-colors cursor-pointer"
+                        title="Click to dial directly"
+                      >
+                        +91-9627349173
+                      </a>
+                    </div>
+                    <span className="text-[9.5px] text-orange-600 font-bold block mt-1">📞 Click to call directly</span>
+                  </div>
+
+                  <div className="col-span-2 sm:col-span-1 bg-sky-50/40 hover:bg-sky-50 rounded-2xl p-3 border border-sky-200/50 transition-colors">
+                    <span className="text-[9px] uppercase tracking-wider text-sky-600 font-extrabold flex items-center gap-1.5 mb-2">
+                      <Mail className="w-3.5 h-3.5 text-sky-500" /> Email Us
+                    </span>
+                    <a 
+                      href="mailto:rakeshcabservics@gmail.com" 
+                      className="block text-slate-800 hover:text-sky-600 font-black text-[12px] break-all leading-snug transition-colors cursor-pointer"
+                      title="Click to write mail"
+                    >
+                      rakeshcabservics@gmail.com
+                    </a>
+                    <span className="text-[9px] text-slate-400 font-medium block mt-2">📬 Reply usually under 30 min.</span>
+                  </div>
+                </div>
+
+                {/* Location Box */}
+                <div className="bg-slate-50 hover:bg-slate-100 rounded-2xl p-3.5 border border-slate-200 transition-colors">
+                  <span className="text-[9px] uppercase tracking-wider text-slate-500 font-black flex items-center gap-1.5 mb-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-orange-500" /> Location
+                  </span>
+                  <p className="text-[11.5px] font-bold text-slate-700 leading-relaxed">
+                    Main market, mohan bazaar, Mukteshwar, Darima <br />
+                    <span className="text-slate-800 font-black">Uttarakhand 263138</span>
+                  </p>
+                  <a 
+                    href="https://maps.app.goo.gl/yqNKxK8uLUj6cSsJ6"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 inline-flex items-center gap-1 text-[10px] text-[#f97316] hover:text-orange-500 font-bold uppercase transition-all"
+                  >
+                    View Registered Hub in Google Maps ➔
+                  </a>
+                </div>
+
+                {/* Instant Book Package Action Panel */}
+                <div className="border-t border-slate-150 pt-5 space-y-4">
+                  <div className="bg-emerald-50/70 border border-emerald-150 rounded-2xl p-4 space-y-2">
+                    <span className="text-[9.5px] uppercase tracking-wider text-emerald-800 font-black flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-emerald-600 animate-pulse" /> Instant Package Reservation
+                    </span>
+                    <p className="text-[11.5px] font-bold text-emerald-900 leading-relaxed">
+                      Confirm your handmade Himalayan getaway instantly! Click below to auto-populate your booking details, proceed directly to the ticket summary page, and obtain reservation details with applied seasonal discounts.
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    id="btn-expert-call-submit"
+                    onClick={() => {
+                      onBookTour(
+                        "Travel Cab Services Experts Portfolio",
+                        `Package Tour Pass: ${bookingPackage.name} (${bookingPackage.duration} Custom Handcrafted Trail Guide Included)`,
+                        `₹${bookingPackage.pricePerPerson.toLocaleString('en-IN')}`
+                      );
+                      setBookingPackage(null);
+                    }}
+                    className="w-full bg-emerald-660 hover:bg-emerald-760 active:scale-98 text-white font-black py-3 px-4 rounded-2xl text-[11.5px] uppercase tracking-widest transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-emerald-660/10"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    <span>Confirm & Book Package Now</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Drawer footer close indicator */}
+              <div className="bg-slate-50 px-5 py-3 border-t border-slate-100 flex items-center justify-between text-[10px] text-slate-400">
+                <span>⚡ 24/7 Cab Dispatch Active</span>
+                <button
+                  type="button"
+                  id="btn-close-booking-modal-bottom"
+                  onClick={() => setBookingPackage(null)}
+                  className="text-slate-500 hover:text-slate-950 font-extrabold uppercase transition-colors"
+                >
+                  Close Panel
+                </button>
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
 
