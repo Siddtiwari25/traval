@@ -4,7 +4,7 @@ export interface City {
   airport: string;
 }
 
-export type TravelTab = 'Bike/Scooty' | 'hotels' | 'trains' | 'cabs';
+export type TravelTab = 'flights' | 'hotels' | 'trains' | 'cabs';
 
 export interface Booking {
   id: string;
@@ -15,6 +15,10 @@ export interface Booking {
   price: string;
   code?: string;
   status: 'Confirmed' | 'Pending' | 'Completed';
+  passengerName?: string;
+  passengerPhone?: string;
+  passengerEmail?: string;
+  notes?: string;
 }
 
 export interface Flight {

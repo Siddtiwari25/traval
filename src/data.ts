@@ -1,108 +1,102 @@
 import { City, Flight, Hotel, Train, Cab, Coupon } from "./types";
 
 export const CITIES: City[] = [
-  { name: 'Delhi', code: 'DEL', airport: 'Indira Gandhi International Airport' },
-  { name: 'Mumbai', code: 'BOM', airport: 'Chhatrapati Shivaji Maharaj Intl Airport' },
-  { name: 'Bengaluru', code: 'BLR', airport: 'Kempegowda International Airport' },
-  { name: 'Goa', code: 'GOI', airport: 'Dabolim Airport' },
-  { name: 'Dubai', code: 'DXB', airport: 'Dubai International Airport' },
-  { name: 'Singapore', code: 'SIN', airport: 'Changi Airport' },
-  { name: 'London', code: 'LHR', airport: 'Heathrow Airport' },
+  { name: 'Nainital Complex', code: 'NTL', airport: 'Tallital Bus Station & Lake Yard' },
+  { name: 'Pantnagar Hub', code: 'PGH', airport: 'Pantnagar Domestic Airport (120km away)' },
+  { name: 'Dehradun Valley', code: 'DED', airport: 'Jolly Grant Airport' },
+  { name: 'Delhi NCR IGI', code: 'DEL', airport: 'Indira Gandhi International Airport Terminal 3' },
+  { name: 'Bhatelia Office', code: 'BHT', airport: 'Bhatelia-Mukteshwar Rd main crossing' },
+  { name: 'Mukteshwar Town', code: 'MUK', airport: 'Mohan Bazaar Primary Cab Station' }
 ];
 
 export const FLIGHTS: Flight[] = [
-  { id: 'f1', airline: 'IndiAir', logoCode: 'IA', flightNo: 'IA-302', fromTime: '06:00 AM', toTime: '08:15 AM', duration: '2h 15m', stops: 'Non Stop', price: 110 },
-  { id: 'f2', airline: 'StarAirways', logoCode: 'SA', flightNo: 'SA-109', fromTime: '11:45 AM', toTime: '02:00 PM', duration: '2h 15m', stops: 'Non Stop', price: 125 },
-  { id: 'f3', airline: 'VistaraFly', logoCode: 'VF', flightNo: 'VF-740', fromTime: '04:15 PM', toTime: '06:35 PM', duration: '2h 20m', stops: 'Non Stop', price: 140 },
-  { id: 'f4', airline: 'ExpressFly', logoCode: 'EF', flightNo: 'EF-891', fromTime: '08:30 PM', toTime: '11:15 PM', duration: '2h 45m', stops: '1 Stop', price: 95 },
-  { id: 'f5', airline: 'JetConnect', logoCode: 'JC', flightNo: 'JC-221', fromTime: '10:00 PM', toTime: '12:15 AM', duration: '2h 15m', stops: 'Non Stop', price: 105 },
+  { id: 'f1', airline: 'Honda Activa 6G', logoCode: 'COOT', flightNo: 'ACT-6G', fromTime: '08:00 AM', toTime: '08:00 PM', duration: '110cc Automatic', stops: 'Petrol (Self-Start)', price: 450 },
+  { id: 'f2', airline: 'Royal Enfield Classic 350', logoCode: 'BIKE', flightNo: 'RE-350', fromTime: '09:00 AM', toTime: '09:00 PM', duration: '350cc Manual Gear', stops: 'Petrol (Royal Feel)', price: 900 },
+  { id: 'f3', airline: 'Yamaha FZ-S FI', logoCode: 'BIKE', flightNo: 'YAM-149', fromTime: '08:00 AM', toTime: '08:00 PM', duration: '149cc Manual Gear', stops: 'Petrol (Fuel Injected)', price: 700 },
+  { id: 'f4', airline: 'TVS Jupiter 125', logoCode: 'COOT', flightNo: 'JUP-125', fromTime: '08:30 AM', toTime: '08:30 PM', duration: '124cc Automatic', stops: 'Petrol (Eco Mode)', price: 450 },
+  { id: 'f5', airline: 'Bajaj Avenger Cruise 220', logoCode: 'BIKE', flightNo: 'AVG-220', fromTime: '07:30 AM', toTime: '07:30 PM', duration: '220cc Manual Gear', stops: 'Petrol (Cruiser Bike)', price: 800 },
 ];
 
 export const HOTELS: Hotel[] = [
   {
     id: 'h1',
-    name: 'The Grand Taj Palace',
+    name: 'The Mukteshwar Pine Resort',
     rating: 4.8,
-    location: 'Colaba, Mumbai',
-    pricePerNight: 280,
+    location: 'Bhatelia-Mukteshwar Rd, Mukteshwar',
+    pricePerNight: 4500,
     imageUrl: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=400&q=80',
-    amenities: ['Free WiFi', 'Infinity Pool', 'Luxury Spa', '24h Gym', 'Sea View']
+    amenities: ['Free WiFi', 'Valley View Balcony', 'Local Organic Kitchen', '24h Hot Water', 'Bonfire Pit']
   },
   {
     id: 'h2',
-    name: 'Zuri Beach Resort & Villas',
+    name: 'Mountain Crest Homestay',
     rating: 4.6,
-    location: 'Calangute, Goa',
-    pricePerNight: 160,
+    location: 'Mohan Bazaar Ridge, Mukteshwar',
+    pricePerNight: 2200,
     imageUrl: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=400&q=80',
-    amenities: ['Private Beach', 'Cocktail Bar', 'Free Breakfast', 'Watersports', 'Eco-friendly']
+    amenities: ['Himachali Fireplace', 'Traditional Kumaoni Meals', 'Free Breakfast', 'Himalaya Terrace']
   },
   {
     id: 'h3',
-    name: 'Roseate House Tech-Metro',
+    name: 'Rudra Heights Wellness Lodge',
     rating: 4.5,
-    location: 'Aerocity, Delhi',
-    pricePerNight: 195,
+    location: 'Darima Orchards Side, Mukteshwar',
+    pricePerNight: 3500,
     imageUrl: 'https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=400&q=80',
-    amenities: ['Free WiFi', 'Rooftop Bar', 'Business Lounge', 'Spa', 'Soundproof Rooms']
+    amenities: ['Free WiFi', 'Yoga Room', 'Apple Picking Orchard Tour', 'Organic Tea Bar', 'Soundproof Suite']
   },
   {
     id: 'h4',
-    name: 'Marina Sands Bay Resort',
+    name: 'The Nanda Devi Dome Stay',
     rating: 4.9,
-    location: 'Marina Bay, Singapore',
-    pricePerNight: 450,
+    location: 'Chauli Ki Jali Cliffs, Mukteshwar',
+    pricePerNight: 7500,
     imageUrl: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=400&q=80',
-    amenities: ['Rooftop Pool', 'Casino Access', ' Michelin Star Dining', 'Full Butler Service']
+    amenities: ['360° Geodesic Skylight glass', 'Outdoor Deck', 'Gourmet Chef Diner', 'Luxury Bath Tub']
   },
   {
     id: 'h5',
-    name: 'The Oasis Hideaway',
+    name: 'Devbhoomi Pine Chalets',
     rating: 4.2,
-    location: 'Downtown, Dubai',
-    pricePerNight: 140,
+    location: 'Sargakhet Pine Ridge, Mukteshwar',
+    pricePerNight: 2800,
     imageUrl: 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=400&q=80',
-    amenities: ['Free Shuttle', 'Kids Club', 'Outdoor Pool', 'Middle Eastern Lounge']
+    amenities: ['Free Valley Shuttle', 'Traditional Wood Chimney', 'Outdoor Grill Garden', 'Organic Apple Farm']
   },
 ];
 
-export const TRAINS: Train[] = [
-  { id: 't1', name: 'Rajdhani Express', trainNo: '12952', fromTime: '04:55 PM', toTime: '08:35 AM', duration: '15h 40m', classes: ['1A', '2A', '3A'], price: 45 },
-  { id: 't2', name: 'Duronto Express', trainNo: '12268', fromTime: '11:15 PM', toTime: '03:10 PM', duration: '15h 55m', classes: ['2A', '3A', 'SL'], price: 38 },
-  { id: 't3', name: 'Shatabdi Pro-Express', trainNo: '12010', fromTime: '06:10 AM', toTime: '01:20 PM', duration: '7h 10m', classes: ['CC', 'EC'], price: 25 },
-  { id: 't4', name: 'Tejas Premium Bullet', trainNo: '82902', fromTime: '03:40 PM', toTime: '09:55 PM', duration: '6h 15m', classes: ['EC', 'CC'], price: 32 },
-];
+export const TRAINS: Train[] = []; // Empty since train service and pickup is removed per instruction
 
 export const CABS: Cab[] = [
-  { id: 'c1', type: 'Economy Sedan', model: 'Suzuki Dzire', pricePerKm: 0.18, estimatedPrice: 28, rating: 4.6, capacity: 4 },
-  { id: 'c2', type: 'Spacious SUV', model: 'Toyota Innova Crysta', pricePerKm: 0.28, estimatedPrice: 42, rating: 4.8, capacity: 6 },
-  { id: 'c3', type: 'Premium Luxury', model: 'Mercedes C-Class', pricePerKm: 0.75, estimatedPrice: 110, rating: 4.9, capacity: 4 },
-  { id: 'c4', type: 'Electric Green', model: 'Tata Nexon EV', pricePerKm: 0.22, estimatedPrice: 34, rating: 4.7, capacity: 4 },
+  { id: 'c1', type: 'Economy Sedan', model: 'Suzuki Dzire', pricePerKm: 12, estimatedPrice: 1800, rating: 4.6, capacity: 4 },
+  { id: 'c2', type: 'Spacious SUV', model: 'Toyota Innova Crysta', pricePerKm: 18, estimatedPrice: 3500, rating: 4.8, capacity: 6 },
+  { id: 'c3', type: 'Premium Luxury Tourer', model: 'Mahindra Scorpio-N', pricePerKm: 22, estimatedPrice: 4800, rating: 4.9, capacity: 6 },
+  { id: 'c4', type: 'Himalayan 4x4 Gypsy', model: 'Maruti Suzuki Gypsy', pricePerKm: 25, estimatedPrice: 4000, rating: 4.7, capacity: 4 },
 ];
 
 export const COUPONS: Coupon[] = [
   {
     code: 'MMTSUPER',
-    title: 'Up to 20% Off Flights',
-    desc: 'Instant 15% discount on domestic flights, capping at $40 with selected credit card providers.',
+    title: 'Up to 20% Off Rentals',
+    desc: 'Instant 15% discount on eco scooty and cruiser bikes, capping at ₹350 with local pre-bookings.',
     category: 'flights',
     discount: '15% Off',
-    imageUrl: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=120&q=80'
+    imageUrl: 'https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=120&q=80'
   },
   {
     code: 'MMTLUXSTAY',
     title: 'Stay 3, Pay for 2 Nights',
-    desc: 'Book select premium luxury suites and get your 3rd night entirely complimentary with direct room upgrades.',
+    desc: 'Book select custom pine-wood suites and enjoy your 3rd night entirely complimentary with native welcome drinks.',
     category: 'hotels',
     discount: 'Free Night',
     imageUrl: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=120&q=80'
   },
   {
     code: 'MMTINTELECT',
-    title: 'Save $100 on International',
-    desc: 'Get flat $100 off on international bookings value exceeding $500. Perfect for family getaways.',
+    title: 'Save ₹500 on Week Rentals',
+    desc: 'Get flat ₹500 off on weekly bike hires exceeding ₹2,500 total value.',
     category: 'flights',
-    discount: 'Flat $100 Off',
-    imageUrl: 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=120&q=80'
+    discount: 'Flat ₹500 Off',
+    imageUrl: 'https://images.unsplash.com/photo-1444492442247-4053ae6b0a29?auto=format&fit=crop&w=120&q=80'
   },
 ];

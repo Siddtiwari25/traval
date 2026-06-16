@@ -1,21 +1,56 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Compass, Briefcase, Calendar, Bell, Sliders, PlayCircle, Plane, Sparkles, Check, Info, Sun, Moon, Sunrise, TreePine, Waves } from 'lucide-react';
+import { Compass, Briefcase, Calendar, Bell, Sliders, PlayCircle, Plane, Sparkles, Check, Info, Sun, Moon, Sunrise, TreePine, Waves, Bike, Home, MapPin, Users, BookOpen, Star, Car, ArrowUp, ArrowDown, Play, Pause, ChevronsDown } from 'lucide-react';
 import { City, Booking, TravelTab } from './types';
 import { CITIES } from './data';
 
 // Modular Sub-components
 import SearchWidget from './components/SearchWidget';
 import SearchResults from './components/SearchResults';
-import OffersSection from './components/OffersSection';
 import AIPlanner from './components/AIPlanner';
 import ActiveBookings from './components/ActiveBookings';
 import UttarakhandTourExplorer from './components/UttarakhandTourExplorer';
 import ContactMethods from './components/ContactMethods';
+import AboutAndReviews from './components/AboutAndReviews';
+import BookingConfirmationModal from './components/BookingConfirmationModal';
+
+// Scenic photographs of beautiful Uttarakhand destinations for home page auto moving gallery
+const UTTARAKHAND_HERO_PHOTOS = [
+  {
+    url: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=800&q=80',
+    title: 'Kedarnath Snowy Sanctum',
+    vibe: 'Sacred Himalayan High Peak'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80',
+    title: 'Kainchi Dham Ashram',
+    vibe: 'Peaceful Spiritual Hub surrounded by Cedars'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1572883454114-1cf0031ed2a1?auto=format&fit=crop&w=800&q=80',
+    title: 'Prisinte Naini Lake',
+    vibe: 'Emerald Waters & Scenic Ridge views'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1598977123418-45f04b01fe14?auto=format&fit=crop&w=800&q=80',
+    title: 'Holy Ganga at Rishikesh',
+    vibe: 'Lakes & Rivers Gateway of Devbhoomi'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1486873249359-2731bd6dafc7?auto=format&fit=crop&w=800&q=80',
+    title: 'Chopta Valley Meadows',
+    vibe: 'Pristine Mini Switzerland Ridge'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&w=800&q=80',
+    title: 'Valley of Flowers',
+    vibe: 'Dense meadows of Himalayan blue poppies'
+  }
+];
 
 export default function App() {
   // Uttarakhand Theme Environment State
-  const [uttarakhandTheme, setUttarakhandTheme] = useState<'dawn' | 'blue' | 'dusk'>('dawn');
+  const [uttarakhandTheme, setUttarakhandTheme] = useState<'dawn' | 'blue' | 'dusk'>('blue');
 
   // Global booking tabs and states
   const [activeTab, setActiveTab] = useState<TravelTab>('flights');
@@ -49,6 +84,43 @@ export default function App() {
   // Coupon state
   const [appliedPromo, setAppliedPromo] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Multiple scenic photographs auto move slideshow index
+  const [scenicPhotoIndex, setScenicPhotoIndex] = useState(0);
+
+  // Single button Scroll controller state (false = top/auto up available, true = bottom/auto last available)
+  const [scrolledPastHalf, setScrolledPastHalf] = useState(false);
+
+  // Intermediary pending booking state for coupons checkout
+  const [pendingBooking, setPendingBooking] = useState<{
+    type: string;
+    provider: string;
+    routeDetails: string;
+    price: string;
+    date: string;
+    callback: (finalPrice: string, couponApplied?: string) => void;
+  } | null>(null);
+
+  // Listen to scroll ratio to toggle the single arrow button direction
+  useEffect(() => {
+    const handleScrollDepth = () => {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (scrollHeight <= 0) return;
+      const scrolledRatio = window.scrollY / scrollHeight;
+      // If user has scrolled down past 45%, point up to Top. Otherwise point down to Last/Bottom of website.
+      setScrolledPastHalf(scrolledRatio > 0.45);
+    };
+    window.addEventListener('scroll', handleScrollDepth);
+    return () => window.removeEventListener('scroll', handleScrollDepth);
+  }, []);
+
+  // Auto-move/play home page Uttarakhand slideshow every 3.5 seconds
+  useEffect(() => {
+    const slideTimer = setInterval(() => {
+      setScenicPhotoIndex((prev) => (prev + 1) % UTTARAKHAND_HERO_PHOTOS.length);
+    }, 3500);
+    return () => clearInterval(slideTimer);
+  }, []);
 
   // Synchronize bookings database to localStorage client-side
   useEffect(() => {
@@ -89,70 +161,102 @@ export default function App() {
   };
 
   const handleBookItem = (provider: string, routeDetails: string, price: string) => {
-    // Generate a secure, unique ticket booking alphanumeric sequence
-    const uniqueTicketId = Math.random().toString(36).substring(2, 8).toUpperCase();
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let codeStr = '';
-    for (let i = 0; i < 6; i++) {
-        codeStr += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-
-    const newBooking: Booking = {
-      id: `bk-${Date.now()}`,
+    setPendingBooking({
       type: activeTab,
       provider: provider,
       routeDetails: routeDetails,
-      date: departureDate,
       price: price,
-      code: codeStr,
-      status: 'Confirmed'
-    };
+      date: departureDate,
+      callback: (finalPrice: string, couponApplied?: string) => {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let codeStr = '';
+        for (let i = 0; i < 6; i++) {
+            codeStr += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
 
-    setBookings((prev) => [newBooking, ...prev]);
-    setShowMyLedger(true);
-    triggerToast(`Reservation confirmed! Your e-ticket code is ${codeStr}.`);
+        const newBooking: Booking = {
+          id: `bk-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+          type: activeTab,
+          provider: provider,
+          routeDetails: routeDetails,
+          date: departureDate,
+          price: finalPrice,
+          code: codeStr,
+          status: 'Confirmed'
+        };
+
+        setBookings((prev) => [newBooking, ...prev]);
+        setShowMyLedger(true);
+        triggerToast(`Reservation confirmed${couponApplied ? ` with Coupon ${couponApplied}` : ''}! Your e-ticket code is ${codeStr}.`);
+      }
+    });
   };
 
   const handleAddAITrip = (destination: string, days: number, budget: string) => {
-    const uniqueTicketId = Math.random().toString(36).substring(2, 8).toUpperCase();
-    const newBooking: Booking = {
-      id: `bk-ai-${Date.now()}`,
+    setPendingBooking({
       type: 'flights',
       provider: `Gemini AI: Full Tour Guide`,
       routeDetails: `${destination} (${days} Days Customizable Itinerary)`,
-      date: departureDate,
       price: budget,
-      code: `AI-${uniqueTicketId}`,
-      status: 'Confirmed'
-    };
+      date: departureDate,
+      callback: (finalPrice: string, couponApplied?: string) => {
+        const uniqueTicketId = Math.random().toString(36).substring(2, 8).toUpperCase();
+        const newBooking: Booking = {
+          id: `bk-ai-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+          type: 'flights',
+          provider: `Gemini AI: Full Tour Guide`,
+          routeDetails: `${destination} (${days} Days Customizable Itinerary)`,
+          date: departureDate,
+          price: finalPrice,
+          code: `AI-${uniqueTicketId}`,
+          status: 'Confirmed'
+        };
 
-    setBookings((prev) => [newBooking, ...prev]);
-    setShowMyLedger(true);
-    triggerToast(`Successfully loaded custom AI Guide for ${destination} in your trips!`);
+        setBookings((prev) => [newBooking, ...prev]);
+        setShowMyLedger(true);
+        triggerToast(`Successfully loaded custom AI Guide${couponApplied ? ` (Promo: ${couponApplied})` : ''} for ${destination} in your trips!`);
+      }
+    });
   };
 
   const handleBookUttarakhandTour = (provider: string, details: string, price: string) => {
-    const uniqueReceiptId = Math.random().toString(36).substring(2, 8).toUpperCase();
-    
-    const newBooking: Booking = {
-      id: `bk-ut-${Date.now()}`,
+    setPendingBooking({
       type: 'flights',
       provider: provider,
       routeDetails: details,
-      date: departureDate,
       price: price,
-      code: `UT-${uniqueReceiptId}`,
-      status: 'Confirmed'
-    };
+      date: departureDate,
+      callback: (finalPrice: string, couponApplied?: string) => {
+        const uniqueReceiptId = Math.random().toString(36).substring(2, 8).toUpperCase();
+        
+        const newBooking: Booking = {
+          id: `bk-ut-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+          type: 'flights',
+          provider: provider,
+          routeDetails: details,
+          date: departureDate,
+          price: finalPrice,
+          code: `UT-${uniqueReceiptId}`,
+          status: 'Confirmed'
+        };
 
-    setBookings((prev) => [newBooking, ...prev]);
-    setShowMyLedger(true);
-    triggerToast(`Spirit of Uttarakhand confirmed! Saved sequence: UT-${uniqueReceiptId}`);
+        setBookings((prev) => [newBooking, ...prev]);
+        setShowMyLedger(true);
+        triggerToast(`Spirit of Uttarakhand confirmed${couponApplied ? ` with discount code ${couponApplied}` : ''}! Saved sequence: UT-${uniqueReceiptId}`);
+      }
+    });
   };
 
   const handleCancelBooking = (bookingId: string) => {
     setBookings((prev) => prev.filter((bk) => bk.id !== bookingId));
     triggerToast(`Reservation ${bookingId.substring(0,8)} successfully refunded and cancelled.`);
+  };
+
+  const handleUpdateBooking = (updatedBooking: Booking) => {
+    setBookings((prev) =>
+      prev.map((bk) => (bk.id === updatedBooking.id ? updatedBooking : bk))
+    );
+    triggerToast(`Reservation status for e-ticket [ ${updatedBooking.code} ] has been modified. ✅`);
   };
 
   const handleApplyPromo = (code: string) => {
@@ -186,13 +290,33 @@ export default function App() {
           
           {/* Logo brand */}
           <a href="#" className="flex items-center gap-2 group">
-            <span className="text-xl md:text-2xl font-black tracking-tight select-none">
-              make<span className="text-sky-400">my</span>trip
+            <span className="text-xl md:text-2xl font-black tracking-tight select-none uppercase">
+              Rudra<span className="text-orange-500"> Travel</span>
             </span>
-            <span className="text-[9px] bg-sky-500/10 border border-sky-400/20 text-sky-400 font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider hidden sm:inline-block">
-              Workspace
+            <span className="text-[9px] bg-orange-500/10 border border-orange-400/20 text-orange-400 font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider hidden sm:inline-block">
+              Rakesh Cab Service
             </span>
           </a>
+
+          {/* Main Navigation (Requested) */}
+          <nav className="hidden lg:flex items-center gap-5 text-[10.5px] font-black uppercase tracking-wider text-slate-300">
+            <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-orange-400 hover:scale-103 transition-all cursor-pointer">Home</button>
+            <button onClick={() => {
+              const el = document.getElementById('curated-holiday-packages');
+              if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+              }
+              window.dispatchEvent(new CustomEvent('clear-tour-filters'));
+            }} className="text-orange-400 font-extrabold hover:text-orange-355 hover:scale-103 transition-all cursor-pointer">
+              Tour Packages 🎁
+            </button>
+            <button onClick={() => document.getElementById('section-about')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-orange-400 hover:scale-103 transition-all cursor-pointer">About us</button>
+            <button onClick={() => document.getElementById('section-services')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-orange-400 hover:scale-103 transition-all cursor-pointer">Services</button>
+            <button onClick={() => document.getElementById('uttarakhand-tour-explorer')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-orange-400 hover:scale-103 transition-all cursor-pointer">Interactive Map</button>
+            <button onClick={() => document.getElementById('section-blogs')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-orange-400 hover:scale-103 transition-all cursor-pointer">Blogs</button>
+            <button onClick={() => document.getElementById('section-reviews')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-orange-400 hover:scale-103 transition-all cursor-pointer">Recent Posts & Reviews</button>
+            <button onClick={() => document.getElementById('contact-outer-container')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-orange-400 hover:scale-103 transition-all cursor-pointer">Contact</button>
+          </nav>
 
           {/* Prompt status context or ledger access */}
           <div className="flex items-center gap-4 text-sm font-semibold">
@@ -222,6 +346,102 @@ export default function App() {
           </div>
         </div>
       </header>
+
+      {/* Mobile-Responsive Navigation shortcuts ribbon bar */}
+      <div className="bg-slate-900 border-t border-b border-white/5 sticky top-16 z-30 transition-all shadow-md">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-2 flex items-center justify-between gap-4 overflow-x-auto scrollbar-none">
+          <div className="flex items-center gap-1.5 md:gap-3 shrink-0">
+            <span className="text-[10px] uppercase font-black tracking-widest text-orange-450 bg-orange-500/15 border border-orange-500/20 px-2 py-0.5 rounded-md hidden xs:inline-block">Shortcuts:</span>
+            
+            <button 
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} 
+              className="group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-orange-500/10 hover:text-orange-300 text-slate-300 text-xs font-bold uppercase transition-all cursor-pointer whitespace-nowrap"
+            >
+              <Home className="w-3.5 h-3.5 text-orange-400 group-hover:scale-110 transition-transform" />
+              <span>Home</span>
+            </button>
+
+            <button 
+              onClick={() => {
+                const el = document.getElementById('curated-holiday-packages');
+                if (el) {
+                  el.scrollIntoView({ behavior: 'smooth' });
+                }
+                window.dispatchEvent(new CustomEvent('clear-tour-filters'));
+              }} 
+              className="group inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-orange-500/20 text-orange-200 border border-orange-500/30 hover:bg-orange-500/30 text-xs font-black uppercase transition-all cursor-pointer whitespace-nowrap"
+            >
+              <Compass className="w-3.5 h-3.5 text-orange-400 animate-pulse" />
+              <span>Tour Packages 🎁</span>
+            </button>
+
+            <button 
+              onClick={() => {
+                document.getElementById('section-about')?.scrollIntoView({ behavior: 'smooth' });
+              }} 
+              className="group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-sky-500/10 hover:text-sky-300 text-slate-300 text-xs font-bold uppercase transition-all cursor-pointer whitespace-nowrap"
+            >
+              <Users className="w-3.5 h-3.5 text-sky-400 group-hover:scale-110 transition-transform" />
+              <span>About us</span>
+            </button>
+
+            <button 
+              onClick={() => {
+                document.getElementById('section-services')?.scrollIntoView({ behavior: 'smooth' });
+              }} 
+              className="group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-emerald-500/10 hover:text-emerald-300 text-slate-300 text-xs font-bold uppercase transition-all cursor-pointer whitespace-nowrap"
+            >
+              <Car className="w-3.5 h-3.5 text-emerald-450 group-hover:scale-110 transition-transform" />
+              <span>Services</span>
+            </button>
+
+            <button 
+              onClick={() => {
+                document.getElementById('uttarakhand-tour-explorer')?.scrollIntoView({ behavior: 'smooth' });
+              }} 
+              className="group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-purple-500/10 hover:text-purple-300 text-slate-300 text-xs font-bold uppercase transition-all cursor-pointer whitespace-nowrap"
+            >
+              <Compass className="w-3.5 h-3.5 text-purple-400 group-hover:scale-110 transition-transform" />
+              <span>Photo Gallery</span>
+            </button>
+
+            <button 
+              onClick={() => {
+                document.getElementById('section-blogs')?.scrollIntoView({ behavior: 'smooth' });
+              }} 
+              className="group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-pink-500/10 hover:text-pink-300 text-slate-300 text-xs font-bold uppercase transition-all cursor-pointer whitespace-nowrap"
+            >
+              <BookOpen className="w-3.5 h-3.5 text-pink-450 group-hover:scale-110 transition-transform" />
+              <span>Blogs</span>
+            </button>
+
+            <button 
+              onClick={() => {
+                document.getElementById('section-reviews')?.scrollIntoView({ behavior: 'smooth' });
+              }} 
+              className="group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-amber-500/10 hover:text-amber-300 text-slate-300 text-xs font-bold uppercase transition-all cursor-pointer whitespace-nowrap"
+            >
+              <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-500/20 group-hover:scale-110 transition-transform" />
+              <span>Guest Reviews & Rating</span>
+            </button>
+
+            <button 
+              onClick={() => {
+                document.getElementById('expert-support-hub')?.scrollIntoView({ behavior: 'smooth' });
+              }} 
+              className="group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 hover:bg-orange-500/10 hover:text-orange-400 text-slate-200 text-xs font-black uppercase transition-all cursor-pointer border border-orange-500/25 whitespace-nowrap"
+            >
+              <MapPin className="w-3.5 h-3.5 text-orange-400 group-hover:animate-bounce" />
+              <span>Head Office & Hub</span>
+            </button>
+          </div>
+
+          <div className="hidden md:flex items-center gap-2 text-[10px] text-slate-400 font-extrabold uppercase tracking-wider shrink-0">
+            <span>📞 Helpline 24/7 Support:</span>
+            <span className="text-white font-black">+91 98765-43210</span>
+          </div>
+        </div>
+      </div>
 
       {/* Hero & bookings engine core */}
       <main className="flex-1 pb-16">
@@ -384,27 +604,75 @@ export default function App() {
               Experience holy rivers, mystical peak sunsets, and pristine mountain lodging. Let Gemini AI tailor your spiritual Himalayan retreat instantly.
             </motion.p>
 
+            {/* Scenic Uttarakhand Auto Moving Slideshow */}
+            <div className="my-6 max-w-lg mx-auto relative z-20">
+              <div className="relative h-44 sm:h-52 w-full rounded-2xl overflow-hidden border-2 border-white/10 shadow-2xl bg-black">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={scenicPhotoIndex}
+                    initial={{ opacity: 0.3, scale: 1.05 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0.3, scale: 0.95 }}
+                    transition={{ duration: 0.8 }}
+                    className="absolute inset-0"
+                  >
+                    <img
+                      src={UTTARAKHAND_HERO_PHOTOS[scenicPhotoIndex].url}
+                      alt={UTTARAKHAND_HERO_PHOTOS[scenicPhotoIndex].title}
+                      className="w-full h-full object-cover select-none pointer-events-none"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  </motion.div>
+                </AnimatePresence>
+
+                {/* Left/Right manual click triggers */}
+                <button
+                  type="button"
+                  onClick={() => setScenicPhotoIndex((prev) => (prev - 1 + UTTARAKHAND_HERO_PHOTOS.length) % UTTARAKHAND_HERO_PHOTOS.length)}
+                  className="absolute left-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/40 hover:bg-orange-500/80 text-white flex items-center justify-center font-bold text-sm cursor-pointer select-none"
+                  title="Previous Destination Picture"
+                >
+                  ‹
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setScenicPhotoIndex((prev) => (prev + 1) % UTTARAKHAND_HERO_PHOTOS.length)}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/40 hover:bg-orange-500/80 text-white flex items-center justify-center font-bold text-sm cursor-pointer select-none"
+                  title="Next Destination Picture"
+                >
+                  ›
+                </button>
+
+                {/* Picture Information Tag */}
+                <div className="absolute bottom-3 left-4 right-4 text-left pointer-events-none">
+                  <span className="inline-block px-2 py-0.5 rounded-md bg-orange-600 text-white text-[9px] font-black uppercase tracking-wider mb-1">
+                    {UTTARAKHAND_HERO_PHOTOS[scenicPhotoIndex].vibe}
+                  </span>
+                  <h4 className="text-white text-xs sm:text-sm font-extrabold tracking-tight drop-shadow-md">
+                    {UTTARAKHAND_HERO_PHOTOS[scenicPhotoIndex].title}
+                  </h4>
+                </div>
+
+                {/* Slide indicator dots */}
+                <div className="absolute top-3 right-4 flex gap-1.5 z-20">
+                  {UTTARAKHAND_HERO_PHOTOS.map((_, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setScenicPhotoIndex(idx)}
+                      className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
+                        idx === scenicPhotoIndex ? 'bg-orange-500 w-4' : 'bg-white/40 hover:bg-white/75'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+
             {/* Uttarakhand Theme Ambiance Controls */}
             <div id="uttarakhand-theme-selector" className="mt-6 flex flex-wrap justify-center gap-2 relative z-20">
               <span className="text-white/40 text-[10px] font-bold uppercase tracking-wider block w-full mb-1">Ambiance Preset</span>
               
-              <button
-                type="button"
-                id="preset-himalayan-dawn"
-                onClick={() => {
-                  setUttarakhandTheme('dawn');
-                  triggerToast("Switched ambiance to Golden Himalayan Dawn 🌅");
-                }}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-extrabold tracking-tight transition-all cursor-pointer backdrop-blur-md border ${
-                  uttarakhandTheme === 'dawn'
-                    ? 'bg-amber-500/20 border-amber-400 text-amber-200 shadow-lg'
-                    : 'bg-black/20 hover:bg-black/30 border-white/10 text-white/70 hover:text-white'
-                }`}
-              >
-                <Sunrise className="w-3.5 h-3.5 text-amber-400" />
-                <span>Himalayan Dawn</span>
-              </button>
-
               <button
                 type="button"
                 id="preset-glacial-valley"
@@ -467,11 +735,6 @@ export default function App() {
           />
         </div>
 
-        {/* PROMOTIONS SLAT */}
-        <section className="max-w-6xl mx-auto px-4 mt-14">
-          <OffersSection onApplyPromo={handleApplyPromo} />
-        </section>
-
         {/* ACTIVE SEARCH RESULTS SCREEN */}
         <AnimatePresence>
           {showResults && (
@@ -484,6 +747,7 @@ export default function App() {
                 fromCity={fromCity}
                 toCity={toCity}
                 onBook={handleBookItem}
+                appliedPromoCode={appliedPromo}
               />
             </section>
           )}
@@ -502,6 +766,11 @@ export default function App() {
           <AIPlanner onAddAITripToBookings={handleAddAITrip} />
         </section>
 
+        {/* CUSTOM ENRICHED ABOUT US & REVIEWS SECTION */}
+        <section className="max-w-6xl mx-auto px-4 mt-16">
+          <AboutAndReviews />
+        </section>
+
         {/* COMPREHENSIVE CONTACT METHODS WITH ANIMATED ICONS */}
         <section className="max-w-6xl mx-auto px-4">
           <ContactMethods />
@@ -512,9 +781,9 @@ export default function App() {
       <footer className="bg-slate-900 text-slate-500 py-12 px-6 border-t border-slate-800">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <span className="text-xl font-bold tracking-tight text-white">make<span className="text-sky-400">my</span>trip</span>
+            <span className="text-xl font-bold tracking-tight text-white uppercase">rudra<span className="text-orange-500"> travel</span></span>
             <p className="text-xs text-slate-400 font-medium mt-3 leading-relaxed max-w-sm">
-              Sandbox travel replication workspace using custom Vite, full-stack Express layouts, and premium Gemini model integrations.
+              Explore beautiful custom travel packages and book 24/7 Rakesh Cab Service across Nainital, Almora, Kausani, and Mukteshwar.
             </p>
           </div>
           <div>
@@ -533,7 +802,7 @@ export default function App() {
           </div>
         </div>
         <div className="max-w-7xl mx-auto border-t border-slate-800 mt-8 pt-8 text-center text-xs font-medium">
-          &copy; 2026 MakeMyTrip Inspired Travel Space. Custom Prototyping Platform.
+          &copy; 2026 Rudra Travel Guide & Rakesh Cab Service. Authentic Devbhoomi Tour Operators.
         </div>
       </footer>
 
@@ -556,11 +825,21 @@ export default function App() {
             >
               {/* Flight vector moving path container */}
               <div className="h-16 relative overflow-hidden mb-6 bg-slate-50 rounded-2xl flex items-center border border-slate-100">
-                <Plane className="w-10 h-10 text-sky-500 animate-flight absolute" />
+                {activeTab === 'flights' ? (
+                  <Bike className="w-10 h-10 text-sky-500 animate-flight absolute" />
+                ) : (
+                  <Plane className="w-10 h-10 text-sky-500 animate-flight absolute" />
+                )}
               </div>
-              <h3 className="text-xl font-extrabold text-slate-800">Compiling Travel Rates...</h3>
+              <h3 className="text-xl font-extrabold text-slate-800">
+                {activeTab === 'flights' ? 'Compiling Rental Fleet Rates...' : 'Compiling Travel Rates...'}
+              </h3>
               <p className="text-sm text-slate-400 mt-2 font-medium">
-                Syncing custom fares for travel <span className="font-extrabold text-slate-600">{fromCity.code}</span> to <span className="font-extrabold text-slate-600">{toCity.code}</span>
+                {activeTab === 'flights' ? (
+                  <>Syncing custom rent quotes at <span className="font-extrabold text-slate-600">{fromCity.name}</span></>
+                ) : (
+                  <>Syncing custom fares for travel <span className="font-extrabold text-slate-600">{fromCity.code}</span> to <span className="font-extrabold text-slate-600">{toCity.code}</span></>
+                )}
               </p>
               
               <div className="w-full bg-slate-100 h-1.5 rounded-full mt-6 overflow-hidden">
@@ -577,12 +856,42 @@ export default function App() {
       </AnimatePresence>
 
       {/* BOOKING DRAWER */}
+      <BookingConfirmationModal
+        isOpen={pendingBooking !== null}
+        onClose={() => setPendingBooking(null)}
+        pendingBooking={pendingBooking}
+      />
+
       <ActiveBookings
         isOpen={showMyLedger}
         onClose={() => setShowMyLedger(false)}
         bookings={bookings}
         onCancelBooking={handleCancelBooking}
+        onUpdateBooking={handleUpdateBooking}
       />
+
+      {/* SINGLE TOGGLE INSTANT SCROLL ARROW BUTTON (Auto Up & Auto Last) */}
+      <div className="fixed bottom-6 right-6 z-40 pointer-events-auto">
+        <button
+          onClick={() => {
+            if (scrolledPastHalf) {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              triggerToast("Scrolled smoothly to the top! 🌅");
+            } else {
+              window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+              triggerToast("Scrolled smoothly to the bottom! 🏔️");
+            }
+          }}
+          title={scrolledPastHalf ? "Scroll to Top (Auto Up)" : "Scroll to Bottom (Auto Last)"}
+          className="w-12 h-12 rounded-full bg-slate-900 border border-slate-700 hover:bg-orange-600 text-slate-200 hover:text-white flex items-center justify-center cursor-pointer shadow-2xl transition-all duration-300 hover:scale-110 active:scale-90 group"
+        >
+          {scrolledPastHalf ? (
+            <ArrowUp className="w-5 h-5 transition-transform duration-300 group-hover:-translate-y-0.5" />
+          ) : (
+            <ArrowDown className="w-5 h-5 transition-transform duration-300 group-hover:translate-y-0.5" />
+          )}
+        </button>
+      </div>
     </div>
   );
 }
