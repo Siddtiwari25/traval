@@ -4,7 +4,7 @@ export interface City {
   airport: string;
 }
 
-export type TravelTab = 'flights' | 'hotels' | 'trains' | 'cabs';
+export type TravelTab = 'Bike/Scooty' | 'hotels' | 'trains' | 'cabs';
 
 export interface Booking {
   id: string;
