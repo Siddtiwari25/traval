@@ -103,3 +103,28 @@
   animation: soarAround 25s infinite linear;
 }
 
+/* Infinite Marquee Left-to-Right layout */
+@keyframes marqueeLeftToRight {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes gradientText {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient-text {
+  background-size: 200% auto;
+  animation: gradientText 6s ease infinite;
+}
+
+.animate-marquee-lr {
+  animation: marqueeLeftToRight 65s infinite linear;
+}
+

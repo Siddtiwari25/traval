@@ -1,7 +1,7 @@
 export interface City {
   name: string;
   code: string;
-  airport: string;
+  hotels: string;
 }
 
 export type TravelTab = 'flights' | 'hotels' | 'trains' | 'cabs';

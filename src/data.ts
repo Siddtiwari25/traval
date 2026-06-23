@@ -1,20 +1,27 @@
 import { City, Flight, Hotel, Train, Cab, Coupon } from "./types";
 
 export const CITIES: City[] = [
-  { name: 'Nainital Complex', code: 'NTL', airport: 'Tallital Bus Station & Lake Yard' },
-  { name: 'Pantnagar Hub', code: 'PGH', airport: 'Pantnagar Domestic Airport (120km away)' },
-  { name: 'Dehradun Valley', code: 'DED', airport: 'Jolly Grant Airport' },
-  { name: 'Delhi NCR IGI', code: 'DEL', airport: 'Indira Gandhi International Airport Terminal 3' },
-  { name: 'Bhatelia Office', code: 'BHT', airport: 'Bhatelia-Mukteshwar Rd main crossing' },
-  { name: 'Mukteshwar Town', code: 'MUK', airport: 'Mohan Bazaar Primary Cab Station' }
+  { name: 'Mukteshwar Town', code: 'MUK', hotels: 'Mohan Bazaar Main Stand' },
+  { name: 'Bhatelia Office', code: 'BHT', hotels: 'Bhatelia-Mukteshwar Crossing Office' },
+  { name: 'Bhimtal', code: 'BML', hotels: 'Bhimtal Lake Side Stand' },
+  { name: 'Kainchi Dham', code: 'KCD', hotels: 'Neem Karoli Baba Ashram Gate' },
+  { name: 'Nainital', code: 'NTL', hotels: 'Tallital Bus Station & Lake Yard' },
+  { name: 'Sattal', code: 'STL', hotels: 'Sattal Lake Camping Ground' },
+  { name: 'Almora & Kasar Devi', code: 'AKD', hotels: 'Kasar Devi Temple Ridge Stand' },
+  { name: 'Haridwar', code: 'HW', hotels: 'Haridwar Railway Station / Ghats' },
+  { name: 'Rishikesh', code: 'RK', hotels: 'Laxman Jhula & Tapovan Crossing' },
+  { name: 'Dehradun', code: 'DDN', hotels: 'Jolly Grant Hotels / Town Center' },
+  { name: 'Mussoorie', code: 'MSO', hotels: 'Library Chowk & Mall Road Stand' },
+  { name: 'Dhanaulti', code: 'DHT', hotels: 'Eco Park Main Entrance' },
+  { name: 'Lansdowne', code: 'LDN', hotels: 'Gandhi Chowk cantonment town' }
 ];
 
 export const FLIGHTS: Flight[] = [
-  { id: 'f1', airline: 'Honda Activa 6G', logoCode: 'COOT', flightNo: 'ACT-6G', fromTime: '08:00 AM', toTime: '08:00 PM', duration: '110cc Automatic', stops: 'Petrol (Self-Start)', price: 450 },
-  { id: 'f2', airline: 'Royal Enfield Classic 350', logoCode: 'BIKE', flightNo: 'RE-350', fromTime: '09:00 AM', toTime: '09:00 PM', duration: '350cc Manual Gear', stops: 'Petrol (Royal Feel)', price: 900 },
-  { id: 'f3', airline: 'Yamaha FZ-S FI', logoCode: 'BIKE', flightNo: 'YAM-149', fromTime: '08:00 AM', toTime: '08:00 PM', duration: '149cc Manual Gear', stops: 'Petrol (Fuel Injected)', price: 700 },
-  { id: 'f4', airline: 'TVS Jupiter 125', logoCode: 'COOT', flightNo: 'JUP-125', fromTime: '08:30 AM', toTime: '08:30 PM', duration: '124cc Automatic', stops: 'Petrol (Eco Mode)', price: 450 },
-  { id: 'f5', airline: 'Bajaj Avenger Cruise 220', logoCode: 'BIKE', flightNo: 'AVG-220', fromTime: '07:30 AM', toTime: '07:30 PM', duration: '220cc Manual Gear', stops: 'Petrol (Cruiser Bike)', price: 800 },
+  { id: 'f1', airline: 'Honda Activa 6G', logoCode: 'COOT', flightNo: 'ACT-6G', fromTime: '08:00 AM', toTime: '08:00 PM', duration: '110cc Automatic', stops: 'Petrol (Self-Start)', price: 499 },
+  { id: 'f2', airline: 'Royal Enfield Classic 350', logoCode: 'BIKE', flightNo: 'RE-350', fromTime: '09:00 AM', toTime: '09:00 PM', duration: '350cc Manual Gear', stops: 'Petrol (Royal Feel)', price: 599 },
+  { id: 'f3', airline: 'Yamaha FZ-S FI', logoCode: 'BIKE', flightNo: 'YAM-149', fromTime: '08:00 AM', toTime: '08:00 PM', duration: '149cc Manual Gear', stops: 'Petrol (Fuel Injected)', price: 599 },
+  { id: 'f4', airline: 'TVS Jupiter 125', logoCode: 'COOT', flightNo: 'JUP-125', fromTime: '08:30 AM', toTime: '08:30 PM', duration: '124cc Automatic', stops: 'Petrol (Eco Mode)', price: 499 },
+  { id: 'f5', airline: 'Bajaj Avenger Cruise 220', logoCode: 'BIKE', flightNo: 'AVG-220', fromTime: '07:30 AM', toTime: '07:30 PM', duration: '220cc Manual Gear', stops: 'Petrol (Cruiser Bike)', price: 599 },
 ];
 
 export const HOTELS: Hotel[] = [
