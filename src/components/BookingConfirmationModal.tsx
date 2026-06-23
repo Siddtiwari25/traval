@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plane, Home, Car, Bike, Briefcase, Calendar, Gift, X, Check, Tag } from 'lucide-react';
+import { Plane, Home, Car, Bike, Briefcase, Calendar, Gift, X, Check, Tag, Phone, QrCode, Copy, ExternalLink, MessageSquare } from 'lucide-react';
 import { TravelTab } from '../types';
 
 interface BookingConfirmationModalProps {
@@ -34,12 +34,22 @@ export default function BookingConfirmationModal({
   const [appliedPromo, setAppliedPromo] = useState<{ code: string; percent: number } | null>(null);
   const [promoError, setPromoError] = useState<string | null>(null);
 
-  // Reset coupon state whenever a new booking is pending
+  // Simple Payment States
+  const [paymentMethod, setPaymentMethod] = useState<'qr' | 'upi' | 'support' | 'whatsapp'>('qr');
+  const [isCopied, setIsCopied] = useState(false);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [isPaying, setIsPaying] = useState(false);
+
+  // Reset coupon and payment states whenever a new booking is pending
   useEffect(() => {
     if (pendingBooking) {
       setPromoInput('');
       setAppliedPromo(null);
       setPromoError(null);
+      setPaymentMethod('qr');
+      setPaymentError(null);
+      setIsPaying(false);
+      setIsCopied(false);
     }
   }, [pendingBooking]);
 
@@ -92,6 +102,35 @@ export default function BookingConfirmationModal({
     }
   };
 
+  const handlePaymentAndConfirm = () => {
+    setPaymentError(null);
+    setIsPaying(true);
+    
+    if (pendingBooking) {
+      pendingBooking.callback(finalPayableStr, appliedPromo?.code);
+    }
+
+    // Direct WhatsApp redirect with detailed package invoice details
+    const waNumber = "918859490284";
+    const message = `Hello Rudra Devbhoomi, I am booking the following package:\n\n*Service/Package:* ${pendingBooking?.provider}\n*Itinerary Details:* ${pendingBooking?.routeDetails}\n*Price:* ${finalPayableStr}\n*Date:* ${pendingBooking?.date}\n\nI have initiated the payment. Here is the screenshot!`;
+    const encodedMsg = encodeURIComponent(message);
+    const waUrl = `https://wa.me/${waNumber}?text=${encodedMsg}`;
+
+    try {
+      const win = window.open(waUrl, '_blank');
+      if (!win) {
+        window.location.href = waUrl;
+      }
+    } catch (e) {
+      window.location.href = waUrl;
+    }
+
+    setTimeout(() => {
+      setIsPaying(false);
+      onClose();
+    }, 1000);
+  };
+
   const getTabIcon = (type: string) => {
     switch (type) {
       case 'flights':
@@ -129,8 +168,8 @@ export default function BookingConfirmationModal({
           <div className="bg-slate-900 text-white p-5 flex items-center justify-between border-b border-white/5 select-none shrink-0">
             <div className="flex items-center gap-2">
               <Gift className="w-5 h-5 text-orange-500 animate-bounce" />
-              <h3 className="font-black text-sm uppercase tracking-wider">
-                Booking Coupons & Checkout
+              <h3 className="font-black text-sm uppercase tracking-wider animate-pulse">
+                Secure Booking & Pay
               </h3>
             </div>
             <button
@@ -157,7 +196,7 @@ export default function BookingConfirmationModal({
                   <h4 className="font-extrabold text-sm text-slate-800 tracking-tight leading-tight">
                     {pendingBooking.provider}
                   </h4>
-                  <p className="text-xs text-slate-500 font-medium leading-relaxed mt-0.5 mt-1">
+                  <p className="text-xs text-slate-500 font-medium leading-relaxed mt-1">
                     {pendingBooking.routeDetails}
                   </p>
                   <div className="flex items-center gap-1.5 mt-2 bg-slate-200/50 w-max px-2.5 py-0.5 rounded-md">
@@ -185,7 +224,7 @@ export default function BookingConfirmationModal({
 
               {/* Grid of active pre-defined vouchers */}
               <div id="booking-promo-choices" className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {AVAILABLE_PROMOS.map((promo) => {
+                {AVAILABLE_PROMOS.slice(0, 4).map((promo) => {
                   const isActive = appliedPromo?.code === promo.code;
                   return (
                     <button
@@ -250,8 +289,258 @@ export default function BookingConfirmationModal({
               )}
             </div>
 
+            {/* SECURE DIRECT PAYMENT OPTIONS SPLIT */}
+            <div className="bg-slate-50 border border-slate-200/60 rounded-2xl p-4.5 space-y-3">
+              <span className="block text-[9.5px] font-black uppercase text-slate-500 tracking-wider">
+                💳 Secure Quick Booking Payment Options
+              </span>
+
+              {/* Quick Note: Pay and send screenshot on WhatsApp */}
+              <div className="bg-emerald-50 text-emerald-950 border border-emerald-200 rounded-xl p-3 text-[11px] font-extrabold flex items-start gap-2.5 shadow-xs select-none">
+                <span className="text-sm mt-0.5 animate-bounce">📱</span>
+                <div>
+                  <span className="block text-[11px] font-black text-emerald-900 uppercase tracking-tight">Important Step</span>
+                  <p className="font-semibold text-[10px] text-emerald-800 leading-normal mt-0.5">
+                    Pay after send the screenshot on WhatsApp <span className="font-black underline text-emerald-950">+91 8859490284</span> to get immediate active receipt confirmation and boarding token!
+                  </p>
+                </div>
+              </div>
+              
+              {/* Payment Tabs Selection */}
+              <div className="grid grid-cols-4 gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPaymentMethod('qr');
+                    setPaymentError(null);
+                  }}
+                  className={`flex flex-col items-center justify-center py-2.5 rounded-xl border text-[9.5px] font-black transition-all cursor-pointer ${
+                    paymentMethod === 'qr'
+                      ? 'bg-emerald-50 border-emerald-400 text-emerald-950 font-black shadow-xs'
+                      : 'bg-white hover:bg-slate-100 border-slate-200 text-slate-600'
+                  }`}
+                >
+                  <QrCode className="w-4 h-4 mb-1 text-emerald-600" />
+                  <span>Scan QR</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPaymentMethod('upi');
+                    setPaymentError(null);
+                  }}
+                  className={`flex flex-col items-center justify-center py-2.5 rounded-xl border text-[9.5px] font-black transition-all cursor-pointer ${
+                    paymentMethod === 'upi'
+                      ? 'bg-emerald-50 border-emerald-400 text-emerald-950 font-black shadow-xs'
+                      : 'bg-white hover:bg-slate-100 border-slate-200 text-slate-600'
+                  }`}
+                >
+                  <span className="text-base mb-0.5">📱</span>
+                  <span>UPI ID</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPaymentMethod('support');
+                    setPaymentError(null);
+                  }}
+                  className={`flex flex-col items-center justify-center py-2.5 rounded-xl border text-[9.5px] font-black transition-all cursor-pointer ${
+                    paymentMethod === 'support'
+                      ? 'bg-emerald-50 border-emerald-400 text-emerald-950 font-black shadow-xs'
+                      : 'bg-white hover:bg-slate-100 border-slate-200 text-slate-600'
+                  }`}
+                >
+                  <Phone className="w-4 h-4 mb-1 text-sky-600" />
+                  <span>Call Us</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPaymentMethod('whatsapp');
+                    setPaymentError(null);
+                  }}
+                  className={`flex flex-col items-center justify-center py-2.5 rounded-xl border text-[9.5px] font-black transition-all cursor-pointer ${
+                    paymentMethod === 'whatsapp'
+                      ? 'bg-emerald-50 border-emerald-400 text-emerald-950 font-black shadow-xs'
+                      : 'bg-white hover:bg-slate-100 border-slate-200 text-slate-600'
+                  }`}
+                >
+                  <MessageSquare className="w-4 h-4 mb-1 text-teal-600" />
+                  <span>whatsapp</span>
+                </button>
+              </div>
+
+              {/* TAB 1: QR CODE */}
+              {paymentMethod === 'qr' && (
+                <div className="space-y-2.5 pt-2 text-center flex flex-col items-center justify-center">
+                  <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs relative">
+                    <svg width="115" height="115" viewBox="0 0 100 100" className="text-slate-900 mx-auto" fill="currentColor">
+                      <path d="M0,0 h30 v30 h-30 z M10,10 h10 v10 h-10 z" />
+                      <path d="M70,0 h30 v30 h-30 z M80,10 h10 v10 h-10 z" />
+                      <path d="M0,70 h30 v30 h-30 z M10,80 h10 v10 h-10 z" />
+                      <path d="M40,5 h5 v5 h-5 z M50,0 h5 v10 h-5 z M60,10 h5 v5 h-5 z M45,20 h10 v5 h-10 z M60,25 h5 v5 h-5 z" />
+                      <path d="M35,35 h5 v5 h-5 z M45,40 h15 v5 h-15 z M30,50 h10 v5 h-10 z M55,50 h5 v10 h-5 z M40,60 h5 v5 h-5 z M50,65 h10 v5 h-10 z" />
+                      <path d="M35,75 h5 v5 h-5 z M45,80 h5 v15 h-5 z M55,75 h10 v5 h-10 z M60,85 h15 v5 h-15 z M80,40 h10 v5 h-10 z M75,50 h15 v5 h-15 z M90,60 h10 v5 h-10 z M85,75 h10 v10 h-10 z" />
+                      <rect x="42" y="42" width="16" height="16" rx="3" fill="#ffffff" />
+                      <path d="M46,51 L50,43 L54,51 Z" fill="#059669" />
+                    </svg>
+                    <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 bg-emerald-600 text-[8.5px] font-black text-white px-2 py-0.5 rounded-full uppercase tracking-wider select-none">
+                      UPI SCANNER
+                    </div>
+                  </div>
+                  <p className="text-[10px] text-slate-500 font-bold max-w-xs leading-normal">
+                    Scan QR with Google Pay, PhonePe, Paytm or Bhim UPI to send transfer.
+                  </p>
+                  
+                  <a 
+                    href={`upi://pay?pa=8859490284@ybl&pn=Rudra%20Devbhoomi%2520Tours&am=${finalPayableNum}&cu=INR`}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-[9.5px] font-black uppercase transition-all"
+                  >
+                    <span>Instant UPI App Pay</span>
+                    <ExternalLink className="w-3 h-3 text-emerald-450" />
+                  </a>
+                </div>
+              )}
+
+              {/* TAB 2: UPI PAY / ADDRESS & PHONE TRANSFERS */}
+              {paymentMethod === 'upi' && (
+                <div className="space-y-3 pt-1">
+                  <div className="space-y-1">
+                    <label className="block text-[9px] font-black text-slate-500 uppercase">
+                      UPI Virtual Payment Address
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        readOnly
+                        value="8859490284@ybl"
+                        className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono font-black text-slate-800 focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText("8859490284@ybl");
+                          setIsCopied(true);
+                          setTimeout(() => setIsCopied(false), 2000);
+                        }}
+                        className="bg-slate-800 hover:bg-slate-950 text-white p-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-center shrink-0"
+                        title="Copy UPI address"
+                      >
+                        {isCopied ? <Check className="w-3.5 h-3.5 text-emerald-450" /> : <Copy className="w-3.5 h-3.5" />}
+                      </button>
+                    </div>
+                    {isCopied && (
+                      <span className="block text-[8px] text-emerald-600 font-extrabold uppercase">
+                        ✓ UPI Address Copied successfully!
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="bg-slate-100 p-2.5 rounded-xl border border-slate-200/50">
+                    <span className="block text-[8px] font-black text-slate-500 uppercase mb-0.5">UPI / Transfer Phone Number</span>
+                    <div className="flex items-center justify-between text-xs font-bold text-slate-800">
+                      <span>GPAY / PHONEPE:</span>
+                      <span className="font-mono text-slate-950 underline">+91 8859490284</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 3: DIRECT CALL */}
+              {paymentMethod === 'support' && (
+                <div className="space-y-3 pt-2 text-center py-2">
+                  <div className="w-10 h-10 bg-sky-50 text-sky-600 rounded-full flex items-center justify-center mx-auto mb-1">
+                    <Phone className="w-5 h-5 animate-pulse" />
+                  </div>
+                  <div>
+                    <span className="block text-[11px] font-black text-slate-800 tracking-tight leading-tight">
+                      Direct Helpdesk support
+                    </span>
+                    <span className="block text-[9px] text-slate-500 font-semibold leading-relaxed mt-1 max-w-xs mx-auto">
+                      Need custom transport, ride changes or instant verification? Tap to Call or WhatsApp below.
+                    </span>
+                  </div>
+                  
+                  <div className="flex flex-col gap-1.5 max-w-xs mx-auto pt-1">
+                    <a 
+                      href="tel:+918859490284"
+                      className="flex items-center justify-center gap-2 bg-gradient-to-r from-sky-600 to-sky-750 hover:from-sky-550 hover:to-sky-650 text-white font-black text-[10px] uppercase py-2.5 rounded-xl transition shadow-md shadow-sky-500/10"
+                    >
+                      <Phone className="w-3.5 h-3.5" />
+                      <span>Call Vikram (+91 8859490284)</span>
+                    </a>
+                    <a 
+                      href="tel:+919627349173"
+                      className="flex items-center justify-center gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-black text-[10px] uppercase py-2 rounded-xl transition"
+                    >
+                      <Phone className="w-3.5 h-3.5 text-slate-400" />
+                      <span>Fleet Booking Office (+91 9627349173)</span>
+                    </a>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 4: WHATSAPP SCREENSHOT & MESSAGE OPTION */}
+              {paymentMethod === 'whatsapp' && (
+                <div className="space-y-3 pt-2 text-center py-2">
+                  <div className="w-11 h-11 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-1">
+                    <span className="text-2xl">💬</span>
+                  </div>
+                  <div>
+                    <span className="block text-[11px] font-black text-slate-800 tracking-tight leading-tight">
+                      Confirm on WhatsApp Chat
+                    </span>
+                    <span className="block text-[9px] text-slate-500 font-semibold leading-relaxed mt-1 max-w-xs mx-auto">
+                      Send your reservation details directly to get active confirmation and receipt verification.
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5 max-w-xs mx-auto pt-1">
+                    <a 
+                      href={`https://wa.me/918859490284?text=Hello%20Rudra%20Devbhoomi,%20I%20am%20interested%20in%20booking%20the%20following%20package:%250A%250A*Package:*%20${encodeURIComponent(pendingBooking.provider)}%250A*Details:*%20${encodeURIComponent(pendingBooking.routeDetails)}%250A*Date:*%20${encodeURIComponent(pendingBooking.date)}%250A*Final%20Price:*%20${encodeURIComponent(finalPayableStr)}%250A%250APlease%20confirm%20my%20reservation.%20Thank%20you!`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-[10.5px] uppercase py-2.5 rounded-xl transition shadow-md cursor-pointer"
+                    >
+                      <span>WhatsApp Vikram (+91 8859490284)</span>
+                    </a>
+                    <a 
+                      href={`https://wa.me/919627349173?text=Hello%20Fleet%20Desk,%20I%20would%20like%20to%20reserve%20a%20package%20transfer:%250A%250A*Package:*%20${encodeURIComponent(pendingBooking.provider)}%250A*Price:*%20${encodeURIComponent(finalPayableStr)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-900 text-white font-black text-[10px] uppercase py-2.5 rounded-xl transition scroll-smooth"
+                    >
+                      <span>WhatsApp Fleet Support Desk</span>
+                    </a>
+                  </div>
+                </div>
+              )}
+
+              {paymentError && (
+                <span className="block text-[10px] text-rose-600 font-black pt-1">
+                  ⚠️ {paymentError}
+                </span>
+              )}
+            </div>
+
             {/* Dynamic Final Reduced Price breakdown */}
-            <div className="border-t border-slate-100 pt-4 space-y-2 bg-slate-950 text-white p-4.5 rounded-2xl font-mono text-[11px] leading-relaxed">
+            <div className="border-t border-slate-100 pt-4 space-y-2 bg-slate-950 text-white p-4.5 rounded-2xl font-mono text-[11px] leading-relaxed relative overflow-hidden">
+              {isPaying && (
+                <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xs flex flex-col items-center justify-center space-y-2 z-30">
+                  <span className="text-xs font-black uppercase text-amber-400 tracking-widest animate-pulse">
+                    ⚡ Securing Virtual Escrow...
+                  </span>
+                  <div className="w-24 h-1 bg-white/10 rounded-full overflow-hidden">
+                    <motion.div 
+                      className="bg-amber-400 h-full rounded-full"
+                      initial={{ width: '0%' }}
+                      animate={{ width: '100%' }}
+                      transition={{ duration: 1.6 }}
+                    />
+                  </div>
+                </div>
+              )}
+
               <div className="flex justify-between text-slate-400">
                 <span>Original Price Charge:</span>
                 <span>₹{originalNum.toLocaleString('en-IN')}{suffix}</span>
@@ -269,7 +558,7 @@ export default function BookingConfirmationModal({
                 </span>
               </div>
               <p className="text-[8px] text-slate-500 text-center leading-normal pt-1.5 select-none font-sans font-medium">
-                💡 Prices verified safely through Rudra Virtual Ledger integration. Apply coupon value now to complete discount check.
+                💡 Prices verified safely through Rudra Virtual Verification integration. Apply coupon value now to complete discount check.
               </p>
             </div>
           </div>
@@ -280,18 +569,20 @@ export default function BookingConfirmationModal({
               type="button"
               id="booking-confirm-cancel"
               onClick={onClose}
-              className="flex-1 px-4 py-2.5 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-extrabold text-xs uppercase rounded-xl transition cursor-pointer text-center"
+              disabled={isPaying}
+              className="flex-1 px-4 py-2.5 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-extrabold text-xs uppercase rounded-xl transition cursor-pointer text-center disabled:opacity-50"
             >
               Cancel
             </button>
             <button
               type="button"
               id="booking-confirm-confirm"
-              onClick={handleConfirm}
-              className="flex-1 px-4 py-2.5 bg-sky-500 hover:bg-sky-650 text-white font-black text-xs uppercase rounded-xl transition shadow-lg shadow-sky-500/10 cursor-pointer text-center flex items-center justify-center gap-1.5"
+              onClick={handlePaymentAndConfirm}
+              disabled={isPaying}
+              className="flex-1 px-4 py-2.5 bg-sky-500 hover:bg-sky-650 text-white font-black text-xs uppercase rounded-xl transition shadow-lg shadow-sky-500/10 cursor-pointer text-center flex items-center justify-center gap-1.5 disabled:opacity-50"
             >
-              <Check className="w-3.5 h-3.5" />
-              <span>Confirm & Sync Trip</span>
+              <Check className="w-3.5 h-3.5 animate-bounce" />
+              <span>{isPaying ? 'Processing...' : 'Pay & Confirm'}</span>
             </button>
           </div>
         </motion.div>

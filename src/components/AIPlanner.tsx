@@ -378,7 +378,7 @@ export default function AIPlanner({ onAddAITripToBookings }: AIPlannerProps) {
                   </motion.div>
                 )}
 
-                {/* Confirm additions ledger footer */}
+                {/* Confirm additions footer */}
                 <div className="mt-6 pt-4 border-t border-sky-900/10 flex justify-end">
                   <button
                     id="add-ai-trip-to-ledger"
@@ -392,11 +392,11 @@ export default function AIPlanner({ onAddAITripToBookings }: AIPlannerProps) {
                   >
                     {addedLedger ? (
                       <>
-                        <Check className="w-4 h-4" /> Trip Saved to Ledger
+                        <Check className="w-4 h-4" /> Itinerary Confirmed
                       </>
                     ) : (
                       <>
-                        <Plus className="w-4 h-4" /> Save Itinerary to My Trips
+                        <Plus className="w-4 h-4" /> Book This Itinerary
                       </>
                     )}
                   </button>

@@ -285,7 +285,7 @@ export default function SearchResults({
 
                     <button
                       id={`btn-book-cab-${cab.id}`}
-                      onClick={() => onBook(`Eco Cab: ${cab.model}`, `Airport One-Way pickup`, percent > 0 ? `₹${discounted}` : `₹${cab.estimatedPrice}`)}
+                      onClick={() => onBook(`Eco Cab: ${cab.model}`, `Hotels One-Way pickup`, percent > 0 ? `₹${discounted}` : `₹${cab.estimatedPrice}`)}
                       className="bg-sky-500 hover:bg-sky-600 active:scale-95 text-white font-extrabold text-[10.5px] px-4.5 py-3 rounded-xl transition-all cursor-pointer uppercase tracking-wider text-center"
                     >
                       Reserve & Sync to My Trips

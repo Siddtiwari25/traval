@@ -124,46 +124,6 @@ export default function AboutAndReviews() {
     }, 1000);
   };
 
-  // Active filter for blogs
-  const [selectedBlogTab, setSelectedBlogTab] = useState<'All' | 'Yatra' | 'Cab' | 'Tips'>('All');
-
-  const blogs = [
-    {
-      id: 'blog-chardham',
-      category: 'Yatra',
-      title: 'Char Dham Yatra Taxi Service in Uttarakhand',
-      subtitle: '🚖 Char Dham Yatra: Route, Stays & Pure Spiritual Guide',
-      excerpt: 'Explore our complete guide to planning the sacred Char Dham pilgrimage securely. Learn how to book our local premium taxis with certified Kumaoni mountain captains who know every bend and holy shrine road.',
-      image: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=600&q=80',
-      date: 'June 02, 2026',
-      readTime: '6 mins read'
-    },
-    {
-      id: 'blog-cab',
-      category: 'Cab',
-      title: 'Uttarakhand cab travel Service',
-      subtitle: 'Explore the beauty of Himalayas securely & cost-effectively',
-      excerpt: 'Strolling through high woods of Mukteshwar Dham or taking in Nainital sunrise? Discover why pre-booking localized cab service is safer than calling random airport shuttles. Clean vehicles, native guides, and 24/7 backups.',
-      image: 'https://images.unsplash.com/photo-1572883454114-1cf0031ed2a1?auto=format&fit=crop&w=600&q=80',
-      date: 'May 18, 2026',
-      readTime: '4 mins read'
-    },
-    {
-      id: 'blog-mukteshwar',
-      category: 'Tips',
-      title: 'Top 5 Secrets of Mukteshwar Dham Ridge',
-      subtitle: 'Apple orchards, misty valleys & cosmic peace',
-      excerpt: ' Mukteshwar is nestled at 2,286 meters. Walk local organic peach farms, try rock rappelling at Chauli-ki-Jali, and view ancient temple bells chanting with the wind.',
-      image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=600&q=80',
-      date: 'April 22, 2026',
-      readTime: '5 mins read'
-    }
-  ];
-
-  const filteredBlogs = selectedBlogTab === 'All' 
-    ? blogs 
-    : blogs.filter(b => b.category === selectedBlogTab);
-
   return (
     <div className="space-y-16">
       
@@ -351,7 +311,7 @@ export default function AboutAndReviews() {
                   </p>
                 </div>
                 <p className="text-xs md:text-sm text-slate-500 font-semibold leading-relaxed">
-                  Need a quick pickup from Kathgodam railway station or Pantnagar airport? Or planning sweet pine-wood forest drives among Almora and Ranikhet? Get dedicated custom local cab service with certified 24/7 assistance and transparent pricing with no hidden charges.
+                  Need a quick pickup from Kathgodam railway station or Pantnagar hotels? Or planning sweet pine-wood forest drives among Almora and Ranikhet? Get dedicated custom local cab service with certified 24/7 assistance and transparent pricing with no hidden charges.
                 </p>
               </div>
 
@@ -579,101 +539,6 @@ export default function AboutAndReviews() {
             ))}
           </div>
 
-        </div>
-      </section>
-
-      {/* 4. BLOGS & RECENT POSTS SECTION */}
-      <section id="section-blogs" className="scroll-mt-20 pt-8">
-        <div className="space-y-6">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <div>
-              <span className="text-xs bg-indigo-100 text-indigo-850 font-black tracking-widest uppercase px-3 py-1 rounded-full">
-                📰 Kumaon & Garhwal Explorer Journals
-              </span>
-              <h3 className="text-2xl font-black text-slate-900 tracking-tight mt-2">
-                Recent Posts & Travel Blogs
-              </h3>
-              <p className="text-slate-400 text-xs font-semibold mt-0.5">
-                Authentic itineraries, route breakdowns, and tips straight from our cab drivers.
-              </p>
-            </div>
-
-            {/* Filter tags pills */}
-            <div className="flex flex-wrap gap-1.5 shrink-0">
-              {(['All', 'Yatra', 'Cab', 'Tips'] as const).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setSelectedBlogTab(tab)}
-                  className={`px-3 py-1.5 rounded-xl text-[10.5px] font-black uppercase tracking-wider cursor-pointer border transition-all ${
-                    selectedBlogTab === tab
-                      ? 'bg-indigo-650 border-indigo-500 text-white shadow-sm'
-                      : 'bg-white hover:bg-slate-50 border-slate-250 text-slate-600'
-                  }`}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredBlogs.map((post) => (
-              <article 
-                key={post.id}
-                className="bg-white rounded-3xl border border-slate-200/80 shadow-2xs hover:shadow-md transition-all overflow-hidden flex flex-col justify-between group"
-              >
-                <div>
-                  <div className="h-44 w-full overflow-hidden relative">
-                    <img 
-                      src={post.image} 
-                      alt={post.title} 
-                      className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                    <span className="absolute top-3 left-3 bg-indigo-900/85 text-white border border-indigo-500/10 text-[9px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg">
-                      {post.category}
-                    </span>
-                  </div>
-
-                  <div className="p-5 space-y-3">
-                    <div className="flex items-center gap-3 text-[10px] text-slate-400 font-bold">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-3.5 h-3.5 text-slate-450" />
-                        {post.date}
-                      </span>
-                      <span>•</span>
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5 text-slate-450" />
-                        {post.readTime}
-                      </span>
-                    </div>
-
-                    <h4 className="font-extrabold text-[14px] text-slate-900 leading-snug group-hover:text-indigo-650 transition-colors">
-                      {post.title}
-                    </h4>
-
-                    <p className="text-[11.5px] text-slate-450 font-bold italic mt-1 bg-slate-50 p-2 rounded-xl border border-slate-100">
-                      "{post.subtitle}"
-                    </p>
-
-                    <p className="text-[11.5px] text-slate-500 leading-relaxed font-semibold line-clamp-3">
-                      {post.excerpt}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="p-5 pt-0 border-t border-slate-50 mt-3 flex justify-end">
-                  <a 
-                    href="tel:+918859490284"
-                    className="text-[11px] font-black uppercase tracking-wider text-indigo-650 hover:text-indigo-500 flex items-center gap-1"
-                  >
-                    <span>Read Guide</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </a>
-                </div>
-              </article>
-            ))}
-          </div>
         </div>
       </section>
 
