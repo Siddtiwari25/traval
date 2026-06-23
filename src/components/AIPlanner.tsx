@@ -58,7 +58,7 @@ export default function AIPlanner({ onAddAITripToBookings }: AIPlannerProps) {
         destination: destination,
         tagline: "Unveiling beautiful sights and landmarks",
         summary: "A customized itinerary handcrafted for your optimal exploration style, maximizing local highlights.",
-        estimatedBudget: "$800 - $1,100 per voyager",
+        estimatedBudget: "1000 - 1,1000 per voyager",
         highlights: ["Explore historic local markets", "Sunset scenic viewing points", "Premium gourmet dinings"],
         itinerary: Array.from({ length: days }).map((_, idx) => ({
           day: idx + 1,
