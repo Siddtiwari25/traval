@@ -59,17 +59,7 @@ const UTTARAKHAND_HERO_PHOTOS = [
     desc: 'Take in the grand scale of the eye-shaped Naini Lake from a soaring bird\'s-eye perspective. Watch white fluffy clouds drift through the mountain ridges while the lakeside town sleeps quietly in the green canyon below.',
     tips: 'Trek to Naina Peak early in the morning for crisp, unobstructed views of the snow-clad Tibet border mountains.'
   }
-  {
-    url: 'https://www.google.com/imgres?q=kainchi%20dham&imgurl=https%3A%2F%2Ftravelophila.com%2Fwp-content%2Fuploads%2F2025%2F09%2Fkainchi-dham-neem-kiroli-baba.webp&imgrefurl=https%3A%2F%2Ftravelophila.com%2Fthe-untold-story-of-neem-karoli-baba-the-miracle-of-kainchi-dham%2F&docid=DndiT9gg4qRXvM&tbnid=lOpOFsjg2R7KAM&vet=12ahUKEwi415vll56VAxV_cGwGHc1eNWkQnPAOegQIOBAA..i&w=815&h=538&hcb=2&ved=2ahUKEwi415vll56VAxV_cGwGHc1eNWkQnPAOegQIOBAA',
-   title: 'Kainchi Dham Panoramic Aerial View',
-vibe: 'Serene Himalayan Spiritual Eye View',
-packageId: 'tour-kainchi-dham-ex-delhi-2n',
-altitude: 'Approx. 1,400 meters (4,593 ft)',
-bestSeason: 'Throughout the year (Lush greenery during Monsoon)',
-specialDelicacy: 'Kumaoni Raita, Bhatt ki Churkani & Ashram Prasad',
-desc: 'Soar above the sacred Kainchi Dham nestled between forested Himalayan hills. Witness the tranquil ashram complex, winding mountain roads, and the gentle Kosi River flowing through the valley, while soft clouds drift across the serene landscape creating a deeply spiritual atmosphere.',
-tips: 'Visit early morning for peaceful darshan, clear aerial views, and the most tranquil experience of the valley.'
-}
+  
 ];
 
 export default function App() {
