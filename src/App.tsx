@@ -27,7 +27,7 @@ const UTTARAKHAND_HERO_PHOTOS = [
     tips: 'Pack thermal base layers and high-traction boots for the snow trail.'
   },
   {
-    url: 'https://images.unsplash.com/photo-1598324789736-4861f89564a0?auto=format&fit=crop&w=1600&q=80',
+    url: 'https://www.tripadvisor.in/Attraction_Review-g297689-d8756679-Reviews-or10-George_Everest_s_House-Mussoorie_Dehradun_District_Uttarakhand.html',
     title: 'George Everest Ridge',
     vibe: 'Dramatic Rocky Ridge & Misty Valleys',
     packageId: 'tour-mussoorie',
@@ -38,7 +38,7 @@ const UTTARAKHAND_HERO_PHOTOS = [
     tips: 'Start trekking around 4 PM to witness the surreal golden hour sunset behind the valleys.'
   },
   {
-    url: 'https://images.unsplash.com/photo-1561361531-997c5e23dbd6?auto=format&fit=crop&w=1600&q=80',
+    url: 'https://shivrajstays.com/here-is-all-you-need-to-know-about-boating-in-nainital/',
     title: 'Naini Lake Boats',
     vibe: 'Colorful Rowboats & Emerald Waters',
     packageId: 'tour-nainital',
@@ -49,7 +49,7 @@ const UTTARAKHAND_HERO_PHOTOS = [
     tips: 'Rent a hand-rowed gondola boat for an authentic local storytelling experience.'
   },
   {
-    url: 'https://images.unsplash.com/photo-1618083707368-b3823daa2726?auto=format&fit=crop&w=1600&q=80',
+    url: 'https://www.pexels.com/video/hilly-town-by-the-lake-in-golden-hour-nainital-uttarakhand-20594603/',
     title: 'Nainital Panoramic Aerial View',
     vibe: 'Breathtaking Valley Eye View',
     packageId: 'tour-nainital-ex-delhi-2n',
@@ -59,6 +59,16 @@ const UTTARAKHAND_HERO_PHOTOS = [
     desc: 'Take in the grand scale of the eye-shaped Naini Lake from a soaring bird\'s-eye perspective. Watch white fluffy clouds drift through the mountain ridges while the lakeside town sleeps quietly in the green canyon below.',
     tips: 'Trek to Naina Peak early in the morning for crisp, unobstructed views of the snow-clad Tibet border mountains.'
   }
+  {
+    url: 'https://www.google.com/imgres?q=kainchi%20dham&imgurl=https%3A%2F%2Ftravelophila.com%2Fwp-content%2Fuploads%2F2024%2F12%2Fkainchi-dham.jpg&imgrefurl=https%3A%2F%2Ftravelophila.com%2Fspiritual-journey-to-kainchi-dham-why-booking-a-tour-package-makes-it-easier%2F&docid=EiqBwsZ4jf_ZbM&tbnid=VnxI8A47EQAAtM&vet=12ahUKEwi415vll56VAxV_cGwGHc1eNWkQnPAOegQIORAA..i&w=863&h=600&hcb=2&ved=2ahUKEwi415vll56VAxV_cGwGHc1eNWkQnPAOegQIORAA',
+    title: 'Kedarnath Dham Panoramic Aerial View',
+vibe: 'Divine Himalayan Eye View',
+packageId: 'tour-kedarnath-ex-delhi-2n',
+altitude: '3,583 meters (11,755 ft)',
+bestSeason: 'May to October (Snow-capped views in early season)',
+specialDelicacy: 'Mandua Roti & Garhwali Rajma',
+desc: 'Witness the sacred Kedarnath Temple nestled amidst the majestic Himalayan peaks from a breathtaking bird’s-eye perspective. Watch drifting clouds embrace the snow-covered mountains while the holy shrine stands peacefully beside the Mandakini Valley, creating a truly spiritual and awe-inspiring landscape.',
+tips: 'Visit during sunrise for the most spectacular golden mountain views and clearer aerial visibility.'
 ];
 
 export default function App() {
