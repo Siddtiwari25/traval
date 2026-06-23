@@ -60,7 +60,7 @@ const UTTARAKHAND_HERO_PHOTOS = [
     tips: 'Trek to Naina Peak early in the morning for crisp, unobstructed views of the snow-clad Tibet border mountains.'
   }
   {
-    url: '',
+    url: 'https://www.google.com/imgres?q=kainchi%20dham&imgurl=https%3A%2F%2Ftravelophila.com%2Fwp-content%2Fuploads%2F2025%2F09%2Fkainchi-dham-neem-kiroli-baba.webp&imgrefurl=https%3A%2F%2Ftravelophila.com%2Fthe-untold-story-of-neem-karoli-baba-the-miracle-of-kainchi-dham%2F&docid=DndiT9gg4qRXvM&tbnid=lOpOFsjg2R7KAM&vet=12ahUKEwi415vll56VAxV_cGwGHc1eNWkQnPAOegQIOBAA..i&w=815&h=538&hcb=2&ved=2ahUKEwi415vll56VAxV_cGwGHc1eNWkQnPAOegQIOBAA',
    title: 'Kainchi Dham Panoramic Aerial View',
 vibe: 'Serene Himalayan Spiritual Eye View',
 packageId: 'tour-kainchi-dham-ex-delhi-2n',
