@@ -60,15 +60,16 @@ const UTTARAKHAND_HERO_PHOTOS = [
     tips: 'Trek to Naina Peak early in the morning for crisp, unobstructed views of the snow-clad Tibet border mountains.'
   }
   {
-    url: 'https://www.google.com/imgres?q=kainchi%20dham&imgurl=https%3A%2F%2Ftravelophila.com%2Fwp-content%2Fuploads%2F2024%2F12%2Fkainchi-dham.jpg&imgrefurl=https%3A%2F%2Ftravelophila.com%2Fspiritual-journey-to-kainchi-dham-why-booking-a-tour-package-makes-it-easier%2F&docid=EiqBwsZ4jf_ZbM&tbnid=VnxI8A47EQAAtM&vet=12ahUKEwi415vll56VAxV_cGwGHc1eNWkQnPAOegQIORAA..i&w=863&h=600&hcb=2&ved=2ahUKEwi415vll56VAxV_cGwGHc1eNWkQnPAOegQIORAA',
-    title: 'Kedarnath Dham Panoramic Aerial View',
-vibe: 'Divine Himalayan Eye View',
-packageId: 'tour-kedarnath-ex-delhi-2n',
-altitude: '3,583 meters (11,755 ft)',
-bestSeason: 'May to October (Snow-capped views in early season)',
-specialDelicacy: 'Mandua Roti & Garhwali Rajma',
-desc: 'Witness the sacred Kedarnath Temple nestled amidst the majestic Himalayan peaks from a breathtaking bird’s-eye perspective. Watch drifting clouds embrace the snow-covered mountains while the holy shrine stands peacefully beside the Mandakini Valley, creating a truly spiritual and awe-inspiring landscape.',
-tips: 'Visit during sunrise for the most spectacular golden mountain views and clearer aerial visibility.'
+    url: '',
+   title: 'Kainchi Dham Panoramic Aerial View',
+vibe: 'Serene Himalayan Spiritual Eye View',
+packageId: 'tour-kainchi-dham-ex-delhi-2n',
+altitude: 'Approx. 1,400 meters (4,593 ft)',
+bestSeason: 'Throughout the year (Lush greenery during Monsoon)',
+specialDelicacy: 'Kumaoni Raita, Bhatt ki Churkani & Ashram Prasad',
+desc: 'Soar above the sacred Kainchi Dham nestled between forested Himalayan hills. Witness the tranquil ashram complex, winding mountain roads, and the gentle Kosi River flowing through the valley, while soft clouds drift across the serene landscape creating a deeply spiritual atmosphere.',
+tips: 'Visit early morning for peaceful darshan, clear aerial views, and the most tranquil experience of the valley.'
+}
 ];
 
 export default function App() {
