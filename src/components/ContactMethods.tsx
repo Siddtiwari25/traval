@@ -28,7 +28,7 @@ export default function ContactMethods() {
       title: 'Rakesh Cab Service (Primary)',
       displayValue: '+91-8859490284',
       link: 'tel:+918859490284',
-      description: 'Available 24/7. Pre-book or hire premium cabs located in Mukteshwar & Nainital.',
+      description: 'Available 24/7. Pre-book or hire premium cabs located in Mukteshwar & Nainitalk.',
       icon: PhoneCall,
       color: 'bg-orange-500',
       iconAnimation: {
