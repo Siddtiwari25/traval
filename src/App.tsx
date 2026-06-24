@@ -38,7 +38,7 @@ const UTTARAKHAND_HERO_PHOTOS = [
     tips: 'Start trekking around 4 PM to witness the surreal golden hour sunset behind the valleys.'
   },
   {
-    url: 'https://shivrajstays.com/here-is-all-you-need-to-know-about-boating-in-nainital/',
+    url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6E4ivHafpi87UVuTrKKIItGyo6QyejYJiESIz4APTdA&s=10',
     title: 'Naini Lake Boats',
     vibe: 'Colorful Rowboats & Emerald Waters',
     packageId: 'tour-nainital',
