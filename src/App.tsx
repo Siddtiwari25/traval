@@ -35,7 +35,7 @@ const UTTARAKHAND_HERO_PHOTOS = [
     bestSeason: 'Throughout the year (Lush greenery during Monsoon)',
     specialDelicacy: 'Kumaoni Raita, Bhatt ki Churkani & Ashram Prasad',
     desc: 'Experience a breathtaking aerial perspective of the revered Kainchi Dham, surrounded by emerald pine forests and rolling Himalayan valleys. From above, the peaceful temple complex appears harmoniously woven into the mountainscape, offering a mesmerizing blend of spirituality and natural beauty.',
-    tips: 'Visit early morning for peaceful darshan, clear aerial views, and the most tranquil experience of the valley.'.'
+    tips: 'Visit early morning for peaceful darshan, clear aerial views, and the most tranquil experience of the valley.'
   },
   {
     url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6E4ivHafpi87UVuTrKKIItGyo6QyejYJiESIz4APTdA&s=10',
@@ -58,7 +58,7 @@ bestSeason: 'October to June (Snow-capped peaks visible in Winter)',
 specialDelicacy: 'Aloo ke Gutke & Bal Mithai',
 desc: 'Soar above the majestic hills of Mukteshwar Dham and witness sweeping views of the Kumaon Himalayas. Watch clouds drift across pine-covered ridges while the ancient temple stands peacefully atop the mountain, surrounded by endless valleys and pristine forests.',
 tips: 'Early morning offers the best visibility for Himalayan peaks including Nanda Devi and Trishul on clear days.'
-  },
+  }
   
 ];
 
