@@ -28,14 +28,14 @@ const UTTARAKHAND_HERO_PHOTOS = [
   },
   {
     url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7z5dQFkec2hamLRxQmdophxQGaZu-uS24SJypjUX_Ig&s=10',
-    title: 'George Everest Ridge',
-    vibe: 'Dramatic Rocky Ridge & Misty Valleys',
-    packageId: 'tour-mussoorie',
-    altitude: '2,005 meters (6,578 ft)',
-    bestSeason: 'September to June (Spectacular sunsets)',
-    specialDelicacy: 'Garhwali Chainsoo & Singori Sweet',
-    desc: 'Stand on the rugged, wind-swept rocky outcrop of Mussoorie\'s historic George Everest peak. Look down upon the endless rows of emerald terraced fields and misty mountain gorges stretching as far as the eye can see.',
-    tips: 'Start trekking around 4 PM to witness the surreal golden hour sunset behind the valleys.'
+    title: 'Kainchi Dham ',
+    vibe: 'Serene Himalayan Spiritual Eye View',
+    packageId: 'tour-kainchi-dham-ex-delhi-2n',
+    altitude: 'Approx. 1,400 meters (4,593 ft)',
+    bestSeason: 'Throughout the year (Lush greenery during Monsoon)',
+    specialDelicacy: 'Kumaoni Raita, Bhatt ki Churkani & Ashram Prasad',
+    desc: 'Experience a breathtaking aerial perspective of the revered Kainchi Dham, surrounded by emerald pine forests and rolling Himalayan valleys. From above, the peaceful temple complex appears harmoniously woven into the mountainscape, offering a mesmerizing blend of spirituality and natural beauty.',
+    tips: 'Visit early morning for peaceful darshan, clear aerial views, and the most tranquil experience of the valley.'.'
   },
   {
     url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6E4ivHafpi87UVuTrKKIItGyo6QyejYJiESIz4APTdA&s=10',
