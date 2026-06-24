@@ -49,15 +49,15 @@ const UTTARAKHAND_HERO_PHOTOS = [
     tips: 'Rent a hand-rowed gondola boat for an authentic local storytelling experience.'
   },
   {
-    url: 'https://www.pexels.com/video/hilly-town-by-the-lake-in-golden-hour-nainital-uttarakhand-20594603/',
-    title: 'Nainital Panoramic Aerial View',
-    vibe: 'Breathtaking Valley Eye View',
-    packageId: 'tour-nainital-ex-delhi-2n',
-    altitude: '2,278 meters (7,473 ft) from Naina Peak',
-    bestSeason: 'Throughout the year (Mist in Monsoon)',
-    specialDelicacy: 'Bhatt ki Churkani & hot Momos',
-    desc: 'Take in the grand scale of the eye-shaped Naini Lake from a soaring bird\'s-eye perspective. Watch white fluffy clouds drift through the mountain ridges while the lakeside town sleeps quietly in the green canyon below.',
-    tips: 'Trek to Naina Peak early in the morning for crisp, unobstructed views of the snow-clad Tibet border mountains.'
+    url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcxaHVLzVAHDpO9Iusnmy557Nw0n6KBMCRLW140fVOnQ&s=10',
+    title: 'Mukteshwar Dham Panoramic Aerial View',
+vibe: 'Breathtaking Himalayan Eagle-Eye View',
+packageId: 'tour-mukteshwar-dham-uttarakhand',
+altitude: '2,312 meters (7,585 ft) above sea level',
+bestSeason: 'October to June (Snow-capped peaks visible in Winter)',
+specialDelicacy: 'Aloo ke Gutke & Bal Mithai',
+desc: 'Soar above the majestic hills of Mukteshwar Dham and witness sweeping views of the Kumaon Himalayas. Watch clouds drift across pine-covered ridges while the ancient temple stands peacefully atop the mountain, surrounded by endless valleys and pristine forests.',
+tips: 'Early morning offers the best visibility for Himalayan peaks including Nanda Devi and Trishul on clear days.'
   }
   
 ];
