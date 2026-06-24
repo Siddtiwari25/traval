@@ -27,7 +27,7 @@ const UTTARAKHAND_HERO_PHOTOS = [
     tips: 'Pack thermal base layers and high-traction boots for the snow trail.'
   },
   {
-    url: 'https://www.tripadvisor.in/Attraction_Review-g297689-d8756679-Reviews-or10-George_Everest_s_House-Mussoorie_Dehradun_District_Uttarakhand.html',
+    url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7z5dQFkec2hamLRxQmdophxQGaZu-uS24SJypjUX_Ig&s=10',
     title: 'George Everest Ridge',
     vibe: 'Dramatic Rocky Ridge & Misty Valleys',
     packageId: 'tour-mussoorie',
