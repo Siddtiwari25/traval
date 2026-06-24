@@ -58,7 +58,7 @@ bestSeason: 'October to June (Snow-capped peaks visible in Winter)',
 specialDelicacy: 'Aloo ke Gutke & Bal Mithai',
 desc: 'Soar above the majestic hills of Mukteshwar Dham and witness sweeping views of the Kumaon Himalayas. Watch clouds drift across pine-covered ridges while the ancient temple stands peacefully atop the mountain, surrounded by endless valleys and pristine forests.',
 tips: 'Early morning offers the best visibility for Himalayan peaks including Nanda Devi and Trishul on clear days.'
-  }
+  },
   
 ];
 
