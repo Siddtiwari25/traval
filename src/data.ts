@@ -45,7 +45,7 @@ export const HOTELS: Hotel[] = [
   },
   {
     id: 'h3',
-    name: 'Rudra Heights Wellness Lodge',
+    name: 'Uttara Heights Wellness Lodge',
     rating: 4.5,
     location: 'Darima Orchards Side, Mukteshwar',
     pricePerNight: 3500,

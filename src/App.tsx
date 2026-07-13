@@ -7,7 +7,7 @@ import { CITIES } from './data';
 // Modular Sub-components
 import SearchWidget from './components/SearchWidget';
 import SearchResults from './components/SearchResults';
-import AIPlanner from './components/AIPlanner';
+
 import UttarakhandTourExplorer, { UTTARAKHAND_TOURS, PredefinedTour } from './components/UttarakhandTourExplorer';
 import ContactMethods from './components/ContactMethods';
 import AboutAndReviews from './components/AboutAndReviews';
@@ -15,6 +15,39 @@ import BookingConfirmationModal from './components/BookingConfirmationModal';
 
 // Scenic photographs of beautiful Uttarakhand destinations for home page auto moving gallery with complete local details
 const UTTARAKHAND_HERO_PHOTOS = [
+  {
+    url: 'https://images.unsplash.com/photo-1610123598195-bf66804618e4?auto=format&fit=crop&w=1600&q=80',
+    title: 'Nainital Boating (Naini Lake)',
+    vibe: 'Vibrant Rowboats & Emerald Lake',
+    packageId: 'tour-nainital',
+    altitude: '1,938 meters (6,358 ft)',
+    bestSeason: 'March to June & September to December',
+    specialDelicacy: 'Kumaoni Bal Mithai & Thukpa',
+    desc: 'Row across the pristine, emerald waters of the eye-shaped Naini Lake. Flanked by deep green pine-covered hillsides, the crisp mountain breeze brings pure joy as vibrant wooden gondola rowboats glide through the tranquil water.',
+    tips: 'Rent a hand-rowed gondola boat for an authentic local storytelling experience with a local oarsman.'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=1600&q=80',
+    title: 'Mukteshwar Dham',
+    vibe: 'Sacred Hilltop Shrine & Rocky Cliffs',
+    packageId: 'tour-mukteshwar',
+    altitude: '2,286 meters (7,500 ft)',
+    bestSeason: 'October to May (For crisp snow peaks)',
+    specialDelicacy: 'Bhatt ki Churkani & Madua Roti',
+    desc: 'A 350-year-old high-altitude stone temple dedicated to Lord Shiva, resting atop massive rocky cliffs. Stroll through peaceful local orchards and pine forests to stand near the spectacular overhanging cliff of Chauli Ki Jali.',
+    tips: 'Ring the sacred heavy bronze bells of the temple to feel deep sound wave vibrations resonating across the mountain valleys.'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1583143874828-de3d288be51a?auto=format&fit=crop&w=1600&q=80',
+    title: 'Kainchi Dham Ashram',
+    vibe: 'Spiritual Sanctuary of Neem Karoli Baba',
+    packageId: 'tour-kainchi-dham',
+    altitude: '1,400 meters (4,593 ft)',
+    bestSeason: 'All year round (Special festivities on June 15th)',
+    specialDelicacy: 'Holy Bhandara Khichdi Prasad & Chai',
+    desc: 'Tucked away in a pristine pine forest valley alongside a singing stream, Kainchi Dham is the world-renowned ashram of Neem Karoli Baba. It is a sanctuary of absolute peace, simplicity, and transcendental meditative energy.',
+    tips: 'Maintain absolute silence inside the temple complex and spend a few quiet moments meditating by the pristine river bank.'
+  },
   {
     url: 'https://images.unsplash.com/photo-1605649487212-47bdab064df7?auto=format&fit=crop&w=1600&q=80',
     title: 'Chopta Chandrashila Peaks',
@@ -27,39 +60,247 @@ const UTTARAKHAND_HERO_PHOTOS = [
     tips: 'Pack thermal base layers and high-traction boots for the snow trail.'
   },
   {
-    url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7z5dQFkec2hamLRxQmdophxQGaZu-uS24SJypjUX_Ig&s=10',
-    title: 'Kainchi Dham ',
-    vibe: 'Serene Himalayan Spiritual Eye View',
-    packageId: 'tour-kainchi-dham-ex-delhi-2n',
-    altitude: 'Approx. 1,400 meters (4,593 ft)',
-    bestSeason: 'Throughout the year (Lush greenery during Monsoon)',
-    specialDelicacy: 'Kumaoni Raita, Bhatt ki Churkani & Ashram Prasad',
-    desc: 'Experience a breathtaking aerial perspective of the revered Kainchi Dham, surrounded by emerald pine forests and rolling Himalayan valleys. From above, the peaceful temple complex appears harmoniously woven into the mountainscape, offering a mesmerizing blend of spirituality and natural beauty.',
-    tips: 'Visit early morning for peaceful darshan, clear aerial views, and the most tranquil experience of the valley.'
+    url: 'https://images.unsplash.com/photo-1598324789736-4861f89564a0?auto=format&fit=crop&w=1600&q=80',
+    title: 'George Everest Ridge',
+    vibe: 'Dramatic Rocky Ridge & Misty Valleys',
+    packageId: 'tour-mussoorie',
+    altitude: '2,005 meters (6,578 ft)',
+    bestSeason: 'September to June (Spectacular sunsets)',
+    specialDelicacy: 'Garhwali Chainsoo & Singori Sweet',
+    desc: 'Stand on the rugged, wind-swept rocky outcrop of Mussoorie\'s historic George Everest peak. Look down upon the endless rows of emerald terraced fields and misty mountain gorges stretching as far as the eye can see.',
+    tips: 'Start trekking around 4 PM to witness the surreal golden hour sunset behind the valleys.'
   },
   {
-    url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6E4ivHafpi87UVuTrKKIItGyo6QyejYJiESIz4APTdA&s=10',
-    title: 'Naini Lake Boats',
-    vibe: 'Colorful Rowboats & Emerald Waters',
+    url: 'https://images.unsplash.com/photo-1618083707368-b3823daa2726?auto=format&fit=crop&w=1600&q=80',
+    title: 'Nainital Panoramic Aerial View',
+    vibe: 'Breathtaking Valley Eye View',
+    packageId: 'tour-nainital-ex-delhi-2n',
+    altitude: '2,278 meters (7,473 ft) from Naina Peak',
+    bestSeason: 'Throughout the year (Mist in Monsoon)',
+    specialDelicacy: 'Bhatt ki Churkani & hot Momos',
+    desc: 'Take in the grand scale of the eye-shaped Naini Lake from a soaring bird\'s-eye perspective. Watch white fluffy clouds drift through the mountain ridges while the lakeside town sleeps quietly in the green canyon below.',
+    tips: 'Trek to Naina Peak early in the morning for crisp, unobstructed views of the snow-clad Tibet border mountains.'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1595815727610-b1d8e874cc65?auto=format&fit=crop&w=1600&q=80',
+    title: 'Dehradun',
+    vibe: 'State Capital & Education Gateway',
+    packageId: 'tour-mussoorie',
+    altitude: '430 meters (1,411 ft)',
+    bestSeason: 'March to June & October to February',
+    specialDelicacy: 'Basmati Rice Pilaf & Bun Tikki',
+    desc: 'The official State Capital, globally famous for elite education, academic institutes, and serving as the direct gateway to Mussoorie and other Garhwal ranges.',
+    tips: 'Explore Robber\'s Cave (Guchhupani) to experience walking through a beautiful, freezing cold mountain river stream flanked by natural canyon walls.'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1545249390-6bdfa286032f?auto=format&fit=crop&w=1600&q=80',
+    title: 'Haridwar',
+    vibe: 'Sacred Ganga Aarti & Pilgrimage',
+    packageId: 'tour-haridwar',
+    altitude: '314 meters (1,030 ft)',
+    bestSeason: 'October to April (Divine winter months)',
+    specialDelicacy: 'Aloo Puri & Peda Sweet',
+    desc: 'One of the most sacred Hindu pilgrimage places in India, where the holy river Ganges exits the Himalayan foothills. Famous for the beautiful Ganga Aarti.',
+    tips: 'Attend the divine evening Ganga Aarti at Har Ki Pauri ghat for a magnificent spectacle of thousands of floating oil lamps.'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1598977123418-45f04b6140bb?auto=format&fit=crop&w=1600&q=80',
+    title: 'Rishikesh',
+    vibe: 'Yoga Capital & River Rafting',
+    packageId: 'tour-rishikesh',
+    altitude: '372 meters (1,220 ft)',
+    bestSeason: 'September to June (Ideal for watersports)',
+    specialDelicacy: 'Herbal Tea & Ayurvedic Salads',
+    desc: 'The global Yoga Capital, nested beside the white-water rapids of the Ganges. Renowned for spiritual ashrams, suspension bridges, and rafting adventure.',
+    tips: 'Take a meditative morning walk across the suspension bridge of Ram Jhula or Lakshman Jhula.'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1610123598195-bf66804618e4?auto=format&fit=crop&w=1600&q=80',
+    title: 'Nainital',
+    vibe: 'Emerald Naini Lake & Hill Station',
     packageId: 'tour-nainital',
     altitude: '1,938 meters (6,358 ft)',
     bestSeason: 'March to June & September to December',
-    specialDelicacy: 'Kumaoni Bal Mithai & Thukpa',
-    desc: 'Watch rows of vibrant yellow wooden rowboats sway gently along the emerald waters of Naini Lake. Guarded by steep pine-covered slopes, Nainital offers a timeless, peaceful rowing experience under clear blue skies.',
-    tips: 'Rent a hand-rowed gondola boat for an authentic local storytelling experience.'
+    specialDelicacy: 'Kumaoni Bal Mithai & Dumplings',
+    desc: 'A gorgeous high-altitude resort town settled inside a volcanic green basin, centered around the spectacular, eye-shaped emerald Naini Lake.',
+    tips: 'Take the aerial ropeway up to Snow View peak for a direct view of high Himalayan glaciers.'
   },
   {
-    url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcxaHVLzVAHDpO9Iusnmy557Nw0n6KBMCRLW140fVOnQ&s=10',
-    title: 'Mukteshwar Dham Panoramic Aerial View',
-vibe: 'Breathtaking Himalayan Eagle-Eye View',
-packageId: 'tour-mukteshwar-dham-uttarakhand',
-altitude: '2,312 meters (7,585 ft) above sea level',
-bestSeason: 'October to June (Snow-capped peaks visible in Winter)',
-specialDelicacy: 'Aloo ke Gutke & Bal Mithai',
-desc: 'Soar above the majestic hills of Mukteshwar Dham and witness sweeping views of the Kumaon Himalayas. Watch clouds drift across pine-covered ridges while the ancient temple stands peacefully atop the mountain, surrounded by endless valleys and pristine forests.',
-tips: 'Early morning offers the best visibility for Himalayan peaks including Nanda Devi and Trishul on clear days.'
+    url: 'https://images.unsplash.com/photo-1618083707368-b3823daa2726?auto=format&fit=crop&w=1600&q=80',
+    title: 'Haldwani',
+    vibe: 'The Commercial Gateway to Kumaon',
+    packageId: 'tour-haldwani',
+    altitude: '424 meters (1,391 ft)',
+    bestSeason: 'October to March (Cozy winter breeze)',
+    specialDelicacy: 'Kumaoni Raita & fresh hill pulses',
+    desc: 'Serving as the commercial gate and business heartbeat of Kumaon region. It is rich in local markets, foothill views, and transportation networks.',
+    tips: 'Shop for pure Himalayan honey and organic mountain herbal tea at the forest department stalls.'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1605649487212-47bdab064df7?auto=format&fit=crop&w=1600&q=80',
+    title: 'Almora',
+    vibe: 'Heritage Town & Kumaoni Culture',
+    packageId: 'tour-almora',
+    altitude: '1,638 meters (5,374 ft)',
+    bestSeason: 'April to June & September to November',
+    specialDelicacy: 'Traditional Singori & Bal Mithai',
+    desc: 'A historic horseshoe-shaped hill ridge celebrated for its deep Kumaon heritage, ancient hand-carved wooden bazaars, and snowy Himalayan vistas.',
+    tips: 'Catch a glorious early morning sunrise at Bright End Corner for a full 360-degree mountain illumination.'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1598324789736-4861f89564a0?auto=format&fit=crop&w=1600&q=80',
+    title: 'Mussoorie',
+    vibe: 'The Regal Queen of Hills',
+    packageId: 'tour-mussoorie',
+    altitude: '2,005 meters (6,578 ft)',
+    bestSeason: 'September to June (Timeless hills breeze)',
+    specialDelicacy: 'Garhwali Chainsoo & Singori Sweet',
+    desc: 'Perched high on an elevated mountain ridge, offering spectacular colonial bungalows, cascading waterfalls, and the magnificent, vibrant Mall Road.',
+    tips: 'Take a quiet walk along the car-free Camel\'s Back Road for a pristine valley view.'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1600&q=80',
+    title: 'Roorkee',
+    vibe: 'IIT Roorkee & Engineering Legacy',
+    packageId: 'tour-roorkee',
+    altitude: '268 meters (879 ft)',
+    bestSeason: 'October to March',
+    specialDelicacy: 'Rabri Kulfi & Bedmi Poori',
+    desc: 'A historic educational center famed for India\'s oldest engineering institution (IIT Roorkee), historic river canals, and military cantonments.',
+    tips: 'Visit the grand Solani Aqueduct, an impressive century-old brick masonry engineering feat.'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?auto=format&fit=crop&w=1600&q=80',
+    title: 'Kashipur',
+    vibe: 'Industrial City & Ancient Ruins',
+    packageId: 'tour-kashipur',
+    altitude: '218 meters (715 ft)',
+    bestSeason: 'October to March (Cozy cool season)',
+    specialDelicacy: 'Moong Dal Halwa & Chole Bhature',
+    desc: 'A prominent industrial city matching rich historic ruins from the Mahabharata era with contemporary industrial manufacturing hubs.',
+    tips: 'Visit the sacred Drona Sagar Lake, a mystical water body believed to be created by Guru Dronacharya.'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1600&q=80',
+    title: 'Rudrapur',
+    vibe: 'Vibrant Industrial & Commercial Hub',
+    packageId: 'tour-rudrapur',
+    altitude: '205 meters (673 ft)',
+    bestSeason: 'October to February',
+    specialDelicacy: 'Fresh Basmati Pulao & Shahi Paneer',
+    desc: 'A rapidly expanding industrial metropolis and district headquarters, representing a lively blend of major factories, agriculture, and commerce.',
+    tips: 'Take a pleasant break at Lake Paradise, a nice urban park with boat rides and gardens.'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1600&q=80',
+    title: 'Kotdwar',
+    vibe: 'Historical Gateway to Garhwal',
+    packageId: 'tour-kotdwar',
+    altitude: '454 meters (1,490 ft)',
+    bestSeason: 'October to April',
+    specialDelicacy: 'Garhwali Arsa & Jhangora Kheer',
+    desc: 'Situated peacefully on the banks of Khoh River, this scenic gateway town leads travelers up into the high mountains of Garhwal.',
+    tips: 'Drive up to the cliffside Siddhbali Temple, dedicated to Lord Hanuman, for incredible valley panoramas.'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1475113548554-5a36f1f523d6?auto=format&fit=crop&w=1600&q=80',
+    title: 'Ramnagar',
+    vibe: 'Jim Corbett National Park Gateway',
+    packageId: 'tour-ramnagar',
+    altitude: '345 meters (1,132 ft)',
+    bestSeason: 'November to May (Best for tiger sighting)',
+    specialDelicacy: 'Kumaoni Dubuk & juicy local guavas',
+    desc: 'The starting point and primary gateway to Jim Corbett National Park. Sits on the banks of Kosi River, surrounded by dense deciduous sal forests.',
+    tips: 'Secure your jungle safari permits online weeks in advance for deep tiger reserve explorations.'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=1600&q=80',
+    title: 'Pithoragarh',
+    vibe: 'High-altitude Himalayan Valley',
+    packageId: 'tour-pithoragarh',
+    altitude: '1,645 meters (5,397 ft)',
+    bestSeason: 'April to June & September to December',
+    specialDelicacy: 'Bhatt ki Churkani & Madua Bread',
+    desc: 'Nicknamed "Little Kashmir", this beautiful valley town is situated in an amphitheater of soaring Himalayan snow peaks on the international border.',
+    tips: 'Visit Chandak Hill for a spectacular view over the entire green Pithoragarh valley.'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1542224566-6e85f2e6772f?auto=format&fit=crop&w=1600&q=80',
+    title: 'Bageshwar',
+    vibe: 'Sacred Bagnath Temple Town',
+    packageId: 'tour-bageshwar',
+    altitude: '1,004 meters (3,294 ft)',
+    bestSeason: 'October to May',
+    specialDelicacy: 'Handmade Bal Mithai & Singhal',
+    desc: 'A holy town settled at the divine confluence of Saryu and Gomti rivers, centered around the historic stone Bagnath Shiva Temple.',
+    tips: 'Witness the colorful Uttarayani Mela in January to enjoy authentic Kumaoni folk performances.'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80',
+    title: 'Champawat',
+    vibe: 'Ancient Chand Dynasty Capital',
+    packageId: 'tour-champawat',
+    altitude: '1,615 meters (5,299 ft)',
+    bestSeason: 'October to June',
+    specialDelicacy: 'Kumaoni Bal Mithai & Bhatt Jaula',
+    desc: 'Steeped in history, this gorgeous town was the capital of the ancient Chand kings. It offers deep forests, organic tea gardens, and stone architecture.',
+    tips: 'Explore Kranteshwar Mahadev temple, located high on a peak overlooking the town tea estates.'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=1600&q=80',
+    title: 'Uttarkashi',
+    vibe: 'Pilgrimage and Trekking Hub',
+    packageId: 'tour-uttarkashi',
+    altitude: '1,158 meters (3,799 ft)',
+    bestSeason: 'March to June & September to November',
+    specialDelicacy: 'Garhwali Mandua Roti & Gahat Soup',
+    desc: 'A major spiritual center on the banks of Bhagirathi river, hosting the ancient Vishwanath Temple and serving as a key base for Himalayan climbing.',
+    tips: 'Check out the high-altitude gear museum at the Nehru Institute of Mountaineering.'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?auto=format&fit=crop&w=1600&q=80',
+    title: 'Srinagar (Garhwal)',
+    vibe: 'Educational & Cultural Center',
+    packageId: 'tour-srinagar',
+    altitude: '560 meters (1,837 ft)',
+    bestSeason: 'October to April',
+    specialDelicacy: 'Swala & Garhwali Jhangora Kheer',
+    desc: 'Nestled beside the wide Alaknanda River, this large valley city serves as a central cultural and educational center of the Garhwal hills.',
+    tips: 'Visit the revered river-guardian Dhari Devi Temple, beautifully located inside the main river reservoir.'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&w=1600&q=80',
+    title: 'Joshimath',
+    vibe: 'Gateway to Badrinath & Auli Slopes',
+    packageId: 'tour-joshimath',
+    altitude: '1,875 meters (6,152 ft)',
+    bestSeason: 'April to November (Winter skiing in Auli)',
+    specialDelicacy: 'Local Apple Pie & Garhwali Dal',
+    desc: 'A high-altitude sacred base founded by Adi Shankaracharya, acting as the primary transit gateway to Badrinath and Auli skiing slopes.',
+    tips: 'Ride the soaring passenger ropeway from Joshimath directly up to the snowy slopes of Auli.'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1486915309851-b0cc1f8a0084?auto=format&fit=crop&w=1600&q=80',
+    title: 'Ranikhet',
+    vibe: 'Quiet Military Cantonment Hill Station',
+    packageId: 'tour-ranikhet',
+    altitude: '1,869 meters (6,132 ft)',
+    bestSeason: 'March to June & September to November',
+    specialDelicacy: 'Baal Mithai & Phaanu',
+    desc: 'A spectacularly clean and quiet cantonment town managed by the Kumaon Regiment, offering pine forests, golf courses, and mountain silence.',
+    tips: 'Walk through the pine trails of Chaubatia Gardens to enjoy direct mountain panoramas.'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1600&q=80',
+    title: 'New Tehri',
+    vibe: 'Colossal Tehri Dam & Water Sports',
+    packageId: 'tour-new-tehri',
+    altitude: '1,550 meters (5,085 ft)',
+    bestSeason: 'September to June (Water activities year-round)',
+    specialDelicacy: 'Garhwali Chainsoo & Mandua Halwa',
+    desc: 'A modern, planned eco-city built over looking the gigantic Tehri Dam reservoir. Celebrated for high-speed boating and jet skiing.',
+    tips: 'Book a luxury floating house-boat cruise or rent a jet ski across the emerald green waters.'
   }
-  
 ];
 
 export default function App() {
@@ -126,6 +367,9 @@ export default function App() {
 
   // Track clicking on continuous Left-to-Right Flow photos to view places inform and corresponding package options
   const [selectedScenicPhoto, setSelectedScenicPhoto] = useState<any | null>(null);
+
+  // Marquee auto-scroll speed and play-pause toggle state
+  const [marqueeSpeed, setMarqueeSpeed] = useState<'paused' | 'slow' | 'normal' | 'fast'>('normal');
 
   // Listen to scroll ratio to toggle the single arrow button direction
   useEffect(() => {
@@ -308,7 +552,7 @@ export default function App() {
           {/* Logo brand */}
           <a href="#" className="flex items-center gap-2 group">
             <span className="text-xl md:text-2xl font-black tracking-tight select-none uppercase">
-              Rudra<span className="text-orange-500"> Travel</span>
+              Uttara<span className="text-orange-500">trip</span>
             </span>
             <span className="text-[9px] bg-orange-500/10 border border-orange-400/20 text-orange-400 font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider hidden sm:inline-block">
               Rakesh Cab Service
@@ -617,20 +861,27 @@ export default function App() {
                     ].map((photo, index) => (
                       <div 
                         key={`marquee-photo-${index}`}
-                        onClick={() => setSelectedScenicPhoto(photo)}
+                        onClick={() => {
+                          handleBookUttarakhandTour(
+                            `Uttaratrip Premium: ${photo.title}`,
+                            `Special Scenic Tour package for ${photo.title} (${photo.vibe || 'Gateway Tour'}). Includes custom transport transfers, high-altitude hotel stay, and complete guided sightseeing.`,
+                            "₹4,999"
+                          );
+                          triggerToast(`Opening direct booking & payment options for ${photo.title}!`);
+                        }}
                         className="w-72 sm:w-80 h-44 sm:h-48 rounded-[1.75rem] flex-shrink-0 relative overflow-hidden bg-slate-900 border-2 border-white/10 shadow-2xl group cursor-pointer transition-all duration-300 hover:scale-103 hover:border-orange-500/80 active:scale-98"
                       >
                         <img
-                          src={photo.url}
-                          alt={photo.title}
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-108 pointer-events-none select-none"
-                          referrerPolicy="no-referrer"
+                           src={photo.url}
+                           alt={photo.title}
+                           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-108 pointer-events-none select-none"
+                           referrerPolicy="no-referrer"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent transition-opacity duration-300 group-hover:via-black/40" />
                         
                         {/* Interactive floating indicator */}
-                        <div className="absolute top-3.5 right-3.5 opacity-0 group-hover:opacity-100 transition-opacity bg-orange-600/90 text-white font-mono text-[8px] font-black tracking-widest uppercase px-2 py-1 rounded-lg backdrop-blur-xs flex items-center gap-1">
-                          <Compass className="w-2.5 h-2.5 animate-spin-slow" /> Explore Info & Packages
+                        <div className="absolute top-3.5 right-3.5 opacity-0 group-hover:opacity-100 transition-opacity bg-orange-600/90 text-white font-mono text-[8px] font-black tracking-widest uppercase px-2.5 py-1 rounded-lg backdrop-blur-xs flex items-center gap-1">
+                          <Compass className="w-2.5 h-2.5 animate-spin-slow" /> Book & Pay
                         </div>
 
                         {/* Elegant tags and text for place name & vibe */}
@@ -641,8 +892,8 @@ export default function App() {
                           <h4 className="text-white text-sm sm:text-base font-extrabold tracking-tight truncate drop-shadow-md">
                             {photo.title}
                           </h4>
-                          <span className="text-[10px] text-orange-200 font-medium block mt-1 opacity-80">
-                            Click to reveal travel guides & prices ➔
+                          <span className="text-[10px] text-orange-200 font-extrabold block mt-1 opacity-95 animate-pulse">
+                            Click to book & open payment options ➔
                           </span>
                         </div>
                       </div>
@@ -707,10 +958,7 @@ export default function App() {
           />
         </section>
 
-        {/* DYNAMIC GEMINI AI CORRIDOR */}
-        <section className="max-w-6xl mx-auto px-4 mt-16">
-          <AIPlanner onAddAITripToBookings={handleAddAITrip} />
-        </section>
+
 
         {/* CUSTOM ENRICHED ABOUT US & REVIEWS SECTION */}
         <section className="max-w-6xl mx-auto px-4 mt-16">
@@ -731,7 +979,7 @@ export default function App() {
         <div className="w-full max-w-4xl mx-auto text-center relative z-10 h-full flex flex-col justify-between items-center">
           <div className="flex flex-col items-center select-none">
             <span className="text-sm font-black tracking-widest text-white uppercase flex items-center gap-1.5 leading-none">
-              rudra<span className="text-orange-500">travel</span>
+              uttara<span className="text-orange-500">trip</span>
             </span>
             <div className="h-0.5 w-6 bg-orange-500 rounded-full mt-1" />
           </div>
@@ -741,7 +989,7 @@ export default function App() {
           </p>
           
           <p className="text-[9px] text-slate-500 font-semibold tracking-wide">
-            &copy; 2025 Rudra Travel Guide & Rakesh Vedi Cab Service.
+            &copy; 2025 Uttaratrip Guide & Rakesh Vedi Cab Service.
           </p>
         </div>
       </footer>
