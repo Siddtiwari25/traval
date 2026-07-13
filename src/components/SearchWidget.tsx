@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Bike, Hotel, Train as TrainIcon, Car, ArrowLeftRight, Calendar, UserPlus, MapPin, Compass } from 'lucide-react';
+import { Bike, Hotel, Train as TrainIcon, Car, ArrowLeftRight, Calendar, UserPlus, MapPin, Compass, Search, Sliders } from 'lucide-react';
 import { City, TravelTab } from '../types';
 import { CITIES } from '../data';
+import { CATEGORIZED_PLACES, CATEGORIES } from '../placesData';
 
 interface SearchWidgetProps {
   activeTab: TravelTab;
@@ -50,6 +51,10 @@ export default function SearchWidget({
   const [showFromDropdown, setShowFromDropdown] = useState(false);
   const [showToDropdown, setShowToDropdown] = useState(false);
   const [showClassDropdown, setShowClassDropdown] = useState(false);
+  
+  // Search query states for filtering categorized places list
+  const [fromSearchQuery, setFromSearchQuery] = useState('');
+  const [toSearchQuery, setToSearchQuery] = useState('');
 
   const swapCities = () => {
     const temp = fromCity;
@@ -60,12 +65,30 @@ export default function SearchWidget({
   const selectFromCity = (city: City) => {
     setFromCity(city);
     setShowFromDropdown(false);
+    setFromSearchQuery('');
   };
 
   const selectToCity = (city: City) => {
     setToCity(city);
     setShowToDropdown(false);
+    setToSearchQuery('');
   };
+
+  const filteredFromPlaces = CATEGORIZED_PLACES.filter(place => {
+    const q = fromSearchQuery.toLowerCase();
+    return place.name.toLowerCase().includes(q) ||
+           place.hotels.toLowerCase().includes(q) ||
+           place.category.toLowerCase().includes(q) ||
+           place.code.toLowerCase().includes(q);
+  });
+
+  const filteredToPlaces = CATEGORIZED_PLACES.filter(place => {
+    const q = toSearchQuery.toLowerCase();
+    return place.name.toLowerCase().includes(q) ||
+           place.hotels.toLowerCase().includes(q) ||
+           place.category.toLowerCase().includes(q) ||
+           place.code.toLowerCase().includes(q);
+  });
 
   return (
     <div id="search-widget" className="bg-white rounded-3xl shadow-2xl p-6 border border-slate-200/60 relative z-20">
@@ -145,26 +168,58 @@ export default function SearchWidget({
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  className="absolute left-0 top-full mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-slate-100 z-50 p-2 max-h-80 overflow-y-auto"
+                  className="absolute left-0 top-full mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-100 z-50 p-2 max-h-96 overflow-y-auto"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <div className="p-2 text-xs font-bold text-sky-600 border-b border-slate-50">Popular Hotels</div>
-                  {CITIES.map((city) => (
-                    <div
-                      key={`from-${city.code}`}
-                      id={`from-city-option-${city.code}`}
-                      onClick={() => selectFromCity(city)}
-                      className={`p-3 hover:bg-sky-50 rounded-xl transition-colors flex justify-between items-center cursor-pointer ${fromCity.code === city.code ? 'bg-sky-50/60' : ''}`}
-                    >
-                      <div>
-                        <span className="font-bold text-slate-800 text-sm block">{city.name}</span>
-                        <span className="text-[11px] text-slate-400 block max-w-56 truncate">{city.hotels}</span>
-                      </div>
-                      <span className="font-mono text-[11px] font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded">
-                        {city.code}
-                      </span>
+                  <div className="p-2 border-b border-slate-100 sticky top-0 bg-white z-20">
+                    <div className="relative">
+                      <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" />
+                      <input 
+                        type="text"
+                        placeholder="Search stations, cities, temples..."
+                        value={fromSearchQuery}
+                        onChange={(e) => setFromSearchQuery(e.target.value)}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-sky-500 font-medium"
+                        onClick={(e) => e.stopPropagation()}
+                      />
                     </div>
-                  ))}
+                  </div>
+
+                  <div className="mt-1 divide-y divide-slate-55">
+                    {CATEGORIES.map((category) => {
+                      const categoryPlaces = filteredFromPlaces.filter(place => place.category === category);
+                      if (categoryPlaces.length === 0) return null;
+                      return (
+                        <div key={`from-cat-${category}`} className="py-2 first:pt-1">
+                          <div className="px-2.5 py-1 text-[10px] font-black tracking-widest text-sky-600 uppercase bg-sky-500/10 rounded-lg mb-1 select-none flex items-center justify-between">
+                            <span>{category}</span>
+                            <span className="text-[9px] bg-sky-500/20 text-sky-700 px-1.5 py-0.5 rounded-full font-mono">{categoryPlaces.length}</span>
+                          </div>
+                          {categoryPlaces.map((city) => (
+                            <div
+                              key={`from-${city.code}-${city.name}`}
+                              id={`from-city-option-${city.code}`}
+                              onClick={() => selectFromCity(city)}
+                              className={`p-2 hover:bg-sky-50 rounded-xl transition-colors flex justify-between items-center cursor-pointer ${fromCity.name === city.name ? 'bg-sky-50/60 font-bold' : ''}`}
+                            >
+                              <div className="min-w-0 flex-1">
+                                <span className="font-bold text-slate-800 text-xs sm:text-sm block truncate">{city.name}</span>
+                                <span className="text-[10px] text-slate-400 block truncate">{city.hotels}</span>
+                              </div>
+                              <span className="font-mono text-[10px] font-bold bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded ml-2 shrink-0">
+                                {city.code}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    })}
+                    {filteredFromPlaces.length === 0 && (
+                      <div className="p-4 text-center text-slate-400 text-xs font-semibold">
+                        No destinations found matching "{fromSearchQuery}"
+                      </div>
+                    )}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -201,26 +256,58 @@ export default function SearchWidget({
                   initial={{ opacity: 0, y: 10, scale: 0.95 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  className="absolute left-0 lg:right-0 lg:left-auto top-full mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-slate-100 z-50 p-2 max-h-80 overflow-y-auto"
+                  className="absolute left-0 lg:right-0 lg:left-auto top-full mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-100 z-50 p-2 max-h-96 overflow-y-auto"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <div className="p-2 text-xs font-bold text-orange-600 border-b border-slate-50">Popular Hotels</div>
-                  {CITIES.map((city) => (
-                    <div
-                      key={`to-${city.code}`}
-                      id={`to-city-option-${city.code}`}
-                      onClick={() => selectToCity(city)}
-                      className={`p-3 hover:bg-sky-50 rounded-xl transition-colors flex justify-between items-center cursor-pointer ${toCity.code === city.code ? 'bg-sky-50/60' : ''}`}
-                    >
-                      <div>
-                        <span className="font-bold text-slate-800 text-sm block">{city.name}</span>
-                        <span className="text-[11px] text-slate-400 block max-w-56 truncate">{city.hotels}</span>
-                      </div>
-                      <span className="font-mono text-[11px] font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded">
-                        {city.code}
-                      </span>
+                  <div className="p-2 border-b border-slate-100 sticky top-0 bg-white z-20">
+                    <div className="relative">
+                      <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" />
+                      <input 
+                        type="text"
+                        placeholder="Search stations, cities, temples..."
+                        value={toSearchQuery}
+                        onChange={(e) => setToSearchQuery(e.target.value)}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-700 focus:outline-none focus:border-orange-500 font-medium"
+                        onClick={(e) => e.stopPropagation()}
+                      />
                     </div>
-                  ))}
+                  </div>
+
+                  <div className="mt-1 divide-y divide-slate-55">
+                    {CATEGORIES.map((category) => {
+                      const categoryPlaces = filteredToPlaces.filter(place => place.category === category);
+                      if (categoryPlaces.length === 0) return null;
+                      return (
+                        <div key={`to-cat-${category}`} className="py-2 first:pt-1">
+                          <div className="px-2.5 py-1 text-[10px] font-black tracking-widest text-orange-600 uppercase bg-orange-500/10 rounded-lg mb-1 select-none flex items-center justify-between">
+                            <span>{category}</span>
+                            <span className="text-[9px] bg-orange-500/20 text-orange-700 px-1.5 py-0.5 rounded-full font-mono">{categoryPlaces.length}</span>
+                          </div>
+                          {categoryPlaces.map((city) => (
+                            <div
+                              key={`to-${city.code}-${city.name}`}
+                              id={`to-city-option-${city.code}`}
+                              onClick={() => selectToCity(city)}
+                              className={`p-2 hover:bg-sky-50 rounded-xl transition-colors flex justify-between items-center cursor-pointer ${toCity.name === city.name ? 'bg-sky-50/60 font-bold' : ''}`}
+                            >
+                              <div className="min-w-0 flex-1">
+                                <span className="font-bold text-slate-800 text-xs sm:text-sm block truncate">{city.name}</span>
+                                <span className="text-[10px] text-slate-400 block truncate">{city.hotels}</span>
+                              </div>
+                              <span className="font-mono text-[10px] font-bold bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded ml-2 shrink-0">
+                                {city.code}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    })}
+                    {filteredToPlaces.length === 0 && (
+                      <div className="p-4 text-center text-slate-400 text-xs font-semibold">
+                        No destinations found matching "{toSearchQuery}"
+                      </div>
+                    )}
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>

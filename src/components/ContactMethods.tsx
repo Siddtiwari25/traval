@@ -28,7 +28,7 @@ export default function ContactMethods() {
       title: 'Rakesh Cab Service (Primary)',
       displayValue: '+91-8859490284',
       link: 'tel:+918859490284',
-      description: 'Available 24/7. Pre-book or hire premium cabs located in Mukteshwar & Nainitalk.',
+      description: 'Available 24/7. Pre-book or hire premium cabs located in Mukteshwar & Nainital.',
       icon: PhoneCall,
       color: 'bg-orange-500',
       iconAnimation: {
@@ -48,8 +48,8 @@ export default function ContactMethods() {
     },
     {
       id: 'instagram',
-      title: 'Rudra Travels Instagram',
-      displayValue: '@rudra_travels_service',
+      title: 'Uttaratrip Instagram',
+      displayValue: '@uttaratrip_service',
       link: 'https://instagram.com',
       description: 'Follow our active feed for beautiful tour group highlights, local weather updates, and road clips.',
       icon: Instagram,
@@ -70,7 +70,7 @@ export default function ContactMethods() {
     {
       id: 'facebook',
       title: 'Rakesh Cab Service Facebook',
-      displayValue: 'fb.com/RudraTravelsMukteshwar',
+      displayValue: 'fb.com/UttaratripMukteshwar',
       link: 'https://facebook.com',
       description: 'Join our friendly Himalayan travelers community page to find carpools, reviews, and active promo flyers.',
       icon: Facebook,
@@ -238,7 +238,7 @@ export default function ContactMethods() {
                   Head Office & Pickup Point
                 </h4>
                 <p className="text-[11.5px] text-slate-400 font-semibold leading-relaxed mt-1">
-                  Locate Rudra Travels & Rakesh Cab Service right at the central mountain route. Stop by for bookings, physical receipts, or tour handoffs!
+                  Locate Uttaratrip & Rakesh Cab Service right at the central mountain route. Stop by for bookings, physical receipts, or tour handoffs!
                 </p>
               </div>
 

@@ -19,7 +19,7 @@ interface BookingConfirmationModalProps {
 // Handpicked high-value active coupons
 const AVAILABLE_PROMOS = [
   { code: 'DEVBHOOMI30', label: '30% Off', desc: 'Special Devbhoomi Himalayan Season Offer', percent: 30 },
-  { code: 'RUDRA25', label: '25% Off', desc: 'Exclusively on Rudra Tour and Rider Fleet', percent: 25 },
+  { code: 'UTTARA25', label: '25% Off', desc: 'Exclusively on Uttaratrip Tour and Rider Fleet', percent: 25 },
   { code: 'MMTSUPER', label: '15% Off', desc: 'MMT Co-branded instant reduction on eco rentals', percent: 15 },
   { code: 'MMTINTELECT', label: '20% Off', desc: 'Flat 20% savings on long-duration travel options', percent: 20 },
   { code: 'MMTLUXSTAY', label: '33% Off', desc: 'Equivalent value reduction for premium resort stays', percent: 33 },
@@ -112,7 +112,7 @@ export default function BookingConfirmationModal({
 
     // Direct WhatsApp redirect with detailed package invoice details
     const waNumber = "918859490284";
-    const message = `Hello Rudra Devbhoomi, I am booking the following package:\n\n*Service/Package:* ${pendingBooking?.provider}\n*Itinerary Details:* ${pendingBooking?.routeDetails}\n*Price:* ${finalPayableStr}\n*Date:* ${pendingBooking?.date}\n\nI have initiated the payment. Here is the screenshot!`;
+    const message = `Hello Uttaratrip, I am booking the following package:\n\n*Service/Package:* ${pendingBooking?.provider}\n*Itinerary Details:* ${pendingBooking?.routeDetails}\n*Price:* ${finalPayableStr}\n*Date:* ${pendingBooking?.date}\n\nI have initiated the payment. Here is the screenshot!`;
     const encodedMsg = encodeURIComponent(message);
     const waUrl = `https://wa.me/${waNumber}?text=${encodedMsg}`;
 
@@ -209,85 +209,206 @@ export default function BookingConfirmationModal({
               </div>
             </div>
 
-            {/* Quick Coupons Selection Option */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="block text-[9.5px] font-black uppercase text-slate-500 tracking-wider">
-                  🎟️ Click to Instantly Apply Coupon
-                </span>
-                {appliedPromo && (
-                  <span className="text-[9px] font-black text-emerald-800 bg-emerald-50 border border-emerald-150 px-2 py-0.5 rounded-md uppercase">
-                    Code Applied: {appliedPromo.code} ({appliedPromo.percent}% Off)
-                  </span>
-                )}
-              </div>
+            {/* Dynamic Rate Specifications Breakdown Section */}
+            {(() => {
+              const providerLower = pendingBooking.provider.toLowerCase();
+              const routeLower = pendingBooking.routeDetails.toLowerCase();
+              
+              const isCab = pendingBooking.type === 'cabs' || providerLower.includes('cab');
+              const isHotel = pendingBooking.type === 'hotels' || providerLower.includes('resort') || providerLower.includes('homestay') || providerLower.includes('lodge') || providerLower.includes('stay');
+              const isScootyBike = pendingBooking.type === 'flights' && (
+                providerLower.includes('activa') || 
+                providerLower.includes('bike') || 
+                providerLower.includes('scooty') || 
+                providerLower.includes('scooter') || 
+                providerLower.includes('royal enfield') || 
+                providerLower.includes('yamaha') || 
+                providerLower.includes('tvs') || 
+                providerLower.includes('avenger') || 
+                providerLower.includes('jupiter') ||
+                routeLower.includes('wheeler') ||
+                routeLower.includes('rent')
+              );
 
-              {/* Grid of active pre-defined vouchers */}
-              <div id="booking-promo-choices" className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {AVAILABLE_PROMOS.slice(0, 4).map((promo) => {
-                  const isActive = appliedPromo?.code === promo.code;
-                  return (
-                    <button
-                      key={promo.code}
-                      type="button"
-                      id={`booking-apply-promo-${promo.code}`}
-                      onClick={() => handleApplyCode(promo.code)}
-                      className={`text-left p-2.5 rounded-xl border transition-all cursor-pointer flex items-start gap-2 relative ${
-                        isActive
-                          ? 'bg-orange-50/70 border-orange-300 ring-2 ring-orange-500/10'
-                          : 'bg-white hover:bg-slate-50 border-slate-200 hover:border-slate-300'
-                      }`}
-                    >
-                      <Tag className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${isActive ? 'text-orange-500' : 'text-slate-400'}`} />
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-1">
-                          <span className="font-mono text-[10.5px] font-black text-slate-800">{promo.code}</span>
-                          <span className="font-sans text-[8.5px] font-black uppercase text-orange-600 bg-orange-50 px-1 py-0.2 rounded">
-                            {promo.label}
-                          </span>
-                        </div>
-                        <p className="text-[9px] font-medium text-slate-400 leading-tight mt-0.5 line-clamp-2">
-                          {promo.desc}
-                        </p>
+              if (isCab) {
+                let cabDetails = {
+                  name: 'Swift Dzire / Etios',
+                  perDay: '₹3,500 – ₹4,000',
+                  perKm: '₹12 – ₹14 / km',
+                  allowance: '₹300 – ₹400 / night',
+                  capacity: '4 Passengers Max',
+                  specs: 'AC, Luggage Carrier, Experienced Driver, Clean Interiors'
+                };
+
+                if (providerLower.includes('ertiga') || providerLower.includes('scorpio')) {
+                  cabDetails = {
+                    name: 'Maruti Ertiga / Scorpio',
+                    perDay: '₹4,500 – ₹5,000',
+                    perKm: '₹15 – ₹16 / km',
+                    allowance: '₹400 – ₹500 / night',
+                    capacity: '6 Passengers Max',
+                    specs: 'Family SUV, Rear AC, Rooftop Carrier, High Ground Clearance'
+                  };
+                } else if (providerLower.includes('crysta') || providerLower.includes('innova')) {
+                  cabDetails = {
+                    name: 'Innova Crysta',
+                    perDay: '₹6,000 – ₹6,500',
+                    perKm: '₹18 – ₹20 / km',
+                    allowance: '₹500 / night',
+                    capacity: '6 Passengers Max',
+                    specs: 'Premium Luxury SUV, Captain Seats, Automatic Climate Control'
+                  };
+                } else if (providerLower.includes('tempo') || providerLower.includes('traveller')) {
+                  cabDetails = {
+                    name: 'Tempo Traveller',
+                    perDay: '₹7,500 – ₹8,500',
+                    perKm: '₹24 – ₹26 / km',
+                    allowance: '₹500 – ₹600 / night',
+                    capacity: '12 - 13 Passengers Max',
+                    specs: 'Group Travel Cruiser, Reclining Pushback Seats, High Roof AC'
+                  };
+                }
+
+                return (
+                  <div className="bg-emerald-50/40 p-4 border border-emerald-100 rounded-2xl space-y-3">
+                    <div className="flex items-center justify-between border-b border-emerald-100 pb-1.5">
+                      <span className="text-[10px] font-black uppercase text-emerald-800 tracking-wider flex items-center gap-1.5">
+                        <Car className="w-3.5 h-3.5 text-emerald-600" /> Standard Cab Fleet Tariff Card
+                      </span>
+                      <span className="text-[9.5px] font-bold text-emerald-700 bg-white border border-emerald-200 px-2 py-0.5 rounded">
+                        {cabDetails.capacity}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 text-center">
+                      <div className="bg-white p-2 rounded-xl border border-slate-100">
+                        <span className="block text-[8px] font-black text-slate-400 uppercase">Base / Day</span>
+                        <span className="text-xs font-black text-slate-800 block mt-0.5">{cabDetails.perDay}</span>
                       </div>
-                      {isActive && (
-                        <div className="absolute top-1.5 right-1.5 w-3.5 h-3.5 rounded-full bg-emerald-500 flex items-center justify-center text-white">
-                          <Check className="w-2.5 h-2.5" />
-                        </div>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+                      <div className="bg-white p-2 rounded-xl border border-slate-100">
+                        <span className="block text-[8px] font-black text-slate-400 uppercase">Per KM Charge</span>
+                        <span className="text-xs font-black text-slate-800 block mt-0.5">{cabDetails.perKm}</span>
+                      </div>
+                      <div className="bg-white p-2 rounded-xl border border-slate-100">
+                        <span className="block text-[8px] font-black text-slate-400 uppercase">Night Allowance</span>
+                        <span className="text-xs font-black text-slate-800 block mt-0.5">{cabDetails.allowance}</span>
+                      </div>
+                    </div>
+                    <div className="text-[9.5px] font-semibold text-slate-500 leading-normal bg-white/70 p-2 rounded-xl border border-slate-100">
+                      <span className="font-bold text-slate-600">Vehicle Specs:</span> {cabDetails.specs}
+                    </div>
+                  </div>
+                );
+              }
 
-            {/* Custom Promo Code manual input option */}
-            <div className="space-y-1.5 pt-1">
-              <label htmlFor="booking-promo-custom" className="block text-[9.5px] font-black uppercase text-slate-500 tracking-wider">
-                Or Enter Custom Promo Coupon
-              </label>
-              <div className="flex gap-2">
-                <input
-                  id="booking-promo-custom"
-                  type="text"
-                  value={promoInput}
-                  onChange={(e) => setPromoInput(e.target.value)}
-                  className="bg-slate-50 border border-slate-200 text-slate-800 text-xs font-bold rounded-xl px-3 py-2 w-full focus:outline-none focus:border-slate-400 focus:bg-white transition-all uppercase placeholder:normal-case font-mono"
-                  placeholder="e.g. DEVBHOOMI30"
-                />
-                <button
-                  type="button"
-                  id="booking-promo-apply-submit"
-                  onClick={() => handleApplyCode(promoInput)}
-                  className="bg-slate-800 hover:bg-slate-950 text-white font-extrabold text-[10.5px] px-4.5 py-2.5 rounded-xl transition cursor-pointer uppercase shrink-0"
-                >
-                  Apply
-                </button>
-              </div>
-              {promoError && (
-                <span className="block text-[10px] text-red-500 font-bold">{promoError}</span>
-              )}
-            </div>
+              if (isHotel) {
+                return (
+                  <div className="bg-indigo-50/40 p-4 border border-indigo-100 rounded-2xl space-y-3">
+                    <div className="flex items-center justify-between border-b border-indigo-100 pb-1.5">
+                      <span className="text-[10px] font-black uppercase text-indigo-800 tracking-wider flex items-center gap-1.5">
+                        <Home className="w-3.5 h-3.5 text-indigo-600" /> Mountain Stay Inclusions & Rates
+                      </span>
+                      <span className="text-[9.5px] font-bold text-indigo-700 bg-white border border-indigo-200 px-2 py-0.5 rounded">
+                        Double Occupancy
+                      </span>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-[11px] font-medium text-slate-600">
+                        <span>Stay Type:</span>
+                        <span className="font-extrabold text-slate-800">Premium Pine Wood Cottage</span>
+                      </div>
+                      <div className="flex items-center justify-between text-[11px] font-medium text-slate-600">
+                        <span>Room Cost / Night:</span>
+                        <span className="font-extrabold text-slate-800">{pendingBooking.price}</span>
+                      </div>
+                      <div className="flex items-center justify-between text-[11px] font-medium text-slate-600">
+                        <span>Taxes & Service Fees:</span>
+                        <span className="font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.2 rounded">₹0 (Zero Extra Charges)</span>
+                      </div>
+                    </div>
+                    <div className="text-[9.5px] font-semibold text-slate-500 leading-normal bg-white/70 p-2.5 rounded-xl border border-slate-100 space-y-1">
+                      <span className="font-bold text-slate-600 block">Complimentary Stay Benefits:</span>
+                      <p className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[9px]">
+                        <span>✓ High-Speed Free WiFi</span>
+                        <span>✓ Private Scenic Balcony</span>
+                        <span>✓ 24h Hot Mountain Water</span>
+                        <span>✓ Traditional Welcome Drinks</span>
+                      </p>
+                    </div>
+                  </div>
+                );
+              }
+
+              if (isScootyBike) {
+                const isBullet = providerLower.includes('enfield') || providerLower.includes('classic');
+                const engineStr = isBullet ? '350cc Manual Gear (Royal Enfield Cruiser)' : (providerLower.includes('yamaha') ? '149cc Manual Gear' : '110cc-125cc Eco Automatic');
+                return (
+                  <div className="bg-sky-50/40 p-4 border border-sky-100 rounded-2xl space-y-3">
+                    <div className="flex items-center justify-between border-b border-sky-100 pb-1.5">
+                      <span className="text-[10px] font-black uppercase text-sky-800 tracking-wider flex items-center gap-1.5">
+                        <Bike className="w-3.5 h-3.5 text-sky-600" /> Eco Rider Fleet Rent Parameters
+                      </span>
+                      <span className="text-[9.5px] font-bold text-sky-700 bg-white border border-sky-200 px-2 py-0.5 rounded">
+                        Daily Self-Drive
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div className="bg-white p-2.5 rounded-xl border border-slate-100">
+                        <span className="block text-[8px] font-black text-slate-400 uppercase">Rental Rate</span>
+                        <span className="text-xs font-black text-slate-800 block mt-0.5">{pendingBooking.price}</span>
+                      </div>
+                      <div className="bg-white p-2.5 rounded-xl border border-slate-100">
+                        <span className="block text-[8px] font-black text-slate-400 uppercase">Refundable Deposit</span>
+                        <span className="text-xs font-black text-emerald-600 block mt-0.5">₹0 (Zero Security)</span>
+                      </div>
+                    </div>
+                    <div className="text-[9.5px] font-semibold text-slate-500 leading-normal bg-white/70 p-2.5 rounded-xl border border-slate-100 space-y-1">
+                      <span className="font-bold text-slate-600 block">Included With Every Ride:</span>
+                      <div className="grid grid-cols-1 gap-1 text-[9px] text-slate-500 font-medium">
+                        <p>⚙️ <span className="font-bold text-slate-700">Powertrain:</span> {engineStr}</p>
+                        <p>🪖 <span className="font-bold text-slate-700">Safety Pack:</span> One ISO-Certified Premium Safety Helmet free of charge</p>
+                        <p>🛠️ <span className="font-bold text-slate-700">Roadside Cover:</span> 24/7 Mountain Breakdown & Flat Tire support</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+
+              // Standard Predefined Tour Package or AI Custom Guide details
+              return (
+                <div className="bg-amber-50/40 p-4 border border-amber-100 rounded-2xl space-y-3">
+                  <div className="flex items-center justify-between border-b border-amber-100 pb-1.5">
+                    <span className="text-[10px] font-black uppercase text-amber-800 tracking-wider flex items-center gap-1.5">
+                      <Briefcase className="w-3.5 h-3.5 text-amber-600" /> Uttarakhand Tour Package Rates
+                    </span>
+                    <span className="text-[9.5px] font-bold text-amber-700 bg-white border border-amber-200 px-2 py-0.5 rounded">
+                      All-Inclusive Plan
+                    </span>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-[11px] font-medium text-slate-600">
+                      <span>Package Guide & Car:</span>
+                      <span className="font-extrabold text-slate-800">Experienced Private Driver Included</span>
+                    </div>
+                    <div className="flex items-center justify-between text-[11px] font-medium text-slate-600">
+                      <span>Hotel Accommodation:</span>
+                      <span className="font-extrabold text-slate-800">Deluxe Valley View Stays</span>
+                    </div>
+                    <div className="flex items-center justify-between text-[11px] font-medium text-slate-600">
+                      <span>Meal Inclusions:</span>
+                      <span className="font-extrabold text-slate-800">Daily Breakfast at Stays</span>
+                    </div>
+                  </div>
+                  <div className="text-[9.5px] font-semibold text-slate-500 leading-normal bg-white/70 p-2.5 rounded-xl border border-slate-100 space-y-1">
+                    <span className="font-bold text-slate-600 block text-[9.5px]">What's Included in Package Price:</span>
+                    <p className="text-[9px] text-slate-500 font-medium leading-relaxed">
+                      ✓ Dedicated sight-seeing transfers without KM caps. All tolls, mountain green taxes, parking fees, and driver overnight allowance covered under this booking price.
+                    </p>
+                  </div>
+                </div>
+              );
+            })()}
+
+
 
             {/* SECURE DIRECT PAYMENT OPTIONS SPLIT */}
             <div className="bg-slate-50 border border-slate-200/60 rounded-2xl p-4.5 space-y-3">
@@ -393,7 +514,7 @@ export default function BookingConfirmationModal({
                   </p>
                   
                   <a 
-                    href={`upi://pay?pa=8859490284@ybl&pn=Rudra%20Devbhoomi%2520Tours&am=${finalPayableNum}&cu=INR`}
+                    href={`upi://pay?pa=8859490284@ybl&pn=Uttaratrip%2520Tours&am=${finalPayableNum}&cu=INR`}
                     className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-[9.5px] font-black uppercase transition-all"
                   >
                     <span>Instant UPI App Pay</span>
@@ -497,7 +618,7 @@ export default function BookingConfirmationModal({
 
                   <div className="flex flex-col gap-1.5 max-w-xs mx-auto pt-1">
                     <a 
-                      href={`https://wa.me/918859490284?text=Hello%20Rudra%20Devbhoomi,%20I%20am%20interested%20in%20booking%20the%20following%20package:%250A%250A*Package:*%20${encodeURIComponent(pendingBooking.provider)}%250A*Details:*%20${encodeURIComponent(pendingBooking.routeDetails)}%250A*Date:*%20${encodeURIComponent(pendingBooking.date)}%250A*Final%20Price:*%20${encodeURIComponent(finalPayableStr)}%250A%250APlease%20confirm%20my%20reservation.%20Thank%20you!`}
+                      href={`https://wa.me/918859490284?text=Hello%20Uttaratrip,%20I%20am%20interested%20in%20booking%20the%20following%20package:%250A%250A*Package:*%20${encodeURIComponent(pendingBooking.provider)}%250A*Details:*%20${encodeURIComponent(pendingBooking.routeDetails)}%250A*Date:*%20${encodeURIComponent(pendingBooking.date)}%250A*Final%20Price:*%20${encodeURIComponent(finalPayableStr)}%250A%250APlease%20confirm%20my%20reservation.%20Thank%20you!`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-[10.5px] uppercase py-2.5 rounded-xl transition shadow-md cursor-pointer"
@@ -523,44 +644,7 @@ export default function BookingConfirmationModal({
               )}
             </div>
 
-            {/* Dynamic Final Reduced Price breakdown */}
-            <div className="border-t border-slate-100 pt-4 space-y-2 bg-slate-950 text-white p-4.5 rounded-2xl font-mono text-[11px] leading-relaxed relative overflow-hidden">
-              {isPaying && (
-                <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xs flex flex-col items-center justify-center space-y-2 z-30">
-                  <span className="text-xs font-black uppercase text-amber-400 tracking-widest animate-pulse">
-                    ⚡ Securing Virtual Escrow...
-                  </span>
-                  <div className="w-24 h-1 bg-white/10 rounded-full overflow-hidden">
-                    <motion.div 
-                      className="bg-amber-400 h-full rounded-full"
-                      initial={{ width: '0%' }}
-                      animate={{ width: '100%' }}
-                      transition={{ duration: 1.6 }}
-                    />
-                  </div>
-                </div>
-              )}
 
-              <div className="flex justify-between text-slate-400">
-                <span>Original Price Charge:</span>
-                <span>₹{originalNum.toLocaleString('en-IN')}{suffix}</span>
-              </div>
-              {appliedPromo && (
-                <div className="flex justify-between text-emerald-450 font-bold">
-                  <span>Coupon Deduction ({appliedPromo.code} - {appliedPromo.percent}%):</span>
-                  <span>-₹{discountAmount.toLocaleString('en-IN')}{suffix}</span>
-                </div>
-              )}
-              <div className="flex justify-between border-t border-dashed border-slate-800 pt-2 font-black text-xs text-amber-400">
-                <span>Final Booking Price:</span>
-                <span className="underline decoration-double">
-                  {finalPayableStr}
-                </span>
-              </div>
-              <p className="text-[8px] text-slate-500 text-center leading-normal pt-1.5 select-none font-sans font-medium">
-                💡 Prices verified safely through Rudra Virtual Verification integration. Apply coupon value now to complete discount check.
-              </p>
-            </div>
           </div>
 
           {/* Action Row */}

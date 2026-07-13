@@ -225,78 +225,271 @@ export default function SearchResults({
       )}
 
       {/* CAB RESULTS VIEW */}
-      {activeTab === 'cabs' && (
-        <motion.div 
-          id="cab-results-list"
-          variants={containerVariants} 
-          initial="hidden" 
-          animate="show" 
-          className="space-y-4"
-        >
-          {CABS.map((cab) => (
-            <motion.div
-              key={cab.id}
-              variants={itemVariants}
-              whileHover={{ y: -3 }}
-              className="bg-white p-5 rounded-2xl border border-slate-200/50 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 hover:shadow-md transition-shadow"
+      {activeTab === 'cabs' && (() => {
+        // Distance Calculation between fromCity and toCity
+        const getRouteDistance = (from: string, to: string): number => {
+          if (!from || !to) return 80;
+          if (from.toLowerCase().trim() === to.toLowerCase().trim()) return 40; // minimum sightseeing distance
+          
+          const f = from.toLowerCase().trim();
+          const t = to.toLowerCase().trim();
+          const key = f < t ? `${f}-${t}` : `${t}-${f}`;
+          
+          const lookups: Record<string, number> = {
+            'dehradun-mussoorie': 35,
+            'dehradun-rishikesh': 45,
+            'dehradun-haridwar': 52,
+            'haridwar-rishikesh': 24,
+            'nainital-bhimtal': 22,
+            'almora-nainital': 64,
+            'haldwani-nainital': 40,
+            'rishikesh-kedarnath': 225,
+            'rishikesh-badrinath': 295,
+            'haridwar-kedarnath': 250,
+            'haridwar-badrinath': 320,
+            'dehradun-kedarnath': 260,
+            'dehradun-badrinath': 335,
+            'mussoorie-dhanaulti': 30,
+            'dehradun-dhanaulti': 60,
+            'rishikesh-chopta': 165,
+            'nainital-ranikhet': 56,
+            'almora-ranikhet': 45,
+            'haldwani-almora': 90,
+          };
+          
+          if (lookups[key]) return lookups[key];
+          
+          // Deterministic fallback for any other combination
+          let hash = 0;
+          const combined = key + "uttaratrip";
+          for (let i = 0; i < combined.length; i++) {
+            hash = combined.charCodeAt(i) + ((hash << 5) - hash);
+          }
+          return (Math.abs(hash) % 215) + 45; // realistic range: 45 - 260 km
+        };
+
+        const distance = getRouteDistance(fromCity.name, toCity.name);
+        const estimatedHours = Math.max(1, Math.round((distance / 35) * 10) / 10); // Average 35 km/h on mountain roads
+
+        const customCabs = [
+          {
+            id: 'cc1',
+            name: 'Swift Dzire / Etios',
+            capacity: '4 Seater (Comfort)',
+            dayRateMin: 3500,
+            dayRateMax: 4000,
+            kmRateMin: 12,
+            kmRateMax: 14,
+            allowanceMin: 300,
+            allowanceMax: 400,
+            rating: 4.8,
+            perDayRateStr: '₹3,500 – ₹4,000',
+            perKmRateStr: '₹12 – ₹14 / km',
+            driverAllowanceStr: '₹300 – ₹400 / night',
+            image: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=400&q=80'
+          },
+          {
+            id: 'cc2',
+            name: 'Maruti Ertiga',
+            capacity: '6 Seater (Family SUV)',
+            dayRateMin: 4500,
+            dayRateMax: 5000,
+            kmRateMin: 15,
+            kmRateMax: 16,
+            allowanceMin: 400,
+            allowanceMax: 500,
+            rating: 4.7,
+            perDayRateStr: '₹4,500 – ₹5,000',
+            perKmRateStr: '₹15 – ₹16 / km',
+            driverAllowanceStr: '₹400 – ₹500 / night',
+            image: 'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?auto=format&fit=crop&w=400&q=80'
+          },
+          {
+            id: 'cc3',
+            name: 'Innova Crysta',
+            capacity: '6 Seater (Premium Luxury)',
+            dayRateMin: 6000,
+            dayRateMax: 6500,
+            kmRateMin: 18,
+            kmRateMax: 20,
+            allowanceMin: 500,
+            allowanceMax: 500,
+            rating: 4.9,
+            perDayRateStr: '₹6,000 – ₹6,500',
+            perKmRateStr: '₹18 – ₹20 / km',
+            driverAllowanceStr: '₹500 / night',
+            image: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=400&q=80'
+          },
+          {
+            id: 'cc4',
+            name: 'Tempo Traveller (12/13 Seater)',
+            capacity: '12-13 Seater (Group)',
+            dayRateMin: 7500,
+            dayRateMax: 8500,
+            kmRateMin: 24,
+            kmRateMax: 26,
+            allowanceMin: 500,
+            allowanceMax: 600,
+            rating: 4.9,
+            perDayRateStr: '₹7,500 – ₹8,500',
+            perKmRateStr: '₹24 – ₹26 / km',
+            driverAllowanceStr: '₹500 – ₹600 / night',
+            image: 'https://images.unsplash.com/photo-1517524006129-1a3a4103133b?auto=format&fit=crop&w=400&q=80'
+          }
+        ];
+
+        return (
+          <div className="space-y-6">
+            {/* Route Distance Alert banner */}
+            <motion.div 
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-emerald-50 border border-emerald-100 rounded-2xl p-4.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm"
             >
-              <div className="flex items-center gap-4 w-full md:w-1/3">
-                <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 font-extrabold border border-emerald-100">
-                  <Car className="w-5 h-5" />
+              <div className="flex items-start gap-3">
+                <div className="p-2.5 bg-emerald-500 text-white rounded-xl">
+                  <MapPin className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="font-extrabold text-slate-800 text-base">{cab.model}</h4>
-                  <p className="text-xs text-slate-400 font-bold">{cab.type} | {cab.capacity} Seater Capacity</p>
+                  <h4 className="font-extrabold text-slate-800 text-sm md:text-base">
+                    Total Route Distance
+                  </h4>
+                  <p className="text-xs text-slate-500 font-semibold mt-0.5">
+                    Traveling from {fromCity.name} ({fromCity.code}) to {toCity.name} ({toCity.code})
+                  </p>
                 </div>
               </div>
-
-              <div className="flex items-center gap-8 w-full md:w-1/3 justify-between md:justify-center">
-                <div className="text-center">
-                  <span className="text-xs text-slate-400 font-bold block mb-0.5">Rating</span>
-                  <span className="inline-flex items-center gap-1 font-black text-slate-800">
-                    <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
-                    {cab.rating}
-                  </span>
+              <div className="flex items-center gap-4 border-l-0 sm:border-l sm:border-emerald-200/60 pl-0 sm:pl-6">
+                <div>
+                  <span className="block text-[10px] text-emerald-600 font-extrabold uppercase tracking-widest">Calculated Distance</span>
+                  <span className="text-2xl font-black text-emerald-700 font-mono">{distance} <span className="text-sm font-bold">km</span></span>
                 </div>
-                <div className="text-center">
-                  <span className="text-xs text-slate-400 font-bold block mb-0.5">Rate / KM</span>
-                  <span className="font-extrabold text-slate-800">₹{cab.pricePerKm} / km</span>
+                <div>
+                  <span className="block text-[10px] text-emerald-600 font-extrabold uppercase tracking-widest">Est. Mountain Drive</span>
+                  <span className="text-lg font-black text-emerald-700 font-mono">~{estimatedHours} <span className="text-xs font-bold">Hrs</span></span>
                 </div>
               </div>
-
-              {(() => {
-                const { discounted, percent, saved } = getDiscountedVal(cab.estimatedPrice);
-                return (
-                  <div className="w-full md:w-1/3 flex items-center justify-between border-t md:border-t-0 pt-4 md:pt-0 border-slate-100 gap-3">
-                    <div className="text-left">
-                      <span className="text-[10px] text-slate-400 font-bold block uppercase tracking-tight">Estimated Fare</span>
-                      {percent > 0 ? (
-                        <div className="flex flex-col items-start leading-none mt-1">
-                          <div className="flex items-center gap-1">
-                            <span className="text-xs text-slate-450 line-through font-extrabold">₹{cab.estimatedPrice}</span>
-                            <span className="text-[9px] font-black text-emerald-600 bg-emerald-50 px-1 py-0.5 rounded-sm border border-emerald-150 uppercase">-{percent}%</span>
-                          </div>
-                          <span className="font-black text-2xl text-slate-900 leading-none mt-0.5">₹{discounted}</span>
-                        </div>
-                      ) : (
-                        <span className="font-black text-2xl text-slate-800">₹{cab.estimatedPrice}</span>
-                      )}
-                    </div>
-
-                    <button
-                      id={`btn-book-cab-${cab.id}`}
-                      onClick={() => onBook(`Eco Cab: ${cab.model}`, `Hotels One-Way pickup`, percent > 0 ? `₹${discounted}` : `₹${cab.estimatedPrice}`)}
-                      className="bg-sky-500 hover:bg-sky-600 active:scale-95 text-white font-extrabold text-[10.5px] px-4.5 py-3 rounded-xl transition-all cursor-pointer uppercase tracking-wider text-center"
-                    >
-                      Reserve & Sync to My Trips
-                    </button>
-                  </div>
-                );
-              })()}
             </motion.div>
-          ))}
-        </motion.div>
-      )}
+
+            {/* Cab Rate Card Table / List Grid */}
+            <motion.div 
+              id="cab-results-list"
+              variants={containerVariants} 
+              initial="hidden" 
+              animate="show" 
+              className="space-y-5"
+            >
+              {customCabs.map((cab) => {
+                // Dynamic Distance-based Pricing Range estimation logic
+                const estPriceLow = cab.dayRateMin + (distance * cab.kmRateMin) + cab.allowanceMin;
+                const estPriceHigh = cab.dayRateMax + (distance * cab.kmRateMax) + cab.allowanceMax;
+                
+                const { discounted: discLow, percent } = getDiscountedVal(estPriceLow);
+                const { discounted: discHigh } = getDiscountedVal(estPriceHigh);
+
+                return (
+                  <motion.div
+                    key={cab.id}
+                    variants={itemVariants}
+                    whileHover={{ y: -2 }}
+                    className="bg-white rounded-2xl border border-slate-200/60 shadow-md p-5 sm:p-6 transition-all duration-300 hover:shadow-lg relative overflow-hidden"
+                  >
+                    <div className="absolute top-0 left-0 w-1.5 h-full bg-emerald-500" />
+                    
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                      {/* Column 1: Vehicle Name & Capacity details */}
+                      <div className="lg:col-span-3 flex items-center gap-4">
+                        <div className="w-14 h-14 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 shrink-0 border border-emerald-100">
+                          <Car className="w-7 h-7" />
+                        </div>
+                        <div className="min-w-0">
+                          <h4 className="font-extrabold text-slate-800 text-base sm:text-lg tracking-tight leading-snug">{cab.name}</h4>
+                          <span className="inline-block mt-1 text-[10px] font-black tracking-wider uppercase px-2 py-0.5 bg-slate-100 text-slate-500 rounded-md">
+                            {cab.capacity}
+                          </span>
+                          <div className="flex items-center gap-1 mt-1 text-xs">
+                            <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
+                            <span className="font-bold text-slate-700">{cab.rating}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Column 2: Specific Rate parameters detailed matrix */}
+                      <div className="lg:col-span-5 grid grid-cols-3 gap-2 bg-slate-50/70 p-3 rounded-xl border border-slate-100 text-center">
+                        <div>
+                          <span className="block text-[9.5px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Per Day Rate</span>
+                          <span className="text-[11px] sm:text-xs font-black text-slate-700 block">{cab.perDayRateStr}</span>
+                          <span className="text-[9px] text-slate-400 font-bold block mt-0.5">(Base Charge)</span>
+                        </div>
+                        <div className="border-l border-slate-200/80">
+                          <span className="block text-[9.5px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Per KM Rate</span>
+                          <span className="text-[11px] sm:text-xs font-black text-slate-700 block">{cab.perKmRateStr}</span>
+                          <span className="text-[9px] text-slate-400 font-bold block mt-0.5">(Per KM)</span>
+                        </div>
+                        <div className="border-l border-slate-200/80">
+                          <span className="block text-[9.5px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Driver Allowance</span>
+                          <span className="text-[11px] sm:text-xs font-black text-slate-700 block">{cab.driverAllowanceStr}</span>
+                          <span className="text-[9px] text-slate-400 font-bold block mt-0.5">(Night Charge)</span>
+                        </div>
+                      </div>
+
+                      {/* Column 3: Total estimated calculated price range and Call To Action */}
+                      <div className="lg:col-span-4 flex items-center justify-between lg:justify-end gap-5 border-t lg:border-t-0 pt-4 lg:pt-0 border-slate-100">
+                        <div className="text-left lg:text-right">
+                          <span className="text-[10px] text-slate-450 font-black block uppercase tracking-wider">
+                            Estimated Fare
+                          </span>
+                          
+                          {percent > 0 ? (
+                            <div className="mt-1">
+                              <div className="flex items-center gap-1.5 lg:justify-end">
+                                <span className="text-[11px] text-slate-400 line-through font-extrabold">
+                                  ₹{estPriceLow.toLocaleString('en-IN')} - ₹{estPriceHigh.toLocaleString('en-IN')}
+                                </span>
+                                <span className="text-[8.5px] font-black text-emerald-600 bg-emerald-50 px-1 py-0.2 rounded border border-emerald-100">
+                                  -{percent}%
+                                </span>
+                              </div>
+                              <span className="block font-black text-xl sm:text-2xl text-emerald-600 leading-none mt-1">
+                                ₹{discLow.toLocaleString('en-IN')} – ₹{discHigh.toLocaleString('en-IN')}
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="block font-black text-xl sm:text-2xl text-slate-800 leading-none mt-1">
+                              ₹{estPriceLow.toLocaleString('en-IN')} – ₹{estPriceHigh.toLocaleString('en-IN')}
+                            </span>
+                          )}
+                          <span className="text-[8.5px] text-slate-400 font-bold block mt-1.5">
+                            (Includes Base Day + {distance} km distance + Driver duty)
+                          </span>
+                        </div>
+
+                        <button
+                          type="button"
+                          id={`btn-book-cab-${cab.id}`}
+                          onClick={() => {
+                            const selectedPriceStr = percent > 0 
+                              ? `₹${discLow.toLocaleString('en-IN')} – ₹${discHigh.toLocaleString('en-IN')}`
+                              : `₹${estPriceLow.toLocaleString('en-IN')} – ₹${estPriceHigh.toLocaleString('en-IN')}`;
+                            onBook(
+                              `Premium Cab: ${cab.name}`,
+                              `One-Way Custom Route Transfer: ${fromCity.name} to ${toCity.name} (${distance} km tour, including day allowance)`,
+                              selectedPriceStr
+                            );
+                          }}
+                          className="bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white font-extrabold text-[10px] sm:text-xs px-4 sm:px-5 py-3 sm:py-3.5 rounded-xl transition-all cursor-pointer uppercase tracking-wider shadow-md shadow-emerald-500/10 shrink-0 text-center"
+                        >
+                          Reserve Cab
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          </div>
+        );
+      })()}
     </div>
   );
 }

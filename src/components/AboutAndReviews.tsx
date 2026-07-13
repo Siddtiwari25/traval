@@ -34,7 +34,7 @@ interface Review {
 export default function AboutAndReviews() {
   // Reviews state with predefined authentic/realistic Kumaon traveler reviews
   const [reviews, setReviews] = useState<Review[]>(() => {
-    const saved = localStorage.getItem('rudra_travel_reviews');
+    const saved = localStorage.getItem('uttaratrip_reviews');
     if (saved) return JSON.parse(saved);
     return [
       {
@@ -76,7 +76,7 @@ export default function AboutAndReviews() {
 
   // Sync reviews to local storage
   useEffect(() => {
-    localStorage.setItem('rudra_travel_reviews', JSON.stringify(reviews));
+    localStorage.setItem('uttaratrip_reviews', JSON.stringify(reviews));
   }, [reviews]);
 
   // Recalculate average stats
